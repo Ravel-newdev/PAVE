@@ -11,11 +11,26 @@ O projeto tem um conjunto de dependências, para compreender como o backend est�
 
 Origem é a combinação de protocolo, domínio e porta. No caso do PAVE:
 
-Frontend React: http://localhost:5173
+Frontend React: http://localhost:5173  
 Backend Express: http://localhost:3000
 
-São origens distintas. Sem o cors configurado no backend, o navegador bloqueia qualquer requisição do React para a API, mesmo que ambos estejam rodando localmente. O erro aparece no console do navegador, não no servidor.
-O cors, junto com o express resolvem isso adicionando os cabeçalhos HTTP apropriados nas respostas, sinalizando ao navegador quais origens têm permissão de consumir a API.
+São origens distintas. Sem o cors configurado no backend, o navegador bloqueia qualquer requisição do React para a API, mesmo que ambos estejam rodando localmente. O erro aparece no console do navegador, não no servidor.  
+O cors resolve isso adicionando os cabeçalhos HTTP apropriados nas respostas.
+
+### Express
+Framework para criação do servidor HTTP e definição de rotas.
+
+### pg
+Driver de conexão com o PostgreSQL, com suporte a pool de conexões.
+
+### dotenv
+Carrega variáveis de ambiente a partir do arquivo `.env`.
+
+### jsonwebtoken
+Implementa autenticação baseada em JWT.
+
+### bcrypt
+Responsável pelo hash de senhas e verificação segura.
 
 ## Rotas
 As rotas de autenticação e protocolos de segurança estão definidos aqui. Ainda em construção.
