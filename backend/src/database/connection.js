@@ -14,5 +14,16 @@ const connectDatabase = async () => {
     process.exit(1);
   }
 };
+const query = async (text, params) => {
+  const client = await pool.connect();
+  try {
+    return await client.query(text, params);
+  } finally {
+    client.release(); 
+  }
+};
+const getClient = async () => {
+  return await pool.connect();
+};
 
-module.exports = { pool, connectDatabase };
+module.exports = { pool, connectDatabase, query, getClient};
