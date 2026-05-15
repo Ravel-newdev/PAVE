@@ -1,8 +1,17 @@
-const { createUser, authenticateUser } = require("./auth.service");
+const { createDiscente, createDocente, authenticateUser } = require("./auth.service");
 
-const register = async (req, res) => {
+const registerDiscente = async (req, res) => {
   try {
-    const user = await createUser(req.body);
+    const user = await createDiscente(req.body);
+    res.status(201).json(user);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+const registerDocente = async (req, res) => {
+  try {
+    const user = await createDocente(req.body);
     res.status(201).json(user);
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -18,4 +27,4 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = { register, login };
+module.exports = { registerDiscente, registerDocente, login };
