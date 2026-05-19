@@ -2,7 +2,6 @@
 A construção do back-end do projeto inclui as rotas de autenticação, segurança, conexão com o banco de dados, requisições de valores sensíveis. O back-end não depende das rotas do front-end.
 
 Assumiremos um prefixo `pave.com/api/` ao trabalharmos com alguma rota do backend, para distinção.
-# README
 
 ## Funcionalidades do Backend
 
