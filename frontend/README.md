@@ -1,4 +1,28 @@
-Welcome to your new TanStack Start app! 
+## 📌 Atividades
+
+### 🎨 1. Atividades de Frontend
+
+| ID   | Atividade                                          | Descrição                                                                       | Responsável |
+|------|----------------------------------------------------|---------------------------------------------------------------------------------|-------------|
+| FE01 | Tela de login                                      | Criar formulário (nome, email, senha)                                           | Raíssa      |
+| FE02 | Validação de login                                 | Validar campos com javascript                                                   | Raíssa      |
+| FE03 | Tela de cadastro                                   | Criar formulário de cadastro de usuários                                        | Raissa      |
+| FE04 | Validação da cadastro                              | Validar campos obrigatórios antes do envio                                      | Raíssa      |
+| FE05 | Tela de vitrine de oportunidades e funcionalidades |                                                                                 | Yasmin      |
+| FE06 | Tela de candidatura e funcionalidade               |                                                                                 | Yasmin      |
+| FE07 | Tela de edição de perfil                           | Criar formulário de edição, validar os campos, receber e enviar dados para api  | Ravena      |
+| FE08 | Tela de recuperação de senha                       | Criar formulário de recuperação de senha, validar senha e enviar dados para api | Ravena      |
+| FE09 | Tela de cadastro de projeto de extensão            | Criar formulário                                                                |             |
+| FE10 | Validar campos de projeto de extensão              | Validar campos com javascript                                                   |             |
+| FE11 | Tela de edição                                     |                                                                                 |             |
+| FE12 | Botão de logout                                    | Criar botão para encerrar sessão                                                |             |
+| FE13 | Tela de edição de projetos (professor)             | Criar formulário de edição de projetos                                          |             |
+| FE14 | Tela de desativação de projetos (professor)        | Botão que possibilite a desativação                                             |             |
+| FE15 | Tela para listar projetos de professor             | Visualizar todos os projetos                                                    |             |
+| FE16 | Botão de favoritar projetos                        | Botão que possibilite essa funcionalidade                                       |             |
+| FE17 | Tela de dashboard do aluno                         | Interface                                                                       |             |
+| FE18 | Tela de dashboard do professor                     | Interface                                                                       |             |
+| FE19 | Tela de sugestão de projetos                       |                                                                                 |             |
 
 # Getting Started
 
@@ -8,6 +32,7 @@ To run this application:
 npm install
 npm run dev
 ```
+
 
 # Building For Production
 
