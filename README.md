@@ -6,7 +6,7 @@ O PAVE é uma plataforma web que centraliza os projetos de extensão da UFC, con
 
 ---
 
-## 👥 Equipe
+##  Equipe
 
 | Nome | Cargo | GitHub |
 |---|---|---|
@@ -19,7 +19,7 @@ O PAVE é uma plataforma web que centraliza os projetos de extensão da UFC, con
 
 ---
 
-## 🗂️ Estrutura do Repositório
+##  Estrutura do Repositório
 
 ```
 PAVE/
@@ -30,7 +30,7 @@ PAVE/
 
 ---
 
-## 🛠️ Stack
+##  Stack
 
 | Camada | Tecnologia |
 |---|---|
@@ -44,7 +44,7 @@ PAVE/
 
 ---
 
-## ⚙️ Como rodar localmente
+##  Como rodar localmente
 
 ### Pré-requisitos
 
@@ -94,7 +94,7 @@ A aplicação estará disponível em `http://localhost:5173`.
 
 ---
 
-## 🗃️ Banco de Dados
+##  Banco de Dados
 
 O schema completo está em `diagrama/pave_schema.sql`. As tabelas principais são:
 
@@ -145,7 +145,7 @@ try {
 
 ---
 
-## 🔌 Back-end
+##  Back-end
 
 ### Dependências
 
@@ -225,7 +225,7 @@ O sistema utiliza JWT para autenticação. O token carrega o nível de acesso do
 
 ---
 
-## 🎨 Front-end
+##  Front-end
 
 ### Dependências
 
@@ -264,7 +264,7 @@ pnpm check     # Lint + format juntos
 
 ---
 
-## 📋 Requisitos Funcionais
+##  Requisitos Funcionais
 
 | ID | Nome | Descrição |
 |---|---|---|
@@ -291,7 +291,7 @@ pnpm check     # Lint + format juntos
 
 ---
 
-## 🔒 Segurança
+##  Segurança
 
 - Senhas armazenadas com hash via **bcrypt** — nunca em texto puro
 - Autenticação via **JWT** com nível de acesso (`discente` / `docente`) embutido no token
@@ -300,7 +300,7 @@ pnpm check     # Lint + format juntos
 
 ---
 
-## 🗺️ Roadmap
+##  Roadmap
 
 - [x] Modelagem do banco de dados (DER + MER)
 - [x] Script DDL PostgreSQL
