@@ -2,27 +2,30 @@
 
 ### 🎨 1. Atividades de Frontend
 
-| ID   | Atividade                                          | Descrição                                                                       | Responsável |
-|------|----------------------------------------------------|---------------------------------------------------------------------------------|-------------|
-| FE01 | Tela de login                                      | Criar formulário (nome, email, senha)                                           | Raíssa      |
-| FE02 | Validação de login                                 | Validar campos com javascript                                                   | Raíssa      |
-| FE03 | Tela de cadastro                                   | Criar formulário de cadastro de usuários                                        | Raissa      |
-| FE04 | Validação da cadastro                              | Validar campos obrigatórios antes do envio                                      | Raíssa      |
-| FE05 | Tela de vitrine de oportunidades e funcionalidades |                                                                                 | Yasmin      |
-| FE06 | Tela de candidatura e funcionalidade               |                                                                                 | Yasmin      |
-| FE07 | Tela de edição de perfil                           | Criar formulário de edição, validar os campos, receber e enviar dados para api  | Ravena      |
-| FE08 | Tela de recuperação de senha                       | Criar formulário de recuperação de senha, validar senha e enviar dados para api | Ravena      |
-| FE09 | Tela de cadastro de projeto de extensão            | Criar formulário                                                                |             |
-| FE10 | Validar campos de projeto de extensão              | Validar campos com javascript                                                   |             |
-| FE11 | Tela de edição                                     |                                                                                 |             |
-| FE12 | Botão de logout                                    | Criar botão para encerrar sessão                                                |             |
-| FE13 | Tela de edição de projetos (professor)             | Criar formulário de edição de projetos                                          |             |
-| FE14 | Tela de desativação de projetos (professor)        | Botão que possibilite a desativação                                             |             |
-| FE15 | Tela para listar projetos de professor             | Visualizar todos os projetos                                                    |             |
-| FE16 | Botão de favoritar projetos                        | Botão que possibilite essa funcionalidade                                       |             |
-| FE17 | Tela de dashboard do aluno                         | Interface                                                                       |             |
-| FE18 | Tela de dashboard do professor                     | Interface                                                                       |             |
-| FE19 | Tela de sugestão de projetos                       |                                                                                 |             |
+| ID   | Atividade                                     | Descrição                                                         | Responsável |
+|------|-----------------------------------------------|-------------------------------------------------------------------|-------------|
+| FE01 | Tela de login                                 | Criar formulário de login de usuários                             | Yasmin      |
+| FE02 | Validação de login                            | Validar campos antes do envio e enviar os dados pro backend       | Felipe      |
+| FE03 | Tela de cadastro                              | Criar formulário de cadastro de usuários                          | Felipe      |
+| FE04 | Validação da cadastro                         | Validar campos antes do envio e enviar os dados pro backend       | Felipe      |
+| FE05 | Tela de dashboard                             | Inclui fazer interface e suas funcionalidades (Aluno)             | Yasmin      |
+| FE06 | Tela de projetos                              | Inclui fazer interface e suas funcionalidades (Aluno)             | Yasmin      |
+| FE07 | Tela de detalhes do projeto                   | Inclui fazer interface e suas funcionalidades (Aluno)             | Yasmin      |
+| FE08 | Tela de minhas oportunidades                  | Inclui fazer interface e suas funcionalidades (Aluno)             | Ravena      |
+| FE09 | Tela de formulário de candidatura             | Criar formulário (Aluno)                                          | Raissa      |
+| FE10 | Validar formulário de candidatura             | Validar campos e enviar os dados para backend (Aluno)             | Raissa      |
+| FE11 | Tela de perfil do aluno                       | Inclui fazer interface e fomulário para edição dos campos (Aluno) | Felipe      |
+| FE12 | Validar formulário de perfil do aluno         | Validar campos e enviar os dados para backend (Aluno)             | Felipe      |
+| FE13 | Tela de notificação                           | Inclui fazer interface de aluno e suas funcionalidades (Aluno)    | Raissa      |
+| FE14 | Tela de dashboard                             | Inclui fazer interface inicial e suas funcionalidades (Professor) | Raissa      |
+| FE15 | Tela de visualização de projetos do professor | Inclui interface e funcionalidades (Professor)                    | Ravel       |
+| FE16 | Tela de visão geral dos projetos              | Inclui fazer interface e funcionalidades (Professor)              | Ravel       |
+| FE17 | Tela de kanban dos candidatos                 | Inclui fazer interface e funcionalidades (Professor)              | Ravena      |
+| FE18 | Tela de criação de projetos                   | Inclui fazer interface e formulário (Professor)                   | Ravena      |
+| FE19 | Validar fomulário de criação de projetos      | Validar campos e enviar os dados para backend (Professor)         | Ravel       |
+| FE20 | Tela de edição de projetos                    | Inclui fazer interface e funcionalidade de edição (Professor)     | Ravena      |
+| FE21 | Validar formulário de edição de projetos      | Validar campos e enviar os dados para backend (Professor)         | Ravel       |
+| FE22 | Tela de perfil                                | Inclui interface e funcionalidades (Professor)                    | Ravel       |
 
 # Getting Started
 
