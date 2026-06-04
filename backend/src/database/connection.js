@@ -14,6 +14,8 @@ const connectDatabase = async () => {
     await pool.connect();
     console.log("Conexão com o banco de dados estabelecida.");
 
+    // await dropDatabaseSchema();
+
     // Verifica existência de tabelas no banco de dados e cria se não existir
     // Trecho relevante para configuração do ambiente
     if (!await existsTables()) {
@@ -27,6 +29,14 @@ const connectDatabase = async () => {
     console.error("Erro ao conectar com o banco de dados:", error.message);
     process.exit(1);
   }
+};
+
+const dropDatabaseSchema = async () => {
+  await pool.query(`
+    DROP SCHEMA public CASCADE;
+    CREATE SCHEMA public;
+    GRANT ALL ON SCHEMA public TO public;
+  `);
 };
 
 const existsTables = async () => {
