@@ -9,18 +9,18 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as AboutRouteImport } from './routes/about'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as CadastroRouteImport } from './routes/cadastro'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as TalksIndexRouteImport } from './routes/talks.index'
-import { Route as SpeakersIndexRouteImport } from './routes/speakers.index'
-import { Route as ScheduleIndexRouteImport } from './routes/schedule.index'
-import { Route as TalksSlugRouteImport } from './routes/talks.$slug'
-import { Route as SpeakersSlugRouteImport } from './routes/speakers.$slug'
-import { Route as ApiRemyChatRouteImport } from './routes/api.remy-chat'
 
-const AboutRoute = AboutRouteImport.update({
-  id: '/about',
-  path: '/about',
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CadastroRoute = CadastroRouteImport.update({
+  id: '/cadastro',
+  path: '/cadastro',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -28,119 +28,51 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const TalksIndexRoute = TalksIndexRouteImport.update({
-  id: '/talks/',
-  path: '/talks/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SpeakersIndexRoute = SpeakersIndexRouteImport.update({
-  id: '/speakers/',
-  path: '/speakers/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ScheduleIndexRoute = ScheduleIndexRouteImport.update({
-  id: '/schedule/',
-  path: '/schedule/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const TalksSlugRoute = TalksSlugRouteImport.update({
-  id: '/talks/$slug',
-  path: '/talks/$slug',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SpeakersSlugRoute = SpeakersSlugRouteImport.update({
-  id: '/speakers/$slug',
-  path: '/speakers/$slug',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiRemyChatRoute = ApiRemyChatRouteImport.update({
-  id: '/api/remy-chat',
-  path: '/api/remy-chat',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/api/remy-chat': typeof ApiRemyChatRoute
-  '/speakers/$slug': typeof SpeakersSlugRoute
-  '/talks/$slug': typeof TalksSlugRoute
-  '/schedule/': typeof ScheduleIndexRoute
-  '/speakers/': typeof SpeakersIndexRoute
-  '/talks/': typeof TalksIndexRoute
+  '/cadastro': typeof CadastroRoute
+  '/login': typeof LoginRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/api/remy-chat': typeof ApiRemyChatRoute
-  '/speakers/$slug': typeof SpeakersSlugRoute
-  '/talks/$slug': typeof TalksSlugRoute
-  '/schedule': typeof ScheduleIndexRoute
-  '/speakers': typeof SpeakersIndexRoute
-  '/talks': typeof TalksIndexRoute
+  '/cadastro': typeof CadastroRoute
+  '/login': typeof LoginRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/api/remy-chat': typeof ApiRemyChatRoute
-  '/speakers/$slug': typeof SpeakersSlugRoute
-  '/talks/$slug': typeof TalksSlugRoute
-  '/schedule/': typeof ScheduleIndexRoute
-  '/speakers/': typeof SpeakersIndexRoute
-  '/talks/': typeof TalksIndexRoute
+  '/cadastro': typeof CadastroRoute
+  '/login': typeof LoginRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/about'
-    | '/api/remy-chat'
-    | '/speakers/$slug'
-    | '/talks/$slug'
-    | '/schedule/'
-    | '/speakers/'
-    | '/talks/'
+  fullPaths: '/' | '/cadastro' | '/login'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/about'
-    | '/api/remy-chat'
-    | '/speakers/$slug'
-    | '/talks/$slug'
-    | '/schedule'
-    | '/speakers'
-    | '/talks'
-  id:
-    | '__root__'
-    | '/'
-    | '/about'
-    | '/api/remy-chat'
-    | '/speakers/$slug'
-    | '/talks/$slug'
-    | '/schedule/'
-    | '/speakers/'
-    | '/talks/'
+  to: '/' | '/cadastro' | '/login'
+  id: '__root__' | '/' | '/cadastro' | '/login'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AboutRoute: typeof AboutRoute
-  ApiRemyChatRoute: typeof ApiRemyChatRoute
-  SpeakersSlugRoute: typeof SpeakersSlugRoute
-  TalksSlugRoute: typeof TalksSlugRoute
-  ScheduleIndexRoute: typeof ScheduleIndexRoute
-  SpeakersIndexRoute: typeof SpeakersIndexRoute
-  TalksIndexRoute: typeof TalksIndexRoute
+  CadastroRoute: typeof CadastroRoute
+  LoginRoute: typeof LoginRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutRouteImport
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cadastro': {
+      id: '/cadastro'
+      path: '/cadastro'
+      fullPath: '/cadastro'
+      preLoaderRoute: typeof CadastroRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -150,60 +82,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/talks/': {
-      id: '/talks/'
-      path: '/talks'
-      fullPath: '/talks/'
-      preLoaderRoute: typeof TalksIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/speakers/': {
-      id: '/speakers/'
-      path: '/speakers'
-      fullPath: '/speakers/'
-      preLoaderRoute: typeof SpeakersIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/schedule/': {
-      id: '/schedule/'
-      path: '/schedule'
-      fullPath: '/schedule/'
-      preLoaderRoute: typeof ScheduleIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/talks/$slug': {
-      id: '/talks/$slug'
-      path: '/talks/$slug'
-      fullPath: '/talks/$slug'
-      preLoaderRoute: typeof TalksSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/speakers/$slug': {
-      id: '/speakers/$slug'
-      path: '/speakers/$slug'
-      fullPath: '/speakers/$slug'
-      preLoaderRoute: typeof SpeakersSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/remy-chat': {
-      id: '/api/remy-chat'
-      path: '/api/remy-chat'
-      fullPath: '/api/remy-chat'
-      preLoaderRoute: typeof ApiRemyChatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AboutRoute: AboutRoute,
-  ApiRemyChatRoute: ApiRemyChatRoute,
-  SpeakersSlugRoute: SpeakersSlugRoute,
-  TalksSlugRoute: TalksSlugRoute,
-  ScheduleIndexRoute: ScheduleIndexRoute,
-  SpeakersIndexRoute: SpeakersIndexRoute,
-  TalksIndexRoute: TalksIndexRoute,
+  CadastroRoute: CadastroRoute,
+  LoginRoute: LoginRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
