@@ -1,10 +1,16 @@
 import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
-import Footer from '../components/Footer'
-import Header from '../components/Header'
 
 import appCss from '../styles.css?url'
+import { Layout } from '#/lib/layout'
+
+const title = 'PAVE'
+const description = 'Plataforma de Avaliação e Verificação Educacional'
+const url = 'hhtps://google.com'
+
+const ogImgUrl =
+  'https://og.sznm.dev/api/generate?heading=PAVE&text=Plataforma+de+Avaliação+e+Verificação+Educacional&template=color'
 
 const THEME_INIT_SCRIPT = `(function(){try{var stored=window.localStorage.getItem('theme');var mode=(stored==='light'||stored==='dark'||stored==='auto')?stored:'auto';var prefersDark=window.matchMedia('(prefers-color-scheme: dark)').matches;var resolved=mode==='auto'?(prefersDark?'dark':'light'):mode;var root=document.documentElement;root.classList.remove('light','dark');root.classList.add(resolved);if(mode==='auto'){root.removeAttribute('data-theme')}else{root.setAttribute('data-theme',mode)}root.style.colorScheme=resolved;}catch(e){}})();`
 
@@ -18,42 +24,127 @@ export const Route = createRootRoute({
         name: 'viewport',
         content: 'width=device-width, initial-scale=1',
       },
+
       {
-        title: 'TanStack Start Starter',
+        title,
+      },
+
+      {
+        name: 'description',
+        content: description,
+      },
+
+      {
+        name: 'application-name',
+        content: title,
+      },
+
+      {
+        name: 'theme-color',
+        content: '#ffffff',
+      },
+
+      {
+        name: 'og:type',
+        content: 'website',
+      },
+
+      {
+        name: 'og:url',
+        content: url,
+      },
+
+      {
+        name: 'og:title',
+        content: title,
+      },
+
+      {
+        name: 'og:description',
+        content: description,
+      },
+
+      {
+        name: 'og:image',
+        content: ogImgUrl,
+      },
+
+      {
+        name: 'twitter:card',
+        content: 'summary_large_image',
+      },
+
+      {
+        name: 'twitter:url',
+        content: url,
+      },
+
+      {
+        name: 'twitter:title',
+        content: title,
+      },
+
+      {
+        name: 'twitter:description',
+        content: description,
+      },
+
+      {
+        name: 'twitter:image',
+        content: ogImgUrl,
       },
     ],
+
     links: [
       {
         rel: 'stylesheet',
         href: appCss,
       },
+
+      {
+        rel: 'icon',
+        href: '/favicon.ico',
+      },
     ],
   }),
+
   shellComponent: RootDocument,
 })
 
-function RootDocument({ children }: { children: React.ReactNode }) {
+function RootDocument({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="pt-BR" suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: THEME_INIT_SCRIPT,
+          }}
+        />
+
         <HeadContent />
       </head>
-      <body className="font-sans antialiased [overflow-wrap:anywhere] selection:bg-[rgba(79,184,178,0.24)]">
-        <Header />
-        {children}
-        <Footer />
+
+      <body className="font-sans antialiased">
+        <Layout>
+          {children}
+        </Layout>
+
         <TanStackDevtools
           config={{
             position: 'bottom-right',
           }}
           plugins={[
             {
-              name: 'Tanstack Router',
+              name: 'TanStack Router',
               render: <TanStackRouterDevtoolsPanel />,
             },
           ]}
         />
+
         <Scripts />
       </body>
     </html>
