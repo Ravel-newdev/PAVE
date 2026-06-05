@@ -1,3 +1,4 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -25,10 +26,26 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { RegisterValidationSchema } from './schema';
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
+import { useForm } from 'react-hook-form';
 
 const Cadastro = () => {
+  const RegisterForm = useForm({
+    resolver: zodResolver(RegisterValidationSchema),
+    mode: 'onChange',
+    defaultValues: {
+      name: '',
+      address: '',
+      cpf: '',
+      dateBirth: '',
+      course: '',
+      period: '',
+      password: '',
+      confirmPassword: ''
+    }
+  })
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   return (
