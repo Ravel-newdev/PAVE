@@ -57,8 +57,7 @@ const Cadastro = () => {
               Faça parte de projetos <br />
               <span className="text-cyan-600">
                 {" "}
-                que transformam <br />
-                vidas
+                que transformam <br />vidas
               </span>{" "}
               e comunidades.
             </h1>
@@ -86,13 +85,15 @@ const Cadastro = () => {
               {/*onSubmit={form.handleSubmit(onSubmit)}*/}
               <form className="grid grid-cols-1 gap-x-8 gap-y-6 md:grid-cols-2">
                 <Field>
-                  <FieldLabel className="mb-2 text-2xl font-bold text-slate-700">
+                  <FieldLabel htmlFor="form-name" className="mb-2 text-2xl font-bold text-slate-700">
                     Nome completo
                   </FieldLabel>
                   <div className="relative">
                     <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
                     <Input
                       placeholder="Digite seu nome completo"
+                      id="form-name"
+                      required
                       className="
                       pl-10
                       h-15
@@ -105,15 +106,17 @@ const Cadastro = () => {
                 </Field>
 
                 <Field>
-                  <FieldLabel className="mb-2 text-2xl font-bold text-slate-700">
+                  <FieldLabel htmlFor="form-email" className="mb-2 text-2xl font-bold text-slate-700">
                     E-mail institucional
                   </FieldLabel>
 
                   <div className="relative">
                     <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
                     <Input
+                      id="form-email"
                       type="email"
                       placeholder="seu.email@instituicao.edu.br"
+                      required
                       className="
                       pl-10
                       h-15
@@ -126,14 +129,16 @@ const Cadastro = () => {
                 </Field>
 
                 <Field>
-                  <FieldLabel className="mb-2 text-2xl font-bold text-slate-700">
+                  <FieldLabel htmlFor="form-cpf" className="mb-2 text-2xl font-bold text-slate-700">
                     CPF
                   </FieldLabel>
 
                   <div className="relative">
                     <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
                     <Input
+                      id="form-cpf"
                       placeholder="000.000.000-00"
+                      required
                       className="
                     pl-10
                     h-15
@@ -145,12 +150,14 @@ const Cadastro = () => {
                 </Field>
 
                 <Field>
-                  <FieldLabel className="mb-2 text-2xl font-bold text-slate-700">
+                  <FieldLabel htmlFor="form-data" className="mb-2 text-2xl font-bold text-slate-700">
                     Data de nascimento
                   </FieldLabel>
                   <div className="relative">
                     <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
                     <Input
+                      id="form-data"
+                      required
                       type="date"
                       className="
                     pl-10
@@ -163,7 +170,7 @@ const Cadastro = () => {
                 </Field>
 
                 <Field>
-                  <FieldLabel className="mb-2 text-2xl font-bold text-slate-700">
+                  <FieldLabel htmlFor="form-course" className="mb-2 text-2xl font-bold text-slate-700">
                     Curso
                   </FieldLabel>
                   <div className="relative">
@@ -178,8 +185,9 @@ const Cadastro = () => {
                     w-4 
                     text-gray-500"
                     />
-                    <Select>
+                    <Select required>
                       <SelectTrigger
+                        id="form-course"
                         className="
                         pl-10
                         p-8
@@ -203,13 +211,14 @@ const Cadastro = () => {
                 </Field>
 
                 <Field>
-                  <FieldLabel className="mb-2 text-2xl font-bold text-slate-700">
+                  <FieldLabel htmlFor="form-period" className="mb-2 text-2xl font-bold text-slate-700">
                     Período
                   </FieldLabel>
                   <div className="relative">
                     <University className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
-                    <Select>
+                    <Select required>
                       <SelectTrigger
+                        id="form-period"
                         className="
                         pl-10
                         p-8
@@ -240,12 +249,14 @@ const Cadastro = () => {
                 </Field>
 
                 <Field>
-                  <FieldLabel className="mb-2 text-2xl font-bold text-slate-700">
+                  <FieldLabel htmlFor="form-password" className="mb-2 text-2xl font-bold text-slate-700">
                     Senha
                   </FieldLabel>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
                     <Input
+                      id="form-password"
+                      required
                       type={showPassword ? "text" : "password"}
                       className="
                     pl-10
@@ -269,12 +280,14 @@ const Cadastro = () => {
                 </Field>
 
                 <Field>
-                  <FieldLabel className="mb-2 text-2xl font-bold text-slate-700">
+                  <FieldLabel htmlFor="form-confirmPass" className="mb-2 text-2xl font-bold text-slate-700">
                     Confirme senha
                   </FieldLabel>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
                     <Input
+                      id="form-confirmPass"
+                      required
                       type={showConfirmPassword ? "text" : "password"}
                       className="
                     pl-10
