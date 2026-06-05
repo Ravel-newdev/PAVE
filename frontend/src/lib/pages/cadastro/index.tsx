@@ -7,6 +7,8 @@ import {
   Calendar,
   GraduationCap,
   University,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 import {
   Card,
@@ -24,8 +26,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Link } from "@tanstack/react-router";
+import { useState } from "react";
 
 const Cadastro = () => {
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   return (
     <>
       <div className="min-h-screen flex">
@@ -162,8 +167,8 @@ const Cadastro = () => {
                     Curso
                   </FieldLabel>
                   <div className="relative">
-                    <GraduationCap 
-                    className="
+                    <GraduationCap
+                      className="
                     pointer-events-none
                     absolute
                     left-3 
@@ -171,7 +176,7 @@ const Cadastro = () => {
                     -translate-y-1/2 
                     h-4 
                     w-4 
-                    text-gray-500" 
+                    text-gray-500"
                     />
                     <Select>
                       <SelectTrigger
@@ -204,8 +209,8 @@ const Cadastro = () => {
                   <div className="relative">
                     <University className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
                     <Select>
-                      <SelectTrigger 
-                      className="
+                      <SelectTrigger
+                        className="
                         pl-10
                         p-8
                         h-15
@@ -240,15 +245,26 @@ const Cadastro = () => {
                   </FieldLabel>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
-                    <Input 
-                    type="password" 
-                    className="
+                    <Input
+                      type={showPassword ? "text" : "password"}
+                      className="
                     pl-10
                     h-15
                     font-semibold
                     font-sans
-                    " 
+                    "
                     />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2"
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-5 w-5 text-gray-500" />
+                      ) : (
+                        <Eye className="h-5 w-5 text-gray-500" />
+                      )}
+                    </button>
                   </div>
                 </Field>
 
@@ -259,14 +275,25 @@ const Cadastro = () => {
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
                     <Input
-                    type="password" 
-                    className="
+                      type={showConfirmPassword ? "text" : "password"}
+                      className="
                     pl-10
                     h-15
                     font-semibold
                     font-sans
                     "
                     />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2"
+                    >
+                      {showConfirmPassword ? (
+                        <EyeOff className="h-5 w-5 text-gray-500" />
+                      ) : (
+                        <Eye className="h-5 w-5 text-gray-500" />
+                      )} 
+                    </button>
                   </div>
                 </Field>
 
@@ -279,12 +306,12 @@ const Cadastro = () => {
                   </Button>
                 </div>
               </form>
-               <p className="mt-6 text-2xl text-slate-500 text-center">
+              <p className="mt-6 text-2xl text-slate-500 text-center">
                 Já tem uma conta?{"\u00A0"}
                 <Link to="/login" className="text-blue-600">
-                    Entrar
+                  Entrar
                 </Link>
-               </p>
+              </p>
             </CardContent>
           </Card>
         </div>
