@@ -1,6 +1,4 @@
 import { useState } from "react";
-import backgroundImage from "../../assets/login.jpeg";
-import logo from "../../assets/logo.png";
 import LoginImg from "../../assets/login2.jpeg";
 import { MailIcon, LockIcon, EyeOffIcon } from "./components/Icons";
 
