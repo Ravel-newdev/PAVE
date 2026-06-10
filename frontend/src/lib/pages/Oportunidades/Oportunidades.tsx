@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from "react";
-import Navbar from "../../components/Navbar/Navbar";
+import { useState, useMemo } from "react";
+import Navbar from "#/components/Navbar/Navbar";
 import { 
   FiSearch, FiStar, FiHeart, FiCalendar, FiUsers, 
   FiMapPin, FiMonitor, FiLayers, FiFilter, FiChevronDown, FiZap
@@ -65,9 +65,16 @@ export default function MinhasOportunidades() {
   const [tipoFilter, setTipoFilter] = useState("Todos");
   const [modalidadeFilter, setModalidadeFilter] = useState("Todos");
   const [activeTab, setActiveTab] = useState(0);
-  const [liked, setLiked] = useState({ 1: true });
+  const [liked, setLiked] = useState<Record<number, boolean>>({
+    1: true,
+  });
 
-  const toggleLike = (id) => setLiked(prev => ({ ...prev, [id]: !prev[id] }));
+  const toggleLike = (id: number) => {
+    setLiked(prev => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
+  };
 
   const clearFilters = () => {
     setTipoFilter("Todos");

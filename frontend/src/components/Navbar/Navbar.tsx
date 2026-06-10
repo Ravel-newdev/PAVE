@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { IoNotificationsOutline } from "react-icons/io5";
 import { FiSearch, FiChevronDown, FiMenu, FiX } from "react-icons/fi";
 import logo from "../../assets/logo.png"; 
