@@ -10,12 +10,24 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as DetalheProjetoRouteImport } from './routes/detalheProjeto'
+import { Route as CadastroProjetoRouteImport } from './routes/cadastroProjeto'
 import { Route as CadastroRouteImport } from './routes/cadastro'
 import { Route as IndexRouteImport } from './routes/index'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DetalheProjetoRoute = DetalheProjetoRouteImport.update({
+  id: '/detalheProjeto',
+  path: '/detalheProjeto',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CadastroProjetoRoute = CadastroProjetoRouteImport.update({
+  id: '/cadastroProjeto',
+  path: '/cadastroProjeto',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CadastroRoute = CadastroRouteImport.update({
@@ -32,30 +44,49 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/cadastro': typeof CadastroRoute
+  '/cadastroProjeto': typeof CadastroProjetoRoute
+  '/detalheProjeto': typeof DetalheProjetoRoute
   '/login': typeof LoginRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/cadastro': typeof CadastroRoute
+  '/cadastroProjeto': typeof CadastroProjetoRoute
+  '/detalheProjeto': typeof DetalheProjetoRoute
   '/login': typeof LoginRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/cadastro': typeof CadastroRoute
+  '/cadastroProjeto': typeof CadastroProjetoRoute
+  '/detalheProjeto': typeof DetalheProjetoRoute
   '/login': typeof LoginRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/cadastro' | '/login'
+  fullPaths:
+    | '/'
+    | '/cadastro'
+    | '/cadastroProjeto'
+    | '/detalheProjeto'
+    | '/login'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/cadastro' | '/login'
-  id: '__root__' | '/' | '/cadastro' | '/login'
+  to: '/' | '/cadastro' | '/cadastroProjeto' | '/detalheProjeto' | '/login'
+  id:
+    | '__root__'
+    | '/'
+    | '/cadastro'
+    | '/cadastroProjeto'
+    | '/detalheProjeto'
+    | '/login'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CadastroRoute: typeof CadastroRoute
+  CadastroProjetoRoute: typeof CadastroProjetoRoute
+  DetalheProjetoRoute: typeof DetalheProjetoRoute
   LoginRoute: typeof LoginRoute
 }
 
@@ -66,6 +97,20 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/detalheProjeto': {
+      id: '/detalheProjeto'
+      path: '/detalheProjeto'
+      fullPath: '/detalheProjeto'
+      preLoaderRoute: typeof DetalheProjetoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cadastroProjeto': {
+      id: '/cadastroProjeto'
+      path: '/cadastroProjeto'
+      fullPath: '/cadastroProjeto'
+      preLoaderRoute: typeof CadastroProjetoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/cadastro': {
@@ -88,6 +133,8 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CadastroRoute: CadastroRoute,
+  CadastroProjetoRoute: CadastroProjetoRoute,
+  DetalheProjetoRoute: DetalheProjetoRoute,
   LoginRoute: LoginRoute,
 }
 export const routeTree = rootRouteImport
