@@ -1,5 +1,5 @@
 import Navbar from "#/components/Navbar/Navbar";
-import heroImg from "../../assets/hero.png";
+import heroImg from "#/assets/hero.png";
 import "./Home.css";
 
 function StatusTag({ status }: { status: string }) {
