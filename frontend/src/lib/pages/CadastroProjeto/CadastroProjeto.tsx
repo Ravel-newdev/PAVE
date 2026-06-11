@@ -1,4 +1,34 @@
-import { useState, useEffect } from "react";
+import React, { useState, type ReactNode } from "react";
+
+interface ProjectData {
+  title: string;
+  type: string;
+  area: string;
+  subArea: string;
+  summary: string;
+  banner: string;
+
+  description: string;
+  startDate: string;
+  endDate: string;
+  hours: string;
+  slots: string;
+
+  modality: string;
+  location: string;
+
+  questions: string[];
+  docs: string[];
+  stages: string[];
+
+  inscriptionStart: string;
+  inscriptionEnd: string;
+
+  requirements: string[];
+  benefits: string[];
+
+  scholarshipValue: string;
+}
 
 const COLORS = {
   primary: "#287999",
@@ -25,7 +55,13 @@ const steps = [
   { id: 5, label: "Revisão", icon: "" },
 ];
 
-const tipsByStep = {
+type Tip = {
+  icon: string;
+  title: string;
+  desc: string;
+}
+
+const tipsByStep: Record<number, Tip[]> = {
   1: [
     { icon: "", title: "Seja claro e objetivo", desc: "Escolha um título que descreva bem o projeto." },
     { icon: "", title: "Adicione uma imagem", desc: "Projetos com banner recebem muito mais inscrições." },
@@ -54,7 +90,7 @@ const tipsByStep = {
 };
 
 const areaOptions = ["Tecnologia", "Saúde", "Educação", "Meio Ambiente", "Cultura", "Esporte", "Direito", "Engenharia", "Comunicação"];
-const subAreaMap = {
+const subAreaMap: Record<string, string[]> = {
   Tecnologia: ["Desenvolvimento de Software", "Inteligência Artificial", "Redes", "Segurança"],
   Saúde: ["Medicina", "Enfermagem", "Nutrição", "Fisioterapia"],
   Educação: ["Pedagogia", "EAD", "Inclusão", "Alfabetização"],
@@ -66,7 +102,7 @@ const subAreaMap = {
   Comunicação: ["Jornalismo", "Publicidade", "Mídias Sociais", "Fotografia"],
 };
 
-function NavBar({ currentStep }) {
+function NavBar({ currentStep }: { currentStep: number }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navItems = [
     { icon: "", label: "Início" },
@@ -125,7 +161,13 @@ function NavBar({ currentStep }) {
   );
 }
 
-function StepIndicator({ currentStep, setStep }) {
+function StepIndicator({
+  currentStep,
+  setStep,
+}: {
+  currentStep: number;
+  setStep: React.Dispatch<React.SetStateAction<number>>;
+}) {
   return (
     <div style={{ overflowX: "auto", paddingBottom: 4 }}>
       <div style={{ display: "flex", alignItems: "center", minWidth: 600, gap: 0 }}>
@@ -168,7 +210,7 @@ function StepIndicator({ currentStep, setStep }) {
   );
 }
 
-function ProgressBar({ currentStep }) {
+function ProgressBar({ currentStep }: { currentStep: number }) {
   const pct = Math.round(((currentStep - 1) / (steps.length - 1)) * 100);
   return (
     <div style={{ background: COLORS.white, borderRadius: 12, padding: "12px 16px", boxShadow: COLORS.cardShadow }}>
@@ -184,11 +226,11 @@ function ProgressBar({ currentStep }) {
   );
 }
 
-function TipsPanel({ currentStep }) {
+function TipsPanel({ currentStep }: { currentStep: number }) {
   return (
     <div style={{ background: COLORS.white, borderRadius: 12, padding: "16px", boxShadow: COLORS.cardShadow }}>
       <div style={{ fontSize: 13, fontWeight: 700, color: COLORS.text, marginBottom: 12 }}>💡 Dicas para um bom cadastro</div>
-      {(tipsByStep[currentStep] || []).map((tip, i) => (
+      {(tipsByStep[currentStep] || []).map((tip,i) => (
         <div key={i} style={{ display: "flex", gap: 10, marginBottom: 12 }}>
           <div style={{ width: 32, height: 32, borderRadius: 8, background: COLORS.primaryLight, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, flexShrink: 0 }}>{tip.icon}</div>
           <div>
@@ -201,7 +243,7 @@ function TipsPanel({ currentStep }) {
   );
 }
 
-function PreviewCard({ data }) {
+function PreviewCard({ data }: {data: ProjectData}) {
   return (
     <div style={{ background: COLORS.white, borderRadius: 12, padding: "16px", boxShadow: COLORS.cardShadow }}>
       <div style={{ fontSize: 13, fontWeight: 700, color: COLORS.text, marginBottom: 12 }}>🌟 Preview do card</div>
@@ -222,7 +264,25 @@ function PreviewCard({ data }) {
   );
 }
 
-function InputField({ label, required, placeholder, value, onChange, type = "text", maxLength, hint }) {
+function InputField({ 
+  label,
+  required, 
+  placeholder, 
+  value, 
+  onChange, 
+  type = "text", 
+  maxLength, 
+  hint 
+}: {
+  label: string;
+  required?: boolean;
+  placeholder?: string;
+  value: string;
+  onChange: (value: string) => void;
+  type?: string;
+  maxLength?: number;
+  hint?: string;
+}) {
   const [count, setCount] = useState(value?.length || 0);
   return (
     <div style={{ marginBottom: 20 }}>
@@ -250,7 +310,21 @@ function InputField({ label, required, placeholder, value, onChange, type = "tex
   );
 }
 
-function SelectField({ label, required, options, value, onChange, placeholder }) {
+function SelectField({ 
+  label, 
+  required, 
+  options, 
+  value, 
+  onChange, 
+  placeholder 
+}: {
+  label: string;
+  required?: boolean;
+  options: string[];
+  value: string;
+  onChange: (value: string) => void;
+  placeholder?: string;
+}) {
   return (
     <div style={{ marginBottom: 20 }}>
       <label style={{ display: "block", fontSize: 13, fontWeight: 600, color: COLORS.text, marginBottom: 6 }}>
@@ -277,7 +351,25 @@ function SelectField({ label, required, options, value, onChange, placeholder })
   );
 }
 
-function TextAreaField({ label, required, placeholder, value, onChange, maxLength, hint, rows = 4 }) {
+function TextAreaField({ 
+  label, 
+  required, 
+  placeholder, 
+  value, 
+  onChange, 
+  maxLength, 
+  hint, 
+  rows = 4 
+}: {
+  label: string;
+  required?: boolean;
+  placeholder?: string;
+  value: string;
+  onChange: (value: string) => void;
+  maxLength?: number;
+  hint?: string;
+  rows?: number;
+}) {
   const [count, setCount] = useState(value?.length || 0);
   return (
     <div style={{ marginBottom: 20 }}>
@@ -304,7 +396,15 @@ function TextAreaField({ label, required, placeholder, value, onChange, maxLengt
   );
 }
 
-function Card({ children, title, icon }) {
+function Card({ 
+   children,
+   title,
+   icon 
+}: {
+  children: ReactNode;
+  title?: string;
+  icon?: string;
+}) {
   return (
     <div style={{ background: COLORS.white, borderRadius: 16, padding: "24px", boxShadow: COLORS.cardShadow, marginBottom: 20 }}>
       {title && <div style={{ fontSize: 16, fontWeight: 700, color: COLORS.text, marginBottom: 20, display: "flex", alignItems: "center", gap: 8 }}>
@@ -315,7 +415,13 @@ function Card({ children, title, icon }) {
   );
 }
 
-function Step1({ data, setData }) {
+function Step1({ 
+  data, 
+  setData
+}: {
+  data: ProjectData,
+  setData: React.Dispatch<React.SetStateAction<ProjectData>>;
+}) {
   return (
     <>
       <Card title="Informações Gerais" icon="📋">
@@ -329,7 +435,7 @@ function Step1({ data, setData }) {
       </Card>
       <Card title="Imagem / Banner do Projeto" icon="🖼️">
         <div style={{ border: `2px dashed ${COLORS.border}`, borderRadius: 12, padding: 32, textAlign: "center", background: COLORS.bg, cursor: "pointer" }}
-          onClick={() => document.getElementById("banner-upload").click()}>
+          onClick={() => document.getElementById("banner-upload")?.click()}>
           {data.banner
             ? <img src={data.banner} alt="Banner" style={{ maxHeight: 160, borderRadius: 8, objectFit: "cover" }} />
             : <>
@@ -338,7 +444,7 @@ function Step1({ data, setData }) {
               <div style={{ fontSize: 12, color: COLORS.textLight, marginTop: 4 }}>PNG, JPG ou WEBP • Recomendado: 1200x400px</div>
             </>}
           <input id="banner-upload" type="file" accept="image/*" style={{ display: "none" }} onChange={e => {
-            const file = e.target.files[0];
+            const file = e.target.files?.[0];
             if (file) { const url = URL.createObjectURL(file); setData({ ...data, banner: url }); }
           }} />
         </div>
@@ -347,7 +453,13 @@ function Step1({ data, setData }) {
   );
 }
 
-function Step2({ data, setData }) {
+function Step2({ 
+  data,
+  setData 
+}: {
+  data: ProjectData;
+  setData: React.Dispatch<React.SetStateAction<ProjectData>>;
+}) {
   return (
     <>
       <Card title="Descrição Completa" icon="📖">
@@ -387,7 +499,13 @@ function Step2({ data, setData }) {
   );
 }
 
-function Step3({ data, setData }) {
+function Step3({
+  data, 
+  setData 
+}: {
+  data: ProjectData;
+  setData: React.Dispatch<React.SetStateAction<ProjectData>>;
+}) {
   const [newQuestion, setNewQuestion] = useState("");
 
   const addQuestion = () => {
@@ -452,7 +570,13 @@ function Step3({ data, setData }) {
   );
 }
 
-function Step4({ data, setData }) {
+function Step4({ 
+  data, 
+  setData 
+}: {
+  data: ProjectData;
+  setData: React.Dispatch<React.SetStateAction<ProjectData>>;
+}) {
   const [newReq, setNewReq] = useState("");
   return (
     <>
@@ -493,7 +617,9 @@ function Step4({ data, setData }) {
   );
 }
 
-function Step5({ data }) {
+function Step5({ data}: {
+  data: ProjectData;
+}) {
   const fields = [
     { label: "Título", value: data.title },
     { label: "Tipo", value: data.type },
@@ -561,7 +687,7 @@ export default function CadastroProjeto() {
   const [step, setStep] = useState(1);
   const [saved, setSaved] = useState(false);
   const [published, setPublished] = useState(false);
-  const [data, setData] = useState({
+  const [data, setData] = useState<ProjectData>({
     title: "", type: "", area: "", subArea: "", summary: "", banner: "",
     description: "", startDate: "", endDate: "", hours: "", slots: "",
     modality: "", location: "", questions: [], docs: [], stages: [],

@@ -1,5 +1,5 @@
 {
-  "include": ["**/*.ts", "**/*.tsx"],
+  "include": ["**/*.ts", "**/*.tsx", "src/lib/pages/DetalheProjeto/DetalheProjeto.jsx", "src/lib/pages/CadastroProjeto/CadastroProjeto.jsx"],
   "compilerOptions": {
     "target": "ES2022",
     "jsx": "react-jsx",

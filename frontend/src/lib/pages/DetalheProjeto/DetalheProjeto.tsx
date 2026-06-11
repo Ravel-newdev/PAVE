@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import Navbar from "../../components/Navbar/Navbar";
+import { useState, type ReactNode } from "react";
+import Navbar from "#/components/Navbar/Navbar";
 import { 
   FiUsers, FiGlobe, FiCheckCircle, FiShield, 
   FiMessageCircle, FiFacebook, FiLinkedin, FiLink, 
@@ -8,8 +8,43 @@ import {
 import { MdOutlineEco } from "react-icons/md";
 import "./DetalheProjeto.css";
 
+type Stat = {
+  valor: string;
+  label: string;
+  detalhe: string;
+  icon: ReactNode;
+};
+
+type Professor = {
+  nome: string;
+  departamento: string;
+  email: string;
+};
+
+type Projeto = {
+  id: number;
+  titulo: string;
+  resumo: string;
+  tipo: string[];
+  area: string;
+  publicoAlvo: string;
+  modalidade: string;
+  local: string;
+  cargaHoraria: string;
+  periodo: string;
+  vagasTotal: number;
+  vagasPreenchidas: number;
+  stats: Stat[];
+  atividades: string[];
+  beneficios: string[];
+  requisitos: string[];
+  professor: Professor;
+  descricaoCompleta: string;
+  bannerUrl: string | null;
+}; 
+
 /* ─── Dados de exemplo ─ */
-const PROJECT_EXAMPLE = {
+const PROJECT_EXAMPLE: Projeto = {
   id: 1,
   titulo: "Sustentabilidade na Comunidade",
   resumo: "Projeto de educação ambiental voltado para práticas sustentáveis e conscientização comunitária em bairros da cidade.",
@@ -57,7 +92,7 @@ const PROJECT_EXAMPLE = {
 
 
 /* ─── Tab content sections ─ */
-function TabSobre({ projeto }) {
+function TabSobre({ projeto }: { projeto: Projeto }) {
   return (
     <div className="dp-fade-in">
       <h2 className="dp-section-title">Sobre o projeto</h2>
@@ -125,7 +160,7 @@ function TabSobre({ projeto }) {
   );
 }
 
-function TabAtividades({ projeto }) {
+function TabAtividades({ projeto }: { projeto : Projeto }) {
   return (
     <div className="dp-fade-in">
       <h2 className="dp-section-title">Atividades do projeto</h2>
@@ -140,7 +175,7 @@ function TabAtividades({ projeto }) {
   );
 }
 
-function TabRequisitos({ projeto }) {
+function TabRequisitos({ projeto }: {projeto: Projeto }) {
   return (
     <div className="dp-fade-in">
       <h2 className="dp-section-title">Requisitos</h2>
@@ -155,7 +190,7 @@ function TabRequisitos({ projeto }) {
   );
 }
 
-function TabBeneficios({ projeto }) {
+function TabBeneficios({ projeto }: { projeto: Projeto }) {
   return (
     <div className="dp-fade-in">
       <h2 className="dp-section-title">Benefícios</h2>
@@ -172,7 +207,13 @@ function TabBeneficios({ projeto }) {
   );
 }
 
-function TabProfessor({ projeto, onViewProfile }) {
+function TabProfessor({ 
+  projeto, 
+  onViewProfile 
+}: {
+  projeto: Projeto;
+  onViewProfile: () => void;
+}) {
   const p = projeto.professor;
   return (
     <div className="dp-fade-in">
@@ -195,7 +236,17 @@ function TabProfessor({ projeto, onViewProfile }) {
 }
 
 /* ─── Sidebar ─ */
-function Sidebar({ projeto, applied, onApply, onViewProfessor }) {
+function Sidebar({ 
+  projeto, 
+  applied, 
+  onApply, 
+  onViewProfessor 
+}: {
+  projeto: Projeto;
+  applied: boolean;
+  onApply: () => void;
+  onViewProfessor: () => void;
+}) {
   const vagasDisp = projeto.vagasTotal - projeto.vagasPreenchidas;
   const pct = (projeto.vagasPreenchidas / projeto.vagasTotal) * 100;
   const p = projeto.professor;
@@ -278,7 +329,15 @@ function Sidebar({ projeto, applied, onApply, onViewProfessor }) {
 }
 
 /* ─── Main component ───────────────────────────────────────── */
-export default function DetalheProjeto({ projeto = PROJECT_EXAMPLE, onBack, onApply }) {
+export default function DetalheProjeto({ 
+  projeto = PROJECT_EXAMPLE, 
+  onBack, 
+  onApply 
+}: {
+  projeto?: Projeto;
+  onBack?: () => void;
+  onApply?: () => void;
+}) {
   const [tab, setTab] = useState("sobre");
   const [applied, setApplied] = useState(false);
 
@@ -298,7 +357,7 @@ export default function DetalheProjeto({ projeto = PROJECT_EXAMPLE, onBack, onAp
     { id: "professor",  label: "Professor" },
   ];
 
-  const tagColor = (t) => t === "Voluntariado" ? "dp-tag--vol" : t === "Extensão" ? "dp-tag--ext" : "dp-tag--blue";
+  const tagColor = (t: string) => t === "Voluntariado" ? "dp-tag--vol" : t === "Extensão" ? "dp-tag--ext" : "dp-tag--blue";
 
   return (
     <div className="dp-root">

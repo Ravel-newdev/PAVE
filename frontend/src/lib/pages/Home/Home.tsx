@@ -1,11 +1,8 @@
-import React from "react";
-import Navbar from "../../components/Navbar/Navbar";
+import Navbar from "#/components/Navbar/Navbar";
 import heroImg from "../../assets/hero.png";
 import "./Home.css";
-import { useNavigate } from '@tanstack/react-router'
 
-
-function StatusTag({ status }) {
+function StatusTag({ status }: { status: string }) {
   if (status === "ativa") {
     return (
       <span className="status-tag tag-ativa">
