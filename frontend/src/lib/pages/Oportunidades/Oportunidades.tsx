@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import Navbar from "#/components/Navbar/Navbar";
+import Navbar from "@/components/Navbar/Navbar";
 import { 
   FiSearch, FiStar, FiHeart, FiCalendar, FiUsers, 
   FiMapPin, FiMonitor, FiLayers, FiFilter, FiChevronDown, FiZap

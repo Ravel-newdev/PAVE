@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from "react";
-import Navbar from "#/components/Navbar/Navbar";
+import Navbar from "@/components/Navbar/Navbar";
 import { 
   FiUsers, FiGlobe, FiCheckCircle, FiShield, 
   FiMessageCircle, FiFacebook, FiLinkedin, FiLink, 
