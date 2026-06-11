@@ -9,12 +9,18 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as OportunidadesRouteImport } from './routes/oportunidades'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as DetalheProjetoRouteImport } from './routes/detalheProjeto'
 import { Route as CadastroProjetoRouteImport } from './routes/cadastroProjeto'
 import { Route as CadastroRouteImport } from './routes/cadastro'
 import { Route as IndexRouteImport } from './routes/index'
 
+const OportunidadesRoute = OportunidadesRouteImport.update({
+  id: '/oportunidades',
+  path: '/oportunidades',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -47,6 +53,7 @@ export interface FileRoutesByFullPath {
   '/cadastroProjeto': typeof CadastroProjetoRoute
   '/detalheProjeto': typeof DetalheProjetoRoute
   '/login': typeof LoginRoute
+  '/oportunidades': typeof OportunidadesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -54,6 +61,7 @@ export interface FileRoutesByTo {
   '/cadastroProjeto': typeof CadastroProjetoRoute
   '/detalheProjeto': typeof DetalheProjetoRoute
   '/login': typeof LoginRoute
+  '/oportunidades': typeof OportunidadesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -62,6 +70,7 @@ export interface FileRoutesById {
   '/cadastroProjeto': typeof CadastroProjetoRoute
   '/detalheProjeto': typeof DetalheProjetoRoute
   '/login': typeof LoginRoute
+  '/oportunidades': typeof OportunidadesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -71,8 +80,15 @@ export interface FileRouteTypes {
     | '/cadastroProjeto'
     | '/detalheProjeto'
     | '/login'
+    | '/oportunidades'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/cadastro' | '/cadastroProjeto' | '/detalheProjeto' | '/login'
+  to:
+    | '/'
+    | '/cadastro'
+    | '/cadastroProjeto'
+    | '/detalheProjeto'
+    | '/login'
+    | '/oportunidades'
   id:
     | '__root__'
     | '/'
@@ -80,6 +96,7 @@ export interface FileRouteTypes {
     | '/cadastroProjeto'
     | '/detalheProjeto'
     | '/login'
+    | '/oportunidades'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -88,10 +105,18 @@ export interface RootRouteChildren {
   CadastroProjetoRoute: typeof CadastroProjetoRoute
   DetalheProjetoRoute: typeof DetalheProjetoRoute
   LoginRoute: typeof LoginRoute
+  OportunidadesRoute: typeof OportunidadesRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/oportunidades': {
+      id: '/oportunidades'
+      path: '/oportunidades'
+      fullPath: '/oportunidades'
+      preLoaderRoute: typeof OportunidadesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -136,6 +161,7 @@ const rootRouteChildren: RootRouteChildren = {
   CadastroProjetoRoute: CadastroProjetoRoute,
   DetalheProjetoRoute: DetalheProjetoRoute,
   LoginRoute: LoginRoute,
+  OportunidadesRoute: OportunidadesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

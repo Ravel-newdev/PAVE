@@ -2,8 +2,7 @@ import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 
-// import appCss from '#/styles.css?url'
-import AppCss from "#/App.css?url"
+import appCss from '#/styles.css?url'
 import Indexcss from "#/index.css?url"
 import { Layout } from '@/lib/layout'
 
@@ -100,12 +99,12 @@ export const Route = createRootRoute({
     links: [
       {
         rel: 'stylesheet',
-        href: AppCss
+        href: Indexcss
       },
 
       {
         rel: 'stylesheet',
-        href: Indexcss
+        href: appCss
       },
 
       {
