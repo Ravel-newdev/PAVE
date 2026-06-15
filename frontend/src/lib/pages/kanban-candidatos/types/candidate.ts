@@ -1,4 +1,12 @@
+import type { DotColor } from "./project";
+
 export type CandidateStatus = "inscritos" | "avaliacao" | "aprovados" | "rejeitados";
+
+export type Column = {
+  id: CandidateStatus;
+  title: string;
+  dot: DotColor;
+};
 
 
 export type Candidate = {

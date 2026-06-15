@@ -15,15 +15,9 @@ import { ProfessorNavbar } from "@/lib/layout/componente-professor/ProfessorNavb
 import "./KanbanCandidatos.css";
 import { getIdFromUrl, paveApi } from "../../services/paveApi";
 
-import type { Candidate, CandidateStatus } from "./types/candidate";
-import type { Project, DrawerTab, DotColor  } from "./types/project";
+import type { Candidate, CandidateStatus, Column } from "./types/candidate";
+import type { Project, DrawerTab } from "./types/project";
 import { initialCandidates } from "./data/candidates";
-
-type Column = {
-  id: CandidateStatus;
-  title: string;
-  dot: DotColor;
-};
 
 const project: Project = {
   id: 1,
