@@ -11,7 +11,7 @@ import {
   Trash2,
   Users,
 } from "lucide-react";
-import { ProfessorNavbar } from "../../components/ProfessorNavbar";
+import { ProfessorNavbar } from "../../layout/componente-professor/ProfessorNavbar";
 import "./ProjetoForm.css";
 import { extractId, getIdFromUrl, paveApi } from "../../services/paveApi";
 

@@ -11,7 +11,7 @@ import {
   Users,
   X,
 } from "lucide-react";
-import { ProfessorNavbar } from "../../components/ProfessorNavbar";
+import { ProfessorNavbar } from "../../layout/componente-professor/ProfessorNavbar";
 import "./KanbanCandidatos.css";
 import { getIdFromUrl, paveApi } from "../../services/paveApi";
 
