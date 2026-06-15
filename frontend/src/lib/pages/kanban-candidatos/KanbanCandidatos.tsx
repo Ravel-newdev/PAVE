@@ -16,6 +16,7 @@ import "./KanbanCandidatos.css";
 import { getIdFromUrl, paveApi } from "../../services/paveApi";
 
 import type { Candidate, CandidateStatus, Column } from "./types/candidate";
+import { normalizeStatus, backendStatus, statusLabel, transitionHistoryLabel, cardDateLabel } from "./utils/status";
 import type { Project, DrawerTab } from "./types/project";
 import { initialCandidates } from "./data/candidates";
 
@@ -36,27 +37,6 @@ const columns: Column[] = [
   { id: "aprovados", title: "Aprovados", dot: "green" },
   { id: "rejeitados", title: "Rejeitados", dot: "red" },
 ];
-
-
-function normalizeStatus(raw: unknown): CandidateStatus {
-  const value = String(raw ?? "").toLowerCase();
-
-  if (value.includes("avali")) return "avaliacao";
-  if (value.includes("aprov")) return "aprovados";
-  if (value.includes("rejeit")) return "rejeitados";
-  return "inscritos";
-}
-
-function backendStatus(status: CandidateStatus) {
-  const labels: Record<CandidateStatus, string> = {
-    inscritos: "INSCRITO",
-    avaliacao: "EM_AVALIACAO",
-    aprovados: "APROVADO",
-    rejeitados: "REJEITADO",
-  };
-
-  return labels[status];
-}
 
 function readString(data: Record<string, unknown>, keys: string[], fallback = "") {
   for (const key of keys) {
@@ -96,53 +76,10 @@ function mapCandidate(raw: unknown, index: number): Candidate {
   };
 }
 
-function statusLabel(status: CandidateStatus): string {
-  const labels: Record<CandidateStatus, string> = {
-    inscritos: "Inscrita",
-    avaliacao: "Em avaliação",
-    aprovados: "Aprovada",
-    rejeitados: "Rejeitada",
-  };
-
-  return labels[status];
-}
-
-
-function transitionHistoryLabel(nextStatus: CandidateStatus): string {
-  const now = new Date().toLocaleString("pt-BR", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-
-  const labels: Record<CandidateStatus, string> = {
-    inscritos: "Movida para Inscritos",
-    avaliacao: "Movida para Em avaliação",
-    aprovados: "Aprovada",
-    rejeitados: "Rejeitada",
-  };
-
-  return `${labels[nextStatus]} em ${now}`;
-}
-
-function cardDateLabel(nextStatus: CandidateStatus): string {
-  const labels: Record<CandidateStatus, string> = {
-    inscritos: "Movido agora",
-    avaliacao: "Movido agora",
-    aprovados: "Aprovado agora",
-    rejeitados: "Rejeitado agora",
-  };
-
-  return labels[nextStatus];
-}
 
 function Header() {
   return <ProfessorNavbar active="projetos" />;
 }
-
-type ProjectSummaryProps = {};
 
 function ProjectSummary() {
   const navigate = useNavigate();
