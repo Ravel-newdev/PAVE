@@ -1,3 +1,4 @@
+import { Link, useNavigate, useLocation } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import type { ChangeEvent, DragEvent } from "react";
 import {
@@ -392,14 +393,17 @@ function Header() {
   return <ProfessorNavbar active="projetos" />;
 }
 
-type ProjectSummaryProps = {
-  activeTab: ActiveTab;
-  onTabChange: (tab: ActiveTab) => void;
-};
+type ProjectSummaryProps = {};
 
-function ProjectSummary({ activeTab, onTabChange }: ProjectSummaryProps) {
+function ProjectSummary() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const isOverview = location.pathname === "/projeto-visao-geral";
+  const isCandidates = location.pathname === "/kanban-candidatos";
+
   function handleEditProject() {
-    window.location.href = `/editar-projeto?id=${project.id}`;
+    navigate({ to: "/editar-projeto", search: { id: project.id } as never });
   }
 
   function handleExport() {
@@ -426,7 +430,7 @@ function ProjectSummary({ activeTab, onTabChange }: ProjectSummaryProps) {
   return (
     <section className="kc-project-section">
       <div className="kc-breadcrumb">
-        <a href="#">Projetos</a>
+        <Link to="/projeto-visao-geral">Projetos</Link>
         <span>›</span>
         <span>{project.title}</span>
       </div>
@@ -470,20 +474,21 @@ function ProjectSummary({ activeTab, onTabChange }: ProjectSummaryProps) {
       </div>
 
       <div className="kc-tabs" role="tablist" aria-label="Abas do projeto">
-        <button
-          className={activeTab === "overview" ? "active" : ""}
-          onClick={() => onTabChange("overview")}
-          type="button"
+        <Link
+          to="/projeto-visao-geral"
+          search={{ id: project.id } as never}
+          className={`kc-tab ${isOverview ? "active" : ""}`}
         >
           Visão geral
-        </button>
-        <button
-          className={activeTab === "candidates" ? "active" : ""}
-          onClick={() => onTabChange("candidates")}
-          type="button"
+        </Link>
+
+        <Link
+          to="/kanban-candidatos"
+          search={{ processoId: project.id } as never}
+          className={`kc-tab ${isCandidates ? "active" : ""}`}
         >
           Candidatos
-        </button>
+        </Link>
       </div>
     </section>
   );
@@ -668,7 +673,6 @@ function CandidateDrawer({ candidate, onClose, onMove }: CandidateDrawerProps) {
 }
 
 export default function KanbanCandidatos() {
-  const [activeTab, setActiveTab] = useState<ActiveTab>("candidates");
   const [query, setQuery] = useState<string>("");
   const processoId = getIdFromUrl("1");
   const [candidates, setCandidates] = useState<Candidate[]>(initialCandidates);
@@ -799,14 +803,8 @@ export default function KanbanCandidatos() {
       <Header />
 
       <main className="kc-main">
-        <ProjectSummary activeTab={activeTab} onTabChange={setActiveTab} />
+        <ProjectSummary />
 
-        {activeTab === "overview" ? (
-          <section className="kc-overview-placeholder">
-            <h2>Visão geral do projeto</h2>
-            <p>Esta aba pode reutilizar a tela de detalhes do projeto depois.</p>
-          </section>
-        ) : (
           <section className="kc-candidates-section">
             {loadingCandidates && <p className="kc-loading-message">Carregando candidatos do backend...</p>}
             <label className="kc-search">
@@ -850,7 +848,6 @@ export default function KanbanCandidatos() {
               ))}
             </div>
           </section>
-        )}
       </main>
 
       <CandidateDrawer

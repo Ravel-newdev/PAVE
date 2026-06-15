@@ -1,3 +1,4 @@
+import { useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import {
   Building2,
@@ -307,6 +308,7 @@ export default function ProjetoForm({ mode = "create" }: { mode?: ProjetoFormMod
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(isEdit);
   const projetoId = getIdFromUrl("1");
+  const navigate = useNavigate();
 
   const totalCaracteresDescricao = formData.descricao.length;
   const totalCaracteresTitulo = formData.titulo.length;
@@ -464,7 +466,7 @@ export default function ProjetoForm({ mode = "create" }: { mode?: ProjetoFormMod
       }
 
       alert(status === "rascunho" ? "Rascunho salvo com sucesso." : isEdit ? "Projeto atualizado com sucesso." : "Projeto publicado com sucesso.");
-      window.location.href = `/projeto-visao-geral?id=${idCriado}`;
+      navigate({ to: "/projeto-visao-geral", search: { id: idCriado } as never });
     } catch (error) {
       console.error("Erro ao salvar projeto", error, payloadPreview);
       alert("Não foi possível salvar. Verifique se você está logada e se o backend está rodando.");

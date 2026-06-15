@@ -1,36 +1,49 @@
+import { Link, useLocation } from "@tanstack/react-router";
 import { Bell, Briefcase, Home } from "lucide-react";
 import "./navbar.css";
 
-type ProfessorNavbarProps = {
-  active?: "inicio" | "projetos";
-};
+export function ProfessorNavbar() {
+  const location = useLocation();
 
-export function ProfessorNavbar({ active = "projetos" }: ProfessorNavbarProps) {
+  const isInicio = location.pathname === "/";
+  
+  const isProjetos =
+    location.pathname.includes("/projeto-visao-geral") ||
+    location.pathname.includes("/kanban-candidatos") ||
+    location.pathname.includes("/projeto-form");
+
   return (
     <nav className="navbar">
       <div className="navbar-left">
-        <a className="logo" href="/">
+        <Link className="logo" to="/">
           <img className="logo-img" src="/logo.png" alt="PAVE" />
-        </a>
+        </Link>
 
         <div className="nav-links">
-          <a className={`nav-link ${active === "inicio" ? "active" : ""}`} href="/">
+          <Link
+            to="/"
+            className={`nav-link ${isInicio ? "active" : ""}`}
+          >
             <Home size={18} />
             <span>Início</span>
-          </a>
+          </Link>
 
-          <a
-            className={`nav-link ${active === "projetos" ? "active" : ""}`}
-            href="/projeto-visao-geral"
+          <Link
+            to="/projeto-visao-geral"
+            className={`nav-link ${isProjetos ? "active" : ""}`}
           >
             <Briefcase size={18} />
             <span>Projetos</span>
-          </a>
+          </Link>
         </div>
       </div>
 
       <div className="navbar-right">
-        <button className="notif-btn" type="button" aria-label="Notificações">
+        <button
+          className="notif-btn"
+          type="button"
+          aria-label="Notificações"
+        >
           <Bell size={20} color="#fff" />
           <span className="notif-badge">3</span>
         </button>
@@ -41,6 +54,7 @@ export function ProfessorNavbar({ active = "projetos" }: ProfessorNavbarProps) {
             src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=80&q=80"
             alt="Prof. Carlos"
           />
+
           <div className="user-info">
             <div className="user-name">Prof. Carlos</div>
           </div>

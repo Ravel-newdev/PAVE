@@ -251,11 +251,11 @@ select {
 .kc-tabs {
   display: flex;
   gap: 30px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  border-bottom: 1px solid #d9e2ef;
   margin-top: 42px;
 }
 
-.kc-tabs button {
+.kc-tab {
   padding: 0 20px 18px;
   background: transparent;
   border: 0;
@@ -263,11 +263,16 @@ select {
   color: #42526a;
   font-weight: 700;
   cursor: pointer;
+  text-decoration: none;
 }
 
-.kc-tabs button.active {
-  color: #ffffff;
+.kc-tab.active {
+  color: #f59e0b !important;
   border-bottom-color: #f59e0b;
+}
+
+.kc-tab.active span {
+  color: #f59e0b !important;
 }
 
 .kc-candidates-section {
@@ -793,9 +798,7 @@ select {
 .kc-main .kc-button-primary,
 .kc-main .kc-button-primary *,
 .kc-main .kc-status-badge,
-.kc-main .kc-status-badge *,
-.kc-main .kc-tab.active,
-.kc-main .kc-tab.active * {
+.kc-main .kc-status-badge * {
   color: #ffffff !important;
 }
 

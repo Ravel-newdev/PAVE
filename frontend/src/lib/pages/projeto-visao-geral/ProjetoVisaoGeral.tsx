@@ -1,3 +1,4 @@
+import { Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState, type ReactNode } from "react";
 import {
   BarChart3,
@@ -106,6 +107,7 @@ function mapProjeto(raw: unknown) {
 export default function ProjetoVisaoGeral() {
   const projetoId = getIdFromUrl("1");
   const [currentProjeto, setCurrentProjeto] = useState(projeto);
+  const navigate = useNavigate();
 
   useEffect(() => {
     let cancelled = false;
@@ -127,7 +129,7 @@ export default function ProjetoVisaoGeral() {
   }, [projetoId]);
 
   const handleEditProject = () => {
-    window.location.href = `/editar-projeto?id=${projetoId}`;
+    navigate({ to: "/editar-projeto", search: { id: projetoId } as never });
   };
 
   const handleExport = () => {
@@ -155,9 +157,6 @@ export default function ProjetoVisaoGeral() {
     }
   };
 
-  const abrirCandidatos = () => {
-    window.location.href = `/kanban-candidatos?processoId=${projetoId}`;
-  };
 
   return (
     <main className="po-page">
@@ -165,7 +164,7 @@ export default function ProjetoVisaoGeral() {
 
       <div className="po-container">
         <div className="po-breadcrumb">
-          <a href="#">Projetos</a>
+          <Link to="/projeto-visao-geral">Projetos</Link>
           <span>›</span>
           <span>{currentProjeto.titulo}</span>
         </div>
@@ -203,8 +202,8 @@ export default function ProjetoVisaoGeral() {
         </section>
 
         <div className="po-tabs" role="tablist">
-          <button className="po-tab po-tab-active" type="button">Visão geral</button>
-          <button className="po-tab" type="button" onClick={abrirCandidatos}>Candidatos</button>
+          <Link className="po-tab po-tab-active" to="/projeto-visao-geral" search={{ id: projetoId } as never}>Visão geral</Link>
+          <Link className="po-tab" to="/kanban-candidatos" search={{ processoId: projetoId } as never}>Candidatos</Link>
         </div>
 
         <section className="po-grid-main">

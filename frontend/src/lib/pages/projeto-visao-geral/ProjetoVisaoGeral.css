@@ -536,3 +536,14 @@
   color: var(--po-text) !important;
   background-color: #ffffff;
 }
+
+.po-tabs .po-tab {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.po-container .po-tabs .po-tab-active,
+.po-container .po-tabs .po-tab-active:visited {
+  color: #f59e0b !important;
+}
