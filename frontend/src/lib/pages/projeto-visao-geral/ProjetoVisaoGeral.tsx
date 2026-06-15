@@ -17,7 +17,7 @@ import {
   Users,
   XCircle,
 } from "lucide-react";
-import { ProfessorNavbar } from "../../layout/componente-professor/ProfessorNavbar";
+import { ProfessorNavbar } from "@/lib/layout/componente-professor/ProfessorNavbar";
 import "./ProjetoVisaoGeral.css";
 import { getIdFromUrl, paveApi } from "../../services/paveApi";
 

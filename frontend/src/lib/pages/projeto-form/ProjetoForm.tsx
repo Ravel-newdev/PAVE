@@ -1,8 +1,6 @@
 import { useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import {
-  Building2,
-  Calendar,
   ClipboardList,
   FileText,
   Plus,
@@ -11,7 +9,7 @@ import {
   Trash2,
   Users,
 } from "lucide-react";
-import { ProfessorNavbar } from "../../layout/componente-professor/ProfessorNavbar";
+import { ProfessorNavbar } from "@/lib/layout/componente-professor/ProfessorNavbar";
 import "./ProjetoForm.css";
 import { extractId, getIdFromUrl, paveApi } from "../../services/paveApi";
 
