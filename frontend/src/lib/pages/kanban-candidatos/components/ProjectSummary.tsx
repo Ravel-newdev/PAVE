@@ -8,9 +8,9 @@ import {
   Users,
 } from "lucide-react";
 
-import { initialCandidates } from "./data/candidates";
-import type { Project } from "./types/project";
-import { statusLabel } from "./utils/status";
+import { initialCandidates } from "../data/candidates";
+import type { Project } from "../types/project";
+import { statusLabel } from "../utils/status";
 
 type ProjectSummaryProps = {
   project: Project;

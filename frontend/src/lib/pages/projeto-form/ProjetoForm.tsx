@@ -1,5 +1,5 @@
 import { useNavigate } from "@tanstack/react-router";
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   ClipboardList,
   FileText,
@@ -12,291 +12,38 @@ import {
 import { ProfessorNavbar } from "@/lib/layout/componente-professor/ProfessorNavbar";
 import "./ProjetoForm.css";
 import { extractId, getIdFromUrl, paveApi } from "../../services/paveApi";
-
-type ProjetoFormMode = "create" | "edit";
-
-type TipoPergunta = "resposta-curta" | "paragrafo" | "multipla-escolha" | "sim-nao";
-
-type Pergunta = {
-  id: number;
-  texto: string;
-  tipo: TipoPergunta;
-  opcoes: string[];
-  obrigatoria: boolean;
-};
-
-type DocumentoSolicitado = {
-  id: "historico" | "curriculo" | "cartaMotivacao" | "comprovanteMatricula";
-  label: string;
-  descricao: string;
-  selecionado: boolean;
-};
-
-type FormData = {
-  titulo: string;
-  area: string;
-  unidade: string;
-  descricao: string;
-  palavrasChave: string;
-  vagasBolsistas: string;
-  vagasVoluntarios: string;
-  cargaHoraria: string;
-  inscricaoInicio: string;
-  inscricaoFim: string;
-  divulgacaoResultado: string;
-  mensagemCandidatos: string;
-};
-
-const initialCreateData: FormData = {
-  titulo: "",
-  area: "",
-  unidade: "",
-  descricao: "",
-  palavrasChave: "",
-  vagasBolsistas: "",
-  vagasVoluntarios: "",
-  cargaHoraria: "",
-  inscricaoInicio: "",
-  inscricaoFim: "",
-  divulgacaoResultado: "",
-  mensagemCandidatos: "",
-};
-
-const initialEditData: FormData = {
-  titulo: "Apoio ao Ensino de Matemática",
-  area: "Educação",
-  unidade: "Instituto de Matemática",
-  descricao:
-    "O projeto tem como objetivo apoiar o processo de ensino e aprendizagem em Matemática por meio de monitorias, oficinas e materiais didáticos, contribuindo para a melhoria do desempenho acadêmico dos estudantes.",
-  palavrasChave: "matemática, ensino, monitoria, aprendizagem, educação",
-  vagasBolsistas: "12",
-  vagasVoluntarios: "8",
-  cargaHoraria: "12h semanais",
-  inscricaoInicio: "2025-06-15",
-  inscricaoFim: "2025-06-30",
-  divulgacaoResultado: "2025-07-05",
-  mensagemCandidatos:
-    "Olá! Responda o formulário com atenção. Entraremos em contato após a etapa de avaliação.",
-};
-
-const initialDocumentos: DocumentoSolicitado[] = [
-  {
-    id: "historico",
-    label: "Histórico escolar",
-    descricao: "Solicitar envio do histórico acadêmico.",
-    selecionado: true,
-  },
-  {
-    id: "curriculo",
-    label: "Currículo",
-    descricao: "Solicitar currículo ou resumo de experiências.",
-    selecionado: true,
-  },
-  {
-    id: "cartaMotivacao",
-    label: "Carta de motivação",
-    descricao: "Solicitar texto explicando o interesse no projeto.",
-    selecionado: false,
-  },
-  {
-    id: "comprovanteMatricula",
-    label: "Comprovante de matrícula",
-    descricao: "Solicitar comprovante atual do aluno.",
-    selecionado: false,
-  },
-];
-
-const perguntasEdit: Pergunta[] = [
-  {
-    id: 1,
-    texto: "Qual seu semestre atual?",
-    tipo: "multipla-escolha",
-    opcoes: ["1º", "2º", "3º", "4º", "5º", "6º", "7º", "8º", "N/A"],
-    obrigatoria: true,
-  },
-  {
-    id: 2,
-    texto: "Você tem IRA maior ou igual a 7?",
-    tipo: "sim-nao",
-    opcoes: ["Sim", "Não"],
-    obrigatoria: true,
-  },
-  {
-    id: 3,
-    texto: "Descreva sua experiência com monitoria ou ensino.",
-    tipo: "paragrafo",
-    opcoes: [],
-    obrigatoria: false,
-  },
-];
-
-const areaOptions = ["Educação", "Meio Ambiente", "Saúde", "Cultura", "Tecnologia", "Comunicação"];
-const unidadeOptions = [
-  "Instituto de Matemática",
-  "Instituto de Ciências do Mar",
-  "Faculdade de Medicina",
-  "Centro de Tecnologia",
-  "Pró-Reitoria de Extensão",
-];
-const cargaOptions = ["4h semanais", "8h semanais", "12h semanais", "16h semanais", "20h semanais"];
-
-const modelosPergunta: Omit<Pergunta, "id">[] = [
-  {
-    texto: "Qual seu semestre atual?",
-    tipo: "multipla-escolha",
-    opcoes: ["1º", "2º", "3º", "4º", "5º", "6º", "7º", "8º", "N/A"],
-    obrigatoria: true,
-  },
-  {
-    texto: "Você tem IRA maior ou igual a 7?",
-    tipo: "sim-nao",
-    opcoes: ["Sim", "Não"],
-    obrigatoria: true,
-  },
-  {
-    texto: "Você tem experiência com a área do projeto?",
-    tipo: "paragrafo",
-    opcoes: [],
-    obrigatoria: false,
-  },
-  {
-    texto: "Por que você deseja participar deste projeto?",
-    tipo: "paragrafo",
-    opcoes: [],
-    obrigatoria: true,
-  },
-];
-
-const tipoPerguntaLabels: Record<TipoPergunta, string> = {
-  "resposta-curta": "Resposta curta",
-  paragrafo: "Parágrafo",
-  "multipla-escolha": "Múltipla escolha",
-  "sim-nao": "Sim/Não",
-};
+import { FieldLabel, Section, SelectField } from "./components/FormFields";
+import {
+  areaOptions,
+  cargaOptions,
+  initialCreateData,
+  initialDocumentos,
+  initialEditData,
+  modelosPergunta,
+  perguntasEdit,
+  tipoPerguntaLabels,
+  unidadeOptions,
+} from "./constants/projetoFormConstants";
+import type { DocumentoSolicitado, FormData, Pergunta, ProjetoFormMode, TipoPergunta } from "./types/projetoFormTypes";
+import {
+  buildProcessoPayload,
+  buildProjetoPayload,
+  createPergunta,
+  mapProjetoToFormData,
+} from "./utils/projetoFormUtils";
 
 function ProfessorTopbar() {
-  return <ProfessorNavbar active="projetos" />;
-}
-
-function FieldLabel({ children, required = false }: { children: ReactNode; required?: boolean }) {
-  return (
-    <label className="pf-label">
-      {children} {required && <span>*</span>}
-    </label>
-  );
-}
-
-function SelectField({ value, onChange, placeholder, options }: {
-  value: string;
-  onChange: (value: string) => void;
-  placeholder: string;
-  options: string[];
-}) {
-  return (
-    <select value={value} onChange={(event) => onChange(event.target.value)} className="pf-input">
-      <option value="">{placeholder}</option>
-      {options.map((option) => (
-        <option value={option} key={option}>{option}</option>
-      ))}
-    </select>
-  );
-}
-
-function Section({ icon, title, children }: { icon: ReactNode; title: string; children: ReactNode }) {
-  return (
-    <section className="pf-card">
-      <h2 className="pf-section-title">
-        <span>{icon}</span>
-        {title}
-      </h2>
-      {children}
-    </section>
-  );
-}
-
-function createPergunta(tipo: TipoPergunta = "resposta-curta"): Pergunta {
-  return {
-    id: Date.now() + Math.floor(Math.random() * 1000),
-    texto: "",
-    tipo,
-    opcoes: tipo === "sim-nao" ? ["Sim", "Não"] : tipo === "multipla-escolha" ? [""] : [],
-    obrigatoria: false,
-  };
+  return <ProfessorNavbar />;
 }
 
 
-function readText(data: Record<string, unknown>, keys: string[], fallback = "") {
-  for (const key of keys) {
-    const value = data[key];
-    if (typeof value === "string" || typeof value === "number") return String(value);
-  }
-  return fallback;
-}
 
-function mapProjetoToFormData(raw: unknown): Partial<FormData> {
-  const data = (raw && typeof raw === "object" ? raw : {}) as Record<string, unknown>;
-  const nested = typeof data.data === "object" && data.data ? (data.data as Record<string, unknown>) : data;
 
-  return {
-    titulo: readText(nested, ["titulo", "title", "nome"], initialEditData.titulo),
-    area: readText(nested, ["area", "areaTematica", "area_tematica", "tag"], initialEditData.area),
-    unidade: readText(nested, ["unidade", "unidadeResponsavel", "unidade_responsavel"], initialEditData.unidade),
-    descricao: readText(nested, ["descricao", "description"], initialEditData.descricao),
-    palavrasChave: Array.isArray(nested.palavrasChave)
-      ? nested.palavrasChave.join(", ")
-      : readText(nested, ["palavrasChave", "palavras_chave", "tags"], initialEditData.palavrasChave),
-    vagasBolsistas: readText(nested, ["vagasBolsistas", "vagas_bolsistas", "qtd_bolsistas"], initialEditData.vagasBolsistas),
-    vagasVoluntarios: readText(nested, ["vagasVoluntarios", "vagas_voluntarios", "qtd_voluntarios"], initialEditData.vagasVoluntarios),
-    cargaHoraria: readText(nested, ["cargaHoraria", "carga_horaria", "cargaHorariaSemanal"], initialEditData.cargaHoraria),
-  };
-}
 
-function buildProjetoPayload(formData: FormData, status: "rascunho" | "ativo") {
-  const palavrasChave = formData.palavrasChave
-    .split(",")
-    .map((palavra) => palavra.trim())
-    .filter(Boolean);
 
-  return {
-    titulo: formData.titulo,
-    descricao: formData.descricao,
-    area: formData.area,
-    areaTematica: formData.area,
-    unidade: formData.unidade,
-    unidadeResponsavel: formData.unidade,
-    vagasBolsistas: Number(formData.vagasBolsistas || 0),
-    vagasVoluntarios: Number(formData.vagasVoluntarios || 0),
-    cargaHoraria: formData.cargaHoraria,
-    cargaHorariaSemanal: formData.cargaHoraria,
-    palavrasChave,
-    status,
-  };
-}
 
-function buildProcessoPayload(
-  projetoId: string | number,
-  formData: FormData,
-  documentos: DocumentoSolicitado[],
-  perguntas: Pergunta[],
-) {
-  return {
-    projetoId,
-    idProjeto: projetoId,
-    dataInicioInscricao: formData.inscricaoInicio,
-    dataFimInscricao: formData.inscricaoFim,
-    dataResultado: formData.divulgacaoResultado,
-    mensagemCandidatos: formData.mensagemCandidatos,
-    documentosSolicitados: documentos
-      .filter((documento) => documento.selecionado)
-      .map((documento) => documento.id),
-    formulario: perguntas.map((pergunta) => ({
-      texto: pergunta.texto,
-      tipo: pergunta.tipo,
-      opcoes: pergunta.opcoes.filter(Boolean),
-      obrigatoria: pergunta.obrigatoria,
-    })),
-  };
-}
+
+
 
 export default function ProjetoForm({ mode = "create" }: { mode?: ProjetoFormMode }) {
   const isEdit = mode === "edit";

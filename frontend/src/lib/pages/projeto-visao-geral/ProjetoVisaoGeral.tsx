@@ -1,9 +1,8 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useState } from "react";
 import {
   BarChart3,
   Briefcase,
-  Building2,
   Calendar,
   CheckCircle2,
   Download,
@@ -17,92 +16,19 @@ import {
   Users,
   XCircle,
 } from "lucide-react";
-import { ProfessorNavbar } from "@/lib/layout/componente-professor/ProfessorNavbar";
 import "./ProjetoVisaoGeral.css";
 import { getIdFromUrl, paveApi } from "../../services/paveApi";
-
-const projeto = {
-  id: 1,
-  titulo: "Apoio ao Ensino de Matemática",
-  status: "Ativo",
-  area: "Educação",
-  inscritos: 18,
-  vagas: "12/20 vagas",
-  prazo: "Inscrições até 30/06/2025",
-  descricao:
-    "O projeto tem como objetivo apoiar o processo de ensino e aprendizagem em Matemática por meio de monitorias, oficinas e materiais didáticos, contribuindo para a melhoria do desempenho acadêmico dos estudantes.",
-  objetivos: [
-    "Apoiar estudantes com dificuldades em conteúdos de Matemática.",
-    "Promover monitorias semanais presenciais.",
-    "Desenvolver materiais didáticos complementares.",
-    "Estimular o aprendizado colaborativo entre os estudantes.",
-  ],
-  palavrasChave: ["matemática", "ensino", "monitoria", "aprendizagem", "educação"],
-  resumoSelecao: {
-    inscritos: 24,
-    avaliacao: 12,
-    aprovados: 2,
-    rejeitados: 4,
-  },
-  cronograma: [
-    ["Início das inscrições", "15/06/2025"],
-    ["Fim das inscrições", "30/06/2025"],
-    ["Período de avaliação", "01/07/2025 a 04/07/2025"],
-    ["Divulgação do resultado", "05/07/2025"],
-    ["Início das atividades", "07/07/2025"],
-  ],
-  informacoes: [
-    { label: "Área temática", value: "Educação", icon: <Building2 size={22} /> },
-    { label: "Coordenador", value: "Prof. Carlos Almeida", icon: <Users size={22} /> },
-    { label: "Unidade responsável", value: "Instituto de Matemática", icon: <Calendar size={22} /> },
-    { label: "Vagas", value: "12 bolsas + 8 voluntárias", icon: <Briefcase size={22} /> },
-    { label: "Carga horária", value: "12h semanais", icon: <Timer size={22} /> },
-  ],
-};
-
-function ProfessorTopbar() {
-  return <ProfessorNavbar active="projetos" />;
-}
-
-function StatCard({ icon, value, label, variant }: { icon: ReactNode; value: number; label: string; variant: "blue" | "amber" | "green" | "red" }) {
-  return (
-    <div className={`po-stat po-stat-${variant}`}>
-      <span>{icon}</span>
-      <strong>{value}</strong>
-      <small>{label}</small>
-    </div>
-  );
-}
+import { ProfessorTopbar } from "./components/ProfessorTopbar";
+import { StatCard } from "./components/StatCard";
+import { projeto } from "./constants/projetoVisaoData";
+import { mapProjeto } from "./utils/projetoMapper";
 
 
-function textFrom(data: Record<string, unknown>, keys: string[], fallback: string) {
-  for (const key of keys) {
-    const value = data[key];
-    if (typeof value === "string" || typeof value === "number") return String(value);
-  }
-  return fallback;
-}
 
-function mapProjeto(raw: unknown) {
-  const root = (raw && typeof raw === "object" ? raw : {}) as Record<string, unknown>;
-  const data = typeof root.data === "object" && root.data ? (root.data as Record<string, unknown>) : root;
-  const vagasBolsistas = Number(data.vagasBolsistas ?? data.vagas_bolsistas ?? 12);
-  const vagasVoluntarios = Number(data.vagasVoluntarios ?? data.vagas_voluntarios ?? 8);
-  const palavras = data.palavrasChave ?? data.palavras_chave ?? data.tags;
 
-  return {
-    ...projeto,
-    id: Number(data.id ?? data.projetoId ?? projeto.id),
-    titulo: textFrom(data, ["titulo", "title", "nome"], projeto.titulo),
-    status: textFrom(data, ["status"], projeto.status),
-    area: textFrom(data, ["area", "areaTematica", "area_tematica"], projeto.area),
-    inscritos: Number(data.inscritos ?? data.totalInscritos ?? projeto.inscritos),
-    vagas: `${vagasBolsistas}/${vagasBolsistas + vagasVoluntarios} vagas`,
-    prazo: textFrom(data, ["prazo", "dataFimInscricao", "fim_inscricoes"], projeto.prazo),
-    descricao: textFrom(data, ["descricao", "description"], projeto.descricao),
-    palavrasChave: Array.isArray(palavras) ? palavras.map(String) : projeto.palavrasChave,
-  };
-}
+
+
+
 
 export default function ProjetoVisaoGeral() {
   const projetoId = getIdFromUrl("1");
