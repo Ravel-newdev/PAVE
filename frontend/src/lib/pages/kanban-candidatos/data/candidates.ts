@@ -71,7 +71,7 @@ export const initialCandidates: Candidate[] = [
     availability: "8 horas semanais (tarde)",
     experience: "Participei de ações voluntárias em ambiente escolar.",
     documents: ["Histórico acadêmico.pdf"],
-    history: ["Inscrição recebida em 22/05/2025", "Status atual: Inscrita"],
+    history: ["Inscrição recebida em 22/05/2025", "Status atual: Inscrito"],
   },
   {
     id: 5,
@@ -178,7 +178,7 @@ export const initialCandidates: Candidate[] = [
     availability: "20 horas semanais (tarde)",
     experience: "Tenho experiência com atividades de ensino e metodologias colaborativas.",
     documents: ["Histórico acadêmico.pdf", "Currículo.pdf"],
-    history: ["Inscrição recebida em 18/05/2025", "Aprovada em 25/05/2025"],
+    history: ["Inscrição recebida em 18/05/2025", "Aprovado em 25/05/2025"],
   },
   {
     id: 11,

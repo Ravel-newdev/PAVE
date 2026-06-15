@@ -354,42 +354,39 @@ select {
   color: #34435b;
 }
 
-.kc-dot {
-  width: 16px;
-  height: 16px;
-  display: inline-block;
-  border-radius: 999px;
-  position: relative;
+.kc-column-header strong {
+  min-width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #0f172a;
+  font-weight: 800;
 }
 
-.kc-dot::after {
-  content: "";
-  position: absolute;
-  inset: 5px;
-  border-radius: inherit;
-  background: currentColor;
+.kc-dot {
+  width: 12px;
+  height: 12px;
+  display: inline-block;
+  border-radius: 999px;
+  flex-shrink: 0;
 }
 
 .kc-dot.blue {
-  background: #dbeafe;
-  color: #0b76d1;
+  background-color: #2563eb;
 }
 
 .kc-dot.amber {
-  background: #ffedd5;
-  color: #f59e0b;
+  background-color: #f59e0b;
 }
 
 .kc-dot.green {
-  background: #dcfce7;
-  color: #16a34a;
+  background-color: #16a34a;
 }
 
 .kc-dot.red {
-  background: #fee2e2;
-  color: #ef4444;
+  background-color: #ef4444;
 }
-
 .kc-column-list {
   display: flex;
   flex-direction: column;

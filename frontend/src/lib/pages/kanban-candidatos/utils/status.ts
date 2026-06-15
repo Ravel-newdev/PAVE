@@ -22,10 +22,10 @@ export function backendStatus(status: CandidateStatus) {
 
 export function statusLabel(status: CandidateStatus): string {
   const labels: Record<CandidateStatus, string> = {
-    inscritos: "Inscrita",
+    inscritos: "Inscrito",
     avaliacao: "Em avaliação",
-    aprovados: "Aprovada",
-    rejeitados: "Rejeitada",
+    aprovados: "Aprovado",
+    rejeitados: "Rejeitado",
   };
 
   return labels[status];
@@ -41,10 +41,10 @@ export function transitionHistoryLabel(nextStatus: CandidateStatus): string {
   });
 
   const labels: Record<CandidateStatus, string> = {
-    inscritos: "Movida para Inscritos",
-    avaliacao: "Movida para Em avaliação",
-    aprovados: "Aprovada",
-    rejeitados: "Rejeitada",
+    inscritos: "Movido para Inscritos",
+    avaliacao: "Movido para Em avaliação",
+    aprovados: "Aprovado",
+    rejeitados: "Rejeitado",
   };
 
   return `${labels[nextStatus]} em ${now}`;
