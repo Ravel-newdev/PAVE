@@ -9,7 +9,13 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+<<<<<<< Updated upstream
 import { Route as AboutRouteImport } from './routes/about'
+=======
+import { Route as ProjetosRouteImport } from './routes/projetos'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as CadastroRouteImport } from './routes/cadastro'
+>>>>>>> Stashed changes
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TalksIndexRouteImport } from './routes/talks.index'
 import { Route as SpeakersIndexRouteImport } from './routes/speakers.index'
@@ -18,9 +24,25 @@ import { Route as TalksSlugRouteImport } from './routes/talks.$slug'
 import { Route as SpeakersSlugRouteImport } from './routes/speakers.$slug'
 import { Route as ApiRemyChatRouteImport } from './routes/api.remy-chat'
 
+<<<<<<< Updated upstream
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
+=======
+const ProjetosRoute = ProjetosRouteImport.update({
+  id: '/projetos',
+  path: '/projetos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CadastroRoute = CadastroRouteImport.update({
+  id: '/cadastro',
+  path: '/cadastro',
+>>>>>>> Stashed changes
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -61,6 +83,7 @@ const ApiRemyChatRoute = ApiRemyChatRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+<<<<<<< Updated upstream
   '/about': typeof AboutRoute
   '/api/remy-chat': typeof ApiRemyChatRoute
   '/speakers/$slug': typeof SpeakersSlugRoute
@@ -78,10 +101,22 @@ export interface FileRoutesByTo {
   '/schedule': typeof ScheduleIndexRoute
   '/speakers': typeof SpeakersIndexRoute
   '/talks': typeof TalksIndexRoute
+=======
+  '/cadastro': typeof CadastroRoute
+  '/login': typeof LoginRoute
+  '/projetos': typeof ProjetosRoute
+}
+export interface FileRoutesByTo {
+  '/': typeof IndexRoute
+  '/cadastro': typeof CadastroRoute
+  '/login': typeof LoginRoute
+  '/projetos': typeof ProjetosRoute
+>>>>>>> Stashed changes
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+<<<<<<< Updated upstream
   '/about': typeof AboutRoute
   '/api/remy-chat': typeof ApiRemyChatRoute
   '/speakers/$slug': typeof SpeakersSlugRoute
@@ -121,10 +156,23 @@ export interface FileRouteTypes {
     | '/schedule/'
     | '/speakers/'
     | '/talks/'
+=======
+  '/cadastro': typeof CadastroRoute
+  '/login': typeof LoginRoute
+  '/projetos': typeof ProjetosRoute
+}
+export interface FileRouteTypes {
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths: '/' | '/cadastro' | '/login' | '/projetos'
+  fileRoutesByTo: FileRoutesByTo
+  to: '/' | '/cadastro' | '/login' | '/projetos'
+  id: '__root__' | '/' | '/cadastro' | '/login' | '/projetos'
+>>>>>>> Stashed changes
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+<<<<<<< Updated upstream
   AboutRoute: typeof AboutRoute
   ApiRemyChatRoute: typeof ApiRemyChatRoute
   SpeakersSlugRoute: typeof SpeakersSlugRoute
@@ -132,15 +180,42 @@ export interface RootRouteChildren {
   ScheduleIndexRoute: typeof ScheduleIndexRoute
   SpeakersIndexRoute: typeof SpeakersIndexRoute
   TalksIndexRoute: typeof TalksIndexRoute
+=======
+  CadastroRoute: typeof CadastroRoute
+  LoginRoute: typeof LoginRoute
+  ProjetosRoute: typeof ProjetosRoute
+>>>>>>> Stashed changes
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+<<<<<<< Updated upstream
     '/about': {
       id: '/about'
       path: '/about'
       fullPath: '/about'
       preLoaderRoute: typeof AboutRouteImport
+=======
+    '/projetos': {
+      id: '/projetos'
+      path: '/projetos'
+      fullPath: '/projetos'
+      preLoaderRoute: typeof ProjetosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cadastro': {
+      id: '/cadastro'
+      path: '/cadastro'
+      fullPath: '/cadastro'
+      preLoaderRoute: typeof CadastroRouteImport
+>>>>>>> Stashed changes
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -197,6 +272,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+<<<<<<< Updated upstream
   AboutRoute: AboutRoute,
   ApiRemyChatRoute: ApiRemyChatRoute,
   SpeakersSlugRoute: SpeakersSlugRoute,
@@ -204,6 +280,11 @@ const rootRouteChildren: RootRouteChildren = {
   ScheduleIndexRoute: ScheduleIndexRoute,
   SpeakersIndexRoute: SpeakersIndexRoute,
   TalksIndexRoute: TalksIndexRoute,
+=======
+  CadastroRoute: CadastroRoute,
+  LoginRoute: LoginRoute,
+  ProjetosRoute: ProjetosRoute,
+>>>>>>> Stashed changes
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
