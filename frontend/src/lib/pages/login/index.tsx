@@ -13,7 +13,7 @@ const Login = () => {
     e.preventDefault()
     setErro('')
 
-    if (!email || !senha) {
+    if (!email.trim() || !senha.trim()) {
       setErro('Preencha e-mail e senha.')
       return
     }
@@ -21,17 +21,25 @@ const Login = () => {
     setLoading(true)
     try {
       const { data } = await api.post('/auth/login', { email, senha })
-      localStorage.setItem('token', data.token)
-      localStorage.setItem('tipo', data.tipo)
-      if (data.tipo === 'docente') {
+      const token = data.token
+      localStorage.setItem('token', token)
+
+      const base64Url = token.split('.')[1]
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
+      const payload = JSON.parse(decodeURIComponent(window.atob(base64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join('')))
+      localStorage.setItem('tipo', payload.tipo)
+
+      if (payload.tipo === 'docente') {
         navigate({ to: '/professor/projetos' })
       } else {
         navigate({ to: '/' })
       }
-    } catch (err: unknown) {
+    } 
+    catch (err) {
       const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message
       setErro(msg || 'E-mail ou senha inválidos.')
-    } finally {
+    }
+    finally {
       setLoading(false)
     }
   }
@@ -64,7 +72,7 @@ const Login = () => {
               <label className="text-sm font-medium text-gray-600">E-mail institucional</label>
               <input
                 type="email"
-                placeholder="seunome@alu.ufc.br"
+                placeholder="seu-email@ufc.br ou @alu.ufc.br"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 className="border border-gray-200 rounded-lg px-4 py-2.5 text-sm outline-none focus:border-[#2E7D32] focus:ring-2 focus:ring-[#2E7D32]/10 transition"
@@ -80,7 +88,7 @@ const Login = () => {
               </div>
               <input
                 type="password"
-                placeholder="••••••••"
+                placeholder="senha"
                 value={senha}
                 onChange={e => setSenha(e.target.value)}
                 className="border border-gray-200 rounded-lg px-4 py-2.5 text-sm outline-none focus:border-[#2E7D32] focus:ring-2 focus:ring-[#2E7D32]/10 transition"
