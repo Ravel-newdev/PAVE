@@ -812,3 +812,22 @@
     padding-bottom: 4px;
   }
 }
+
+.cat-busca-ativa {
+  max-width: 1080px;
+  margin: 0 auto 16px;
+  padding: 10px 20px;
+  font-size: 13px;
+  color: #5a7a6a;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.cat-busca-ativa button {
+  border: none;
+  background: transparent;
+  color: #1e2e4f;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 13px;
+}

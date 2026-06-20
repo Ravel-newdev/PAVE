@@ -10,7 +10,7 @@ import { StepIndicator, ProgressBar, TipsPanel, PreviewCard, TemplatesPanel } fr
 import { Step1, Step2, Step3, Step4, Step5 }                                 from "../../layout/components/CadastroProjeto/ProjectSteps";
 import type { FormData }                                                      from "../../layout/components/CadastroProjeto/ProjectSteps";
 
-/*  Estado inicial  */
+/* Estado inicial  */
 const INITIAL_DATA: FormData = {
   title: "", type: "", area: "", subArea: "", summary: "", banner: "",
   description: "", startDate: "", endDate: "", hours: "", slots: "",
@@ -20,7 +20,7 @@ const INITIAL_DATA: FormData = {
   requirements: [], benefits: [], scholarshipValue: "",
 };
 
-/*  Tela de sucesso  */
+/* Tela de sucesso  */
 function PublishedScreen({ onReset }: { onReset: () => void }) {
   return (
     <div style={{ minHeight: "100vh", background: COLORS.bg, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", padding: 24 }}>
@@ -44,7 +44,7 @@ function PublishedScreen({ onReset }: { onReset: () => void }) {
   );
 }
 
-/*  Página  */
+/* Página  */
 export default function CadastroProjeto() {
   const [step,      setStep]      = useState(1);
   const [saved,     setSaved]     = useState(false);
@@ -90,7 +90,7 @@ export default function CadastroProjeto() {
           </div>
         </div>
 
-        {/*  form e sidebar */}
+        {/* form e sidebar */}
         <div style={{ display: "flex", gap: 24, alignItems: "flex-start" }}>
 
           {/* Formulário */}

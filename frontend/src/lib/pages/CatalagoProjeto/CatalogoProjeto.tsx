@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { SlidersHorizontal, LayoutGrid, List, ChevronLeft, ChevronRight } from "lucide-react";
 
 import Navbar from "../../layout/components/Navbar/Navbar";
@@ -6,6 +6,7 @@ import { SelectDropdown } from "../../layout/components/CatalogoProjeto/SelectDr
 import { ProjetoCard }    from "../../layout/components/CatalogoProjeto/ProjetoCard";
 
 import { projetos } from "../../../data/projetos";
+import { Route } from "../../../routes/projetos.index";  
 import "./CatalogoProjeto.css";
 
 /*  Opções de filtro  */
@@ -22,6 +23,9 @@ const TODOS = projetos;
 
 /*  Página  */
 export default function CatalogoProjeto() {
+  const { q } = Route.useSearch();  
+
+  const [busca,       setBusca]       = useState(q ?? ""); 
   const [tipo,        setTipo]        = useState<string>("Todos");
   const [area,        setArea]        = useState<string>("Todas");
   const [turno,       setTurno]       = useState<string>("Todos");
@@ -30,15 +34,28 @@ export default function CatalogoProjeto() {
   const [visao,       setVisao]       = useState<"grid" | "lista">("grid");
   const [pagina,      setPagina]      = useState(1);
 
+  useEffect(() => {
+    setBusca(q ?? "");
+    setPagina(1);
+  }, [q]);
+
   const filtrados = useMemo(() => {
+    const termo = busca.trim().toLowerCase(); 
+
     return TODOS.filter((p) => {
+      const bateBusca =
+        termo === "" ||
+        p.titulo.toLowerCase().includes(termo) ||
+        p.area.toLowerCase().includes(termo) ||
+        p.professor.nome.toLowerCase().includes(termo); 
+
       const bateTipo     = tipo === "Todos"  || p.tipo.includes(tipo);
       const bateArea     = area === "Todas"  || p.area.toLowerCase().includes(area.toLowerCase());
       const bateModal    = modalidade === "Todas" || p.modalidade === modalidade;
-      
-      return bateTipo && bateArea && bateModal;
+
+      return bateBusca && bateTipo && bateArea && bateModal; 
     });
-  }, [tipo, area, modalidade]);
+  }, [busca, tipo, area, modalidade]); 
 
   const totalPaginas = Math.ceil(filtrados.length / POR_PAGINA);
   const paginados    = filtrados.slice((pagina - 1) * POR_PAGINA, pagina * POR_PAGINA);
@@ -72,6 +89,13 @@ export default function CatalogoProjeto() {
           </svg>
         </div>
       </header>
+
+      {busca && (
+        <div className="cat-busca-ativa">
+          Resultados para "<strong>{busca}</strong>"
+          <button type="button" onClick={() => setBusca("")}>Limpar busca</button>
+        </div>
+      )}
 
       {/*  Filtros  */}
       <section className="cat-filters-bar">
@@ -108,7 +132,7 @@ export default function CatalogoProjeto() {
             <button
               type="button"
               className="cat-limpar"
-              onClick={() => { setTipo("Todos"); setArea("Todas"); setModalidade("Todas"); setPagina(1); }}
+              onClick={() => { setBusca(""); setTipo("Todos"); setArea("Todas"); setModalidade("Todas"); setPagina(1); }}
             >
               Limpar filtros
             </button>

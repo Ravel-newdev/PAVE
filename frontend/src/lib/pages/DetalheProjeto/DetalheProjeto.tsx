@@ -11,7 +11,7 @@ import {
 } from "../../layout/components/DetalheProjeto/ProjectTabs";
 import { Sidebar } from "../../layout/components/DetalheProjeto/Sidebar";
 import type { Project } from "../../../data/projetos";
-import { useInscricoes } from "../../context/InscricoesContext"; // <-- Importamos o contexto aqui
+import { useInscricoes } from "../../context/InscricoesContext";
 import "./DetalheProjeto.css";
 
 type TabId = "sobre" | "atividades" | "requisitos" | "beneficios" | "professor";

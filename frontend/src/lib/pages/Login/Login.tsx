@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import LoginImg from "../../../assets/login2.jpeg";
 import { FiMail, FiLock, FiEyeOff, FiEye } from "react-icons/fi";
-import "./Login.css"; 
 
 import { Button, Input, FieldLabel } from "../../layout/components/CadastroProjeto/FormElements"; 
 
