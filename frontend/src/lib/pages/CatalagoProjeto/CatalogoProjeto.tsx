@@ -6,8 +6,10 @@ import { SelectDropdown } from "../../layout/components/CatalogoProjeto/SelectDr
 import { ProjetoCard }    from "../../layout/components/CatalogoProjeto/ProjetoCard";
 
 import { projetos } from "../../../data/projetos";
-import { Route } from "../../../routes/projetos.index";  
 import "./CatalogoProjeto.css";
+
+const normalizar = (s: string) =>
+  s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
 /*  Opções de filtro  */
 const TIPOS       = ["Todos", "Extensão", "Voluntariado", "Bolsa"]                              as const;
@@ -23,7 +25,7 @@ const TODOS = projetos;
 
 /*  Página  */
 export default function CatalogoProjeto() {
-  const { q } = Route.useSearch();  
+  const q = typeof window !== "undefined" ? (new URLSearchParams(window.location.search).get("q") ?? undefined) : undefined;
 
   const [busca,       setBusca]       = useState(q ?? ""); 
   const [tipo,        setTipo]        = useState<string>("Todos");
@@ -40,20 +42,21 @@ export default function CatalogoProjeto() {
   }, [q]);
 
   const filtrados = useMemo(() => {
-    const termo = busca.trim().toLowerCase(); 
+    const termo = normalizar(busca.trim());
 
     return TODOS.filter((p) => {
       const bateBusca =
         termo === "" ||
-        p.titulo.toLowerCase().includes(termo) ||
-        p.area.toLowerCase().includes(termo) ||
-        p.professor.nome.toLowerCase().includes(termo); 
+        normalizar(p.titulo).includes(termo) ||
+        normalizar(p.area).includes(termo) ||
+        normalizar(p.resumo).includes(termo) ||
+        normalizar(p.professor.nome).includes(termo);
 
-      const bateTipo     = tipo === "Todos"  || p.tipo.includes(tipo);
-      const bateArea     = area === "Todas"  || p.area.toLowerCase().includes(area.toLowerCase());
-      const bateModal    = modalidade === "Todas" || p.modalidade === modalidade;
+      const bateTipo  = tipo === "Todos" || p.tipo.includes(tipo);
+      const bateArea  = area === "Todas" || normalizar(p.area).includes(normalizar(area));
+      const bateModal = modalidade === "Todas" || p.modalidade === modalidade;
 
-      return bateBusca && bateTipo && bateArea && bateModal; 
+      return bateBusca && bateTipo && bateArea && bateModal;
     });
   }, [busca, tipo, area, modalidade]); 
 

@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
-import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
 import {
-  Home, FolderOpen, Bookmark, 
+  Home, FolderOpen, Bookmark,
   Bell, Mail, ChevronDown, Menu, X, Search,
 } from "lucide-react";
-import logo from "../../../../assets/pave-logo-detalhada-512.png"; 
+import logo from "../../../../assets/pave-logo-detalhada-512.png";
 import "./Navbar.css";
 
 function useWindowWidth() {
@@ -20,59 +19,69 @@ function useWindowWidth() {
 }
 
 const navItems = [
-  { label: "Início",               to: "/",              icon: <Home size={16} />       },
-  { label: "Projetos",             to: "/projetos",      icon: <FolderOpen size={16} /> },
+  { label: "Início",               to: "/",             icon: <Home size={16} />       },
+  { label: "Projetos",             to: "/projetos/",    icon: <FolderOpen size={16} /> },
   { label: "Minhas Oportunidades", to: "/oportunidade", icon: <Bookmark size={16} />   },
-] as const;
+];
 
 export default function Navbar() {
-  const width       = useWindowWidth();
-  const isMobile    = width < 768;
+  const width    = useWindowWidth();
+  const isMobile = width < 768;
+
   const [menuOpen, setMenuOpen] = useState(false);
-  const [query, setQuery] = useState("");
-  const routerState = useRouterState();
-  const navigate    = useNavigate();
-  const currentPath = routerState.location.pathname;
+  const [query,    setQuery]    = useState("");
+
+  const currentPath = typeof window !== "undefined" ? window.location.pathname : "/";
   const userName    = "Mariana";
 
-  function buscar() {
+  function buscar(fecharMenu = false) {
     const termo = query.trim();
-    navigate({ to: "/projetos", search: termo ? { q: termo } : {} });
+    const url = termo ? `/projetos/?q=${encodeURIComponent(termo)}` : "/projetos/";
+    window.location.href = url;
+    if (fecharMenu) setMenuOpen(false);
   }
 
   return (
     <>
       <nav className="navbar">
         <div className="navbar-left">
-          <Link to="/" className="logo">
+          <a href="/" className="logo">
             <img src={logo} alt="PAVE" className="logo-img" />
             <span className="logo-text">PAVE</span>
-          </Link>
+          </a>
+
           {!isMobile && (
             <div className="nav-links">
               {navItems.map((item) => {
+                const base = item.to.replace(/\/$/, "");
                 const isActive =
                   item.to === "/"
                     ? currentPath === "/"
-                    : currentPath.startsWith(item.to);
+                    : currentPath.startsWith(base);
                 return (
-                  <Link
+                  <a
                     key={item.label}
-                    to={item.to}
+                    href={item.to}
                     className={`nav-link${isActive ? " active" : ""}`}
                   >
                     {item.icon}
                     {item.label}
-                  </Link>
+                  </a>
                 );
               })}
             </div>
           )}
         </div>
+
         <div className="navbar-right">
           {!isMobile && (
             <div className="search-bar">
-              <Search size={16} className="search-icon" onClick={buscar} style={{ cursor: "pointer" }} />
+              <Search
+                size={16}
+                className="search-icon"
+                style={{ cursor: "pointer", flexShrink: 0 }}
+                onClick={() => buscar()}
+              />
               <input
                 placeholder="Buscar projetos, áreas ou professores..."
                 value={query}
@@ -81,6 +90,7 @@ export default function Navbar() {
               />
             </div>
           )}
+
           <div className="nav-actions">
             <button className="notif-btn" aria-label="Mensagens">
               <Mail size={20} color="rgba(255,255,255,0.8)" />
@@ -101,13 +111,19 @@ export default function Navbar() {
               </div>
             )}
           </div>
+
           {isMobile && (
-            <button className="hamburger" onClick={() => setMenuOpen(!menuOpen)} aria-label="Menu">
+            <button
+              className="hamburger"
+              onClick={() => setMenuOpen(!menuOpen)}
+              aria-label="Menu"
+            >
               {menuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           )}
         </div>
       </nav>
+
       {isMobile && menuOpen && (
         <div className="mobile-menu">
           <div className="mobile-search">
@@ -116,16 +132,19 @@ export default function Navbar() {
               placeholder="Buscar projetos..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") { buscar(); setMenuOpen(false); }
-              }}
+              onKeyDown={(e) => e.key === "Enter" && buscar(true)}
             />
           </div>
           {navItems.map((item) => (
-            <Link key={item.label} to={item.to} className="mobile-menu-link" onClick={() => setMenuOpen(false)}>
+            <a
+              key={item.label}
+              href={item.to}
+              className="mobile-menu-link"
+              onClick={() => setMenuOpen(false)}
+            >
               {item.icon}
               {item.label}
-            </Link>
+            </a>
           ))}
         </div>
       )}

@@ -185,3 +185,13 @@
   font-family: inherit;
 }
 .mobile-search .search-icon { color: #888; }
+/* ─── Search bar como link ─── */
+a.search-bar {
+  text-decoration: none;
+  cursor: text;
+}
+.search-placeholder {
+  color: rgba(255,255,255,0.5);
+  font-size: 13px;
+  font-family: inherit;
+}
