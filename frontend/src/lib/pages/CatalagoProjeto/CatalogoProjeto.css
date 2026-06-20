@@ -39,11 +39,10 @@
 }
 
 .cat-hero-text p {
-  color: var(--text-muted);
-  font-size: 14px;
-  line-height: 1.6;
-  margin: 0;
-  padding-left: 18px;
+  font-size: 1.05rem;
+  color: var(--op-text-secondary);
+  max-width: 600px;
+  line-height: 1.5;
 }
 
 .cat-hero-illustration {
