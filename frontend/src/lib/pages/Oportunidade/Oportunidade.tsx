@@ -8,7 +8,7 @@ import Navbar from "../../layout/components/Navbar/Navbar";
 import { useFavoritos } from "../../context/FavoritosContext";
 import { useInscricoes } from "../../context/InscricoesContext"; // Contexto de Inscrições importado
 import { projetos } from "../../../data/projetos";
-import "./Oportunidades.css";
+import "./Oportunidade.css";
 
 /* Mapeia projetos.tsx para o formato de card */
 const PROJECTS = projetos.map((p) => ({
