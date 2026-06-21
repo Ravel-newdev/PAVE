@@ -9,16 +9,12 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as ProjetosRouteImport } from './routes/projetos'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as CadastroRouteImport } from './routes/cadastro'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ProfessorProjetosRouteImport } from './routes/professor/projetos'
+import { Route as ProfessorProjetosNovoRouteImport } from './routes/professor/projetos.novo'
 
-const ProjetosRoute = ProjetosRouteImport.update({
-  id: '/projetos',
-  path: '/projetos',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -34,50 +30,72 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProfessorProjetosRoute = ProfessorProjetosRouteImport.update({
+  id: '/professor/projetos',
+  path: '/professor/projetos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfessorProjetosNovoRoute = ProfessorProjetosNovoRouteImport.update({
+  id: '/novo',
+  path: '/novo',
+  getParentRoute: () => ProfessorProjetosRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/cadastro': typeof CadastroRoute
   '/login': typeof LoginRoute
-  '/projetos': typeof ProjetosRoute
+  '/professor/projetos': typeof ProfessorProjetosRouteWithChildren
+  '/professor/projetos/novo': typeof ProfessorProjetosNovoRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/cadastro': typeof CadastroRoute
   '/login': typeof LoginRoute
-  '/projetos': typeof ProjetosRoute
+  '/professor/projetos': typeof ProfessorProjetosRouteWithChildren
+  '/professor/projetos/novo': typeof ProfessorProjetosNovoRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/cadastro': typeof CadastroRoute
   '/login': typeof LoginRoute
-  '/projetos': typeof ProjetosRoute
+  '/professor/projetos': typeof ProfessorProjetosRouteWithChildren
+  '/professor/projetos/novo': typeof ProfessorProjetosNovoRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/cadastro' | '/login' | '/projetos'
+  fullPaths:
+    | '/'
+    | '/cadastro'
+    | '/login'
+    | '/professor/projetos'
+    | '/professor/projetos/novo'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/cadastro' | '/login' | '/projetos'
-  id: '__root__' | '/' | '/cadastro' | '/login' | '/projetos'
+  to:
+    | '/'
+    | '/cadastro'
+    | '/login'
+    | '/professor/projetos'
+    | '/professor/projetos/novo'
+  id:
+    | '__root__'
+    | '/'
+    | '/cadastro'
+    | '/login'
+    | '/professor/projetos'
+    | '/professor/projetos/novo'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CadastroRoute: typeof CadastroRoute
   LoginRoute: typeof LoginRoute
-  ProjetosRoute: typeof ProjetosRoute
+  ProfessorProjetosRoute: typeof ProfessorProjetosRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/projetos': {
-      id: '/projetos'
-      path: '/projetos'
-      fullPath: '/projetos'
-      preLoaderRoute: typeof ProjetosRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -99,14 +117,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/professor/projetos': {
+      id: '/professor/projetos'
+      path: '/professor/projetos'
+      fullPath: '/professor/projetos'
+      preLoaderRoute: typeof ProfessorProjetosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/professor/projetos/novo': {
+      id: '/professor/projetos/novo'
+      path: '/novo'
+      fullPath: '/professor/projetos/novo'
+      preLoaderRoute: typeof ProfessorProjetosNovoRouteImport
+      parentRoute: typeof ProfessorProjetosRoute
+    }
   }
 }
+
+interface ProfessorProjetosRouteChildren {
+  ProfessorProjetosNovoRoute: typeof ProfessorProjetosNovoRoute
+}
+
+const ProfessorProjetosRouteChildren: ProfessorProjetosRouteChildren = {
+  ProfessorProjetosNovoRoute: ProfessorProjetosNovoRoute,
+}
+
+const ProfessorProjetosRouteWithChildren =
+  ProfessorProjetosRoute._addFileChildren(ProfessorProjetosRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CadastroRoute: CadastroRoute,
   LoginRoute: LoginRoute,
-  ProjetosRoute: ProjetosRoute,
+  ProfessorProjetosRoute: ProfessorProjetosRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
