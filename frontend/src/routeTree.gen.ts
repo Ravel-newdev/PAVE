@@ -10,9 +10,13 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ProjetosRouteImport } from './routes/projetos'
+import { Route as ProjetoVisaoGeralRouteImport } from './routes/projeto-visao-geral'
 import { Route as OportunidadeRouteImport } from './routes/oportunidade'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as KanbanCandidatosRouteImport } from './routes/kanban-candidatos'
+import { Route as EditarProjetoRouteImport } from './routes/editar-projeto'
 import { Route as DetalheProjetoRouteImport } from './routes/detalheProjeto'
+import { Route as CriarProjetoRouteImport } from './routes/criar-projeto'
 import { Route as CadastroProjetoRouteImport } from './routes/cadastroProjeto'
 import { Route as CadastroRouteImport } from './routes/cadastro'
 import { Route as IndexRouteImport } from './routes/index'
@@ -22,6 +26,11 @@ import { Route as ProjetosIdRouteImport } from './routes/projetos.$id'
 const ProjetosRoute = ProjetosRouteImport.update({
   id: '/projetos',
   path: '/projetos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProjetoVisaoGeralRoute = ProjetoVisaoGeralRouteImport.update({
+  id: '/projeto-visao-geral',
+  path: '/projeto-visao-geral',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OportunidadeRoute = OportunidadeRouteImport.update({
@@ -34,9 +43,24 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const KanbanCandidatosRoute = KanbanCandidatosRouteImport.update({
+  id: '/kanban-candidatos',
+  path: '/kanban-candidatos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EditarProjetoRoute = EditarProjetoRouteImport.update({
+  id: '/editar-projeto',
+  path: '/editar-projeto',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DetalheProjetoRoute = DetalheProjetoRouteImport.update({
   id: '/detalheProjeto',
   path: '/detalheProjeto',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CriarProjetoRoute = CriarProjetoRouteImport.update({
+  id: '/criar-projeto',
+  path: '/criar-projeto',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CadastroProjetoRoute = CadastroProjetoRouteImport.update({
@@ -69,9 +93,13 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/cadastro': typeof CadastroRoute
   '/cadastroProjeto': typeof CadastroProjetoRoute
+  '/criar-projeto': typeof CriarProjetoRoute
   '/detalheProjeto': typeof DetalheProjetoRoute
+  '/editar-projeto': typeof EditarProjetoRoute
+  '/kanban-candidatos': typeof KanbanCandidatosRoute
   '/login': typeof LoginRoute
   '/oportunidade': typeof OportunidadeRoute
+  '/projeto-visao-geral': typeof ProjetoVisaoGeralRoute
   '/projetos': typeof ProjetosRouteWithChildren
   '/projetos/$id': typeof ProjetosIdRoute
   '/projetos/': typeof ProjetosIndexRoute
@@ -80,9 +108,13 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/cadastro': typeof CadastroRoute
   '/cadastroProjeto': typeof CadastroProjetoRoute
+  '/criar-projeto': typeof CriarProjetoRoute
   '/detalheProjeto': typeof DetalheProjetoRoute
+  '/editar-projeto': typeof EditarProjetoRoute
+  '/kanban-candidatos': typeof KanbanCandidatosRoute
   '/login': typeof LoginRoute
   '/oportunidade': typeof OportunidadeRoute
+  '/projeto-visao-geral': typeof ProjetoVisaoGeralRoute
   '/projetos/$id': typeof ProjetosIdRoute
   '/projetos': typeof ProjetosIndexRoute
 }
@@ -91,9 +123,13 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/cadastro': typeof CadastroRoute
   '/cadastroProjeto': typeof CadastroProjetoRoute
+  '/criar-projeto': typeof CriarProjetoRoute
   '/detalheProjeto': typeof DetalheProjetoRoute
+  '/editar-projeto': typeof EditarProjetoRoute
+  '/kanban-candidatos': typeof KanbanCandidatosRoute
   '/login': typeof LoginRoute
   '/oportunidade': typeof OportunidadeRoute
+  '/projeto-visao-geral': typeof ProjetoVisaoGeralRoute
   '/projetos': typeof ProjetosRouteWithChildren
   '/projetos/$id': typeof ProjetosIdRoute
   '/projetos/': typeof ProjetosIndexRoute
@@ -104,9 +140,13 @@ export interface FileRouteTypes {
     | '/'
     | '/cadastro'
     | '/cadastroProjeto'
+    | '/criar-projeto'
     | '/detalheProjeto'
+    | '/editar-projeto'
+    | '/kanban-candidatos'
     | '/login'
     | '/oportunidade'
+    | '/projeto-visao-geral'
     | '/projetos'
     | '/projetos/$id'
     | '/projetos/'
@@ -115,9 +155,13 @@ export interface FileRouteTypes {
     | '/'
     | '/cadastro'
     | '/cadastroProjeto'
+    | '/criar-projeto'
     | '/detalheProjeto'
+    | '/editar-projeto'
+    | '/kanban-candidatos'
     | '/login'
     | '/oportunidade'
+    | '/projeto-visao-geral'
     | '/projetos/$id'
     | '/projetos'
   id:
@@ -125,9 +169,13 @@ export interface FileRouteTypes {
     | '/'
     | '/cadastro'
     | '/cadastroProjeto'
+    | '/criar-projeto'
     | '/detalheProjeto'
+    | '/editar-projeto'
+    | '/kanban-candidatos'
     | '/login'
     | '/oportunidade'
+    | '/projeto-visao-geral'
     | '/projetos'
     | '/projetos/$id'
     | '/projetos/'
@@ -137,9 +185,13 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CadastroRoute: typeof CadastroRoute
   CadastroProjetoRoute: typeof CadastroProjetoRoute
+  CriarProjetoRoute: typeof CriarProjetoRoute
   DetalheProjetoRoute: typeof DetalheProjetoRoute
+  EditarProjetoRoute: typeof EditarProjetoRoute
+  KanbanCandidatosRoute: typeof KanbanCandidatosRoute
   LoginRoute: typeof LoginRoute
   OportunidadeRoute: typeof OportunidadeRoute
+  ProjetoVisaoGeralRoute: typeof ProjetoVisaoGeralRoute
   ProjetosRoute: typeof ProjetosRouteWithChildren
 }
 
@@ -150,6 +202,13 @@ declare module '@tanstack/react-router' {
       path: '/projetos'
       fullPath: '/projetos'
       preLoaderRoute: typeof ProjetosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/projeto-visao-geral': {
+      id: '/projeto-visao-geral'
+      path: '/projeto-visao-geral'
+      fullPath: '/projeto-visao-geral'
+      preLoaderRoute: typeof ProjetoVisaoGeralRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/oportunidade': {
@@ -166,11 +225,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/kanban-candidatos': {
+      id: '/kanban-candidatos'
+      path: '/kanban-candidatos'
+      fullPath: '/kanban-candidatos'
+      preLoaderRoute: typeof KanbanCandidatosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/editar-projeto': {
+      id: '/editar-projeto'
+      path: '/editar-projeto'
+      fullPath: '/editar-projeto'
+      preLoaderRoute: typeof EditarProjetoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/detalheProjeto': {
       id: '/detalheProjeto'
       path: '/detalheProjeto'
       fullPath: '/detalheProjeto'
       preLoaderRoute: typeof DetalheProjetoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/criar-projeto': {
+      id: '/criar-projeto'
+      path: '/criar-projeto'
+      fullPath: '/criar-projeto'
+      preLoaderRoute: typeof CriarProjetoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/cadastroProjeto': {
@@ -229,9 +309,13 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CadastroRoute: CadastroRoute,
   CadastroProjetoRoute: CadastroProjetoRoute,
+  CriarProjetoRoute: CriarProjetoRoute,
   DetalheProjetoRoute: DetalheProjetoRoute,
+  EditarProjetoRoute: EditarProjetoRoute,
+  KanbanCandidatosRoute: KanbanCandidatosRoute,
   LoginRoute: LoginRoute,
   OportunidadeRoute: OportunidadeRoute,
+  ProjetoVisaoGeralRoute: ProjetoVisaoGeralRoute,
   ProjetosRoute: ProjetosRouteWithChildren,
 }
 export const routeTree = rootRouteImport
