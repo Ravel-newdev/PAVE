@@ -9,13 +9,31 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as NotificacoesRouteImport } from './routes/notificacoes'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as DashboardProfessorRouteImport } from './routes/dashboard-professor'
+import { Route as CandidaturaRouteImport } from './routes/candidatura'
 import { Route as CadastroRouteImport } from './routes/cadastro'
 import { Route as IndexRouteImport } from './routes/index'
 
+const NotificacoesRoute = NotificacoesRouteImport.update({
+  id: '/notificacoes',
+  path: '/notificacoes',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardProfessorRoute = DashboardProfessorRouteImport.update({
+  id: '/dashboard-professor',
+  path: '/dashboard-professor',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CandidaturaRoute = CandidaturaRouteImport.update({
+  id: '/candidatura',
+  path: '/candidatura',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CadastroRoute = CadastroRouteImport.update({
@@ -32,40 +50,92 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/cadastro': typeof CadastroRoute
+  '/candidatura': typeof CandidaturaRoute
+  '/dashboard-professor': typeof DashboardProfessorRoute
   '/login': typeof LoginRoute
+  '/notificacoes': typeof NotificacoesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/cadastro': typeof CadastroRoute
+  '/candidatura': typeof CandidaturaRoute
+  '/dashboard-professor': typeof DashboardProfessorRoute
   '/login': typeof LoginRoute
+  '/notificacoes': typeof NotificacoesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/cadastro': typeof CadastroRoute
+  '/candidatura': typeof CandidaturaRoute
+  '/dashboard-professor': typeof DashboardProfessorRoute
   '/login': typeof LoginRoute
+  '/notificacoes': typeof NotificacoesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/cadastro' | '/login'
+  fullPaths:
+    | '/'
+    | '/cadastro'
+    | '/candidatura'
+    | '/dashboard-professor'
+    | '/login'
+    | '/notificacoes'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/cadastro' | '/login'
-  id: '__root__' | '/' | '/cadastro' | '/login'
+  to:
+    | '/'
+    | '/cadastro'
+    | '/candidatura'
+    | '/dashboard-professor'
+    | '/login'
+    | '/notificacoes'
+  id:
+    | '__root__'
+    | '/'
+    | '/cadastro'
+    | '/candidatura'
+    | '/dashboard-professor'
+    | '/login'
+    | '/notificacoes'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CadastroRoute: typeof CadastroRoute
+  CandidaturaRoute: typeof CandidaturaRoute
+  DashboardProfessorRoute: typeof DashboardProfessorRoute
   LoginRoute: typeof LoginRoute
+  NotificacoesRoute: typeof NotificacoesRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/notificacoes': {
+      id: '/notificacoes'
+      path: '/notificacoes'
+      fullPath: '/notificacoes'
+      preLoaderRoute: typeof NotificacoesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard-professor': {
+      id: '/dashboard-professor'
+      path: '/dashboard-professor'
+      fullPath: '/dashboard-professor'
+      preLoaderRoute: typeof DashboardProfessorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/candidatura': {
+      id: '/candidatura'
+      path: '/candidatura'
+      fullPath: '/candidatura'
+      preLoaderRoute: typeof CandidaturaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/cadastro': {
@@ -88,7 +158,10 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CadastroRoute: CadastroRoute,
+  CandidaturaRoute: CandidaturaRoute,
+  DashboardProfessorRoute: DashboardProfessorRoute,
   LoginRoute: LoginRoute,
+  NotificacoesRoute: NotificacoesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
