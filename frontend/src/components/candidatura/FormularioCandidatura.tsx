@@ -3,12 +3,8 @@ import type { DragEvent, ChangeEvent } from "react";
 import { Upload, FileText, Trash2, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent } from "@/components/ui/card";
 import { Field, FieldLabel, FieldError } from "@/components/ui/field";
 import type { CampoFormulario, DadosAluno, RespostaCampo, FormErrors } from "@/types/candidatura";
-
-const estiloTextarea =
-  "flex w-full resize-none rounded-lg border bg-transparent px-3 py-2.5 pb-7 text-sm text-gray-700 font-sans outline-none transition-colors placeholder:font-sans placeholder:text-gray-400 focus-visible:ring-2";
 
 interface Props {
   tituloProjeto: string;
@@ -90,71 +86,65 @@ export function FormularioCandidatura({
   }
 
   return (
-    <Card className="block">
-      <CardContent className="p-8 space-y-8">
+    <div className="bg-white rounded-2xl border border-[#E2E8F0] shadow-[0_4px_20px_rgba(0,0,0,0.04)] overflow-hidden">
 
-        <div>
-          <h1
-            className="text-2xl font-bold text-gray-900"
-            style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
-          >
-            Candidatar-se ao projeto {tituloProjeto}
-          </h1>
-          <p className="text-sm text-gray-500 mt-1">
-            Preencha as informações abaixo para enviar sua candidatura.
-          </p>
-        </div>
+      <div className="bg-gradient-to-r from-[#1E2E4F] to-[#2a4070] px-8 py-6">
+        <h1 className="text-xl font-bold text-white">
+          Candidatar-se ao projeto <span className="text-[#5bbcdc]">{tituloProjeto}</span>
+        </h1>
+        <p className="text-white/60 text-sm mt-1">
+          Preencha as informações abaixo para enviar sua candidatura.
+        </p>
+      </div>
+
+      <div className="p-8 space-y-8">
 
         <section>
-          <h2
-            className="text-base font-bold text-gray-800 mb-4"
-            style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
-          >
+          <h2 className="text-base font-bold text-[#1E2E4F] mb-4 flex items-center gap-2">
+            <span className="w-1 h-5 bg-[#287999] rounded-full inline-block" />
             Informações pessoais
           </h2>
           <div className="grid grid-cols-2 gap-4">
             <Field>
-              <FieldLabel>Nome completo</FieldLabel>
-              <Input value={dadosAluno.nomeCompleto} disabled className="font-sans border-gray-200" />
+              <FieldLabel className="text-xs font-semibold text-[#64748B] uppercase tracking-wide">Nome completo</FieldLabel>
+              <Input value={dadosAluno.nomeCompleto} disabled className="bg-[#F8FAFC] border-[#E2E8F0] text-[#334155]" />
             </Field>
             <Field>
-              <FieldLabel>Curso</FieldLabel>
-              <Input value={dadosAluno.curso} disabled className="font-sans border-gray-200" />
+              <FieldLabel className="text-xs font-semibold text-[#64748B] uppercase tracking-wide">Curso</FieldLabel>
+              <Input value={dadosAluno.curso} disabled className="bg-[#F8FAFC] border-[#E2E8F0] text-[#334155]" />
             </Field>
             <Field>
-              <FieldLabel>Matrícula</FieldLabel>
-              <Input value={dadosAluno.matricula} disabled className="font-sans border-gray-200" />
+              <FieldLabel className="text-xs font-semibold text-[#64748B] uppercase tracking-wide">Matrícula</FieldLabel>
+              <Input value={dadosAluno.matricula} disabled className="bg-[#F8FAFC] border-[#E2E8F0] text-[#334155]" />
             </Field>
           </div>
         </section>
 
         <section>
-          <h2
-            className="text-base font-bold text-gray-800 mb-0.5"
-            style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
-          >
+          <h2 className="text-base font-bold text-[#1E2E4F] mb-1 flex items-center gap-2">
+            <span className="w-1 h-5 bg-[#287999] rounded-full inline-block" />
             Respostas do formulário
           </h2>
-          <p className="text-sm text-amber-700/70 mb-5">
+          <p className="text-sm text-amber-600 mb-5 ml-3">
             Responda com atenção. Suas respostas serão avaliadas pela equipe do projeto.
           </p>
 
           <div className="space-y-6">
             {campos.length === 0 && (
-              <p className="text-sm text-gray-400 font-sans">
+              <p className="text-sm text-[#64748B]">
                 Nenhuma pergunta cadastrada para este processo seletivo ainda.
               </p>
             )}
 
             {campos.map((campo) => (
               <Field key={campo.id} data-invalid={!!errors[campo.id]}>
-                <FieldLabel>
+                <FieldLabel className="text-sm font-semibold text-[#334155]">
                   {campo.label}
-                  {campo.obrigatoriedade && <span className="text-red-400"> *</span>}
+                  {campo.obrigatoriedade && <span className="text-red-400 ml-1">*</span>}
                 </FieldLabel>
 
                 {campo.tipo === "arquivo" ? (
-                  <div className={`border rounded-xl overflow-hidden ${errors[campo.id] ? "border-red-300" : "border-gray-200"}`}>
+                  <div className={`border rounded-xl overflow-hidden ${errors[campo.id] ? "border-red-300" : "border-[#E2E8F0]"}`}>
                     <div
                       onClick={() => inputsArquivo.current[campo.id]?.click()}
                       onDragOver={(e: DragEvent<HTMLDivElement>) => { e.preventDefault(); setArrastando(campo.id); }}
@@ -167,15 +157,13 @@ export function FormularioCandidatura({
                       }}
                       className={`m-3 border-2 border-dashed rounded-lg p-6 flex flex-col items-center justify-center cursor-pointer transition-colors ${
                         arrastando === campo.id
-                          ? "border-[#1B3F3F] bg-[#EEF5F4]"
-                          : "border-gray-200 bg-gray-50 hover:border-gray-300 hover:bg-gray-100"
+                          ? "border-[#287999] bg-[#e8f3f7]"
+                          : "border-[#E2E8F0] bg-[#F8FAFC] hover:border-[#287999] hover:bg-[#e8f3f7]"
                       }`}
                     >
-                      <Upload className="w-5 h-5 text-gray-400 mb-2" />
-                      <span className="text-sm text-gray-600 font-medium font-sans">
-                        Clique para anexar ou arraste o arquivo aqui
-                      </span>
-                      <span className="text-xs text-gray-400 mt-0.5 font-sans">PDF até 10 MB</span>
+                      <Upload className="w-5 h-5 text-[#287999] mb-2" />
+                      <span className="text-sm text-[#334155] font-medium">Clique para anexar ou arraste o arquivo aqui</span>
+                      <span className="text-xs text-[#64748B] mt-0.5">PDF até 10 MB</span>
                       <input
                         ref={(el) => { inputsArquivo.current[campo.id] = el; }}
                         type="file"
@@ -187,19 +175,18 @@ export function FormularioCandidatura({
                         }}
                       />
                     </div>
-
                     {arquivos[campo.id] && (
-                      <div className="mx-3 mb-3 flex items-center gap-3 bg-white border border-gray-100 rounded-lg px-4 py-3">
-                        <FileText className="w-5 h-5 text-green-600 shrink-0" />
-                        <span className="text-sm text-gray-700 flex-1 truncate">{arquivos[campo.id].name}</span>
-                        <span className="text-sm text-gray-400 shrink-0">{formatarTamanho(arquivos[campo.id].size)}</span>
-                        <CheckCircle2 className="w-5 h-5 text-green-500 shrink-0" />
+                      <div className="mx-3 mb-3 flex items-center gap-3 bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg px-4 py-3">
+                        <FileText className="w-5 h-5 text-[#287999] shrink-0" />
+                        <span className="text-sm text-[#334155] flex-1 truncate">{arquivos[campo.id].name}</span>
+                        <span className="text-sm text-[#64748B] shrink-0">{formatarTamanho(arquivos[campo.id].size)}</span>
+                        <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" />
                         <Button
                           variant="ghost"
                           size="icon"
                           type="button"
                           onClick={(e) => { e.stopPropagation(); removerArquivo(campo.id); }}
-                          className="w-8 h-8 text-gray-400 hover:text-red-500 hover:bg-transparent shrink-0"
+                          className="w-8 h-8 text-[#64748B] hover:text-red-500 hover:bg-transparent shrink-0"
                         >
                           <Trash2 className="w-4 h-4" />
                         </Button>
@@ -212,41 +199,37 @@ export function FormularioCandidatura({
                     onChange={(e) => atualizarValor(campo.id, e.target.value)}
                     placeholder="Digite sua resposta..."
                     rows={campo.tipo === "texto" ? 1 : 4}
-                    className={`${estiloTextarea} ${
-                      errors[campo.id]
-                        ? "border-red-400 focus-visible:ring-red-300"
-                        : "border-gray-200 focus-visible:ring-gray-200"
+                    className={`flex w-full resize-none rounded-lg border bg-[#F8FAFC] px-3 py-2.5 pb-7 text-sm text-[#334155] outline-none transition-colors placeholder:text-[#94a3b8] focus:ring-2 focus:ring-[#287999]/30 focus:border-[#287999] ${
+                      errors[campo.id] ? "border-red-400" : "border-[#E2E8F0]"
                     }`}
                   />
                 )}
 
-                {errors[campo.id] && (
-                  <FieldError>{errors[campo.id]}</FieldError>
-                )}
+                {errors[campo.id] && <FieldError>{errors[campo.id]}</FieldError>}
               </Field>
             ))}
           </div>
         </section>
 
-        <div className="flex items-center justify-between pt-2">
+        <div className="flex items-center justify-between pt-2 border-t border-[#E2E8F0]">
           <Button
             variant="outline"
             onClick={onCancelar}
             disabled={isLoading}
-            className="font-sans border-gray-200 text-gray-600 hover:bg-gray-50"
+            className="border-[#E2E8F0] text-[#334155] hover:bg-[#F8FAFC] hover:border-[#1E2E4F] hover:text-[#1E2E4F]"
           >
             Cancelar
           </Button>
-          <Button
+          <button
             onClick={handleSubmit}
             disabled={isLoading}
-            className="font-sans bg-[#1B3F3F] hover:bg-[#163333] text-white px-8"
+            className="px-8 py-2 bg-gradient-to-r from-[#287999] to-[#1e5c75] text-white text-sm font-semibold rounded-lg shadow-[0_4px_12px_rgba(40,121,153,0.25)] hover:shadow-[0_6px_16px_rgba(40,121,153,0.35)] hover:-translate-y-0.5 transition-all disabled:opacity-50"
           >
             {isLoading ? "Enviando..." : "Enviar candidatura"}
-          </Button>
+          </button>
         </div>
 
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }

@@ -2,12 +2,12 @@ import { CheckSquare, Calendar, Clock, MessageSquare, Star, Info } from "lucide-
 import type { Notificacao, TipoNotificacao } from "@/types/notificacao";
 
 const estilos: Record<TipoNotificacao, { icone: typeof CheckSquare; bg: string; cor: string }> = {
-  aprovacao:    { icone: CheckSquare,   bg: "bg-green-100",   cor: "text-green-600"  },
-  novo_projeto: { icone: Calendar,      bg: "bg-blue-100",    cor: "text-blue-600"   },
-  prazo:        { icone: Clock,         bg: "bg-amber-100",   cor: "text-amber-600"  },
-  atualizacao:  { icone: MessageSquare, bg: "bg-emerald-100", cor: "text-emerald-600"},
-  favorito:     { icone: Star,          bg: "bg-purple-100",  cor: "text-purple-600" },
-  sistema:      { icone: Info,          bg: "bg-gray-100",    cor: "text-gray-500"   },
+  aprovacao:    { icone: CheckSquare,   bg: "bg-emerald-50 border border-emerald-200", cor: "text-emerald-600"  },
+  novo_projeto: { icone: Calendar,      bg: "bg-[#e8f3f7] border border-[#c5dfe8]",   cor: "text-[#287999]"    },
+  prazo:        { icone: Clock,         bg: "bg-amber-50 border border-amber-200",     cor: "text-amber-600"   },
+  atualizacao:  { icone: MessageSquare, bg: "bg-blue-50 border border-blue-200",       cor: "text-blue-600"    },
+  favorito:     { icone: Star,          bg: "bg-purple-50 border border-purple-200",   cor: "text-purple-600"  },
+  sistema:      { icone: Info,          bg: "bg-[#F8FAFC] border border-[#E2E8F0]",    cor: "text-[#64748B]"   },
 };
 
 interface Props {
@@ -21,10 +21,10 @@ export function NotificacaoItem({ notificacao, onClick }: Props) {
   return (
     <div
       onClick={() => onClick(notificacao.id)}
-      className="flex items-start gap-4 px-6 py-4 cursor-pointer hover:bg-gray-50 transition-colors"
+      className={`flex items-start gap-4 px-6 py-4 cursor-pointer transition-colors hover:bg-[#F8FAFC] ${!notificacao.lida ? "bg-[#e8f3f7]/30" : ""}`}
     >
       <div className="w-2 pt-2 shrink-0">
-        {!notificacao.lida && <span className="block w-2 h-2 rounded-full bg-[#1B3F3F]" />}
+        {!notificacao.lida && <span className="block w-2 h-2 rounded-full bg-[#287999]" />}
       </div>
 
       <div className={`flex items-center justify-center w-10 h-10 rounded-xl ${bg} shrink-0`}>
@@ -32,17 +32,14 @@ export function NotificacaoItem({ notificacao, onClick }: Props) {
       </div>
 
       <div className="flex-1 min-w-0">
-        <p
-          className="text-[15px] font-bold text-gray-900"
-          style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
-        >
+        <p className={`text-[15px] font-bold ${notificacao.lida ? "text-[#334155]" : "text-[#1E2E4F]"}`}>
           {notificacao.titulo}
         </p>
-        <p className="text-sm text-gray-500 font-sans mt-0.5">{notificacao.mensagem}</p>
+        <p className="text-sm text-[#64748B] mt-0.5">{notificacao.mensagem}</p>
       </div>
 
       {notificacao.dataFormatada && (
-        <span className="text-sm text-gray-400 font-sans whitespace-nowrap shrink-0">
+        <span className="text-xs text-[#94a3b8] whitespace-nowrap shrink-0 mt-1">
           {notificacao.dataFormatada}
         </span>
       )}

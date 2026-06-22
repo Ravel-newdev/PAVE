@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ArrowLeft, ChevronRight } from "lucide-react";
 import { Header } from "@/components/shared/Header";
 import { Footer } from "@/components/shared/Footer";
+import { Button } from "@/components/ui/button";
 import { FormularioCandidatura } from "@/components/candidatura/FormularioCandidatura";
 import { ProjetoInfoSidebar } from "@/components/candidatura/ProjetoInfoSidebar";
 import type { Projeto, DadosAluno, CampoFormulario, RespostaCampo } from "@/types/candidatura";
@@ -40,7 +41,6 @@ export default function CandidaturaPage({
       alert("Não foi possível identificar o processo seletivo. Volte e tente novamente.");
       return;
     }
-
     setIsLoading(true);
     try {
       // TODO: POST /api/inscricoes com { ps_id: projeto.processoSeletivoId, respostas }
@@ -55,28 +55,29 @@ export default function CandidaturaPage({
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#F8FAFC] flex flex-col">
       <Header paginaAtiva="Projetos" nomeUsuario="Ravena" notificacoesPendentes={1} />
 
-      <div className="max-w-7xl mx-auto px-8 py-4">
-        <div className="flex items-center gap-2 text-sm text-gray-500">
-          <button
+      <div className="max-w-7xl mx-auto px-8 py-4 w-full">
+        <div className="flex items-center gap-2 text-sm text-[#64748B]">
+          <Button
+            variant="ghost"
             onClick={() => window.history.back()}
-            className="flex items-center gap-1 text-[#1B3F3F] hover:underline font-medium"
+            className="flex items-center gap-1 text-[#287999] hover:text-[#1E2E4F] font-semibold h-auto p-0 hover:bg-transparent text-sm"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             Voltar
-          </button>
-          <span className="text-gray-300 px-1">|</span>
-          <span>Projetos</span>
-          <ChevronRight className="w-3 h-3 text-gray-300" />
-          <span className="truncate max-w-60">{projeto.titulo}</span>
-          <ChevronRight className="w-3 h-3 text-gray-300" />
-          <span className="text-gray-700 font-medium">Candidatar-se</span>
+          </Button>
+          <span className="text-[#E2E8F0] px-1">|</span>
+          <span className="hover:text-[#334155] cursor-pointer">Projetos</span>
+          <ChevronRight className="w-3 h-3 text-[#E2E8F0]" />
+          <span className="truncate max-w-60 text-[#334155] font-medium">{projeto.titulo}</span>
+          <ChevronRight className="w-3 h-3 text-[#E2E8F0]" />
+          <span className="text-[#1E2E4F] font-semibold">Candidatar-se</span>
         </div>
       </div>
 
-      <main className="max-w-7xl mx-auto px-8 pb-16">
+      <main className="max-w-7xl mx-auto px-8 pb-16 w-full flex-1">
         <div className="grid grid-cols-3 gap-8 items-start">
           <div className="col-span-2">
             <FormularioCandidatura
