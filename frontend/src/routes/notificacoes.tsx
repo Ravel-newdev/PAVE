@@ -1,6 +1,6 @@
-import { createFileRoute } from '@tanstack/react-router'
-import NotificacoesPage from '@/pages/aluno/NotificacoesPage'
+import { createFileRoute } from "@tanstack/react-router";
+import NotificacoesPage from "@/lib/pages/aluno/NotificacoesPage";
 
-export const Route = createFileRoute('/notificacoes')({
+export const Route = createFileRoute("/notificacoes")({
   component: NotificacoesPage,
-})
+});
