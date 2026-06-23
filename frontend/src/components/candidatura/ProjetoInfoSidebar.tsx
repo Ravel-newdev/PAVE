@@ -13,7 +13,7 @@ export function ProjetoInfoSidebar({ projeto }: { projeto: Projeto }) {
 
       <div className="bg-white rounded-2xl border border-[#E2E8F0] shadow-[0_4px_20px_rgba(0,0,0,0.04)] overflow-hidden">
 
-        <div className="bg-gradient-to-r from-[#1E2E4F] to-[#2a4070] p-5">
+        <div className="bg-linear-to-r from-[#1E2E4F] to-[#2a4070] p-5">
           <div className="flex items-start gap-3">
             <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center shrink-0">
               <FolderOpen className="w-5 h-5 text-white" />

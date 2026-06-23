@@ -88,7 +88,7 @@ export function FormularioCandidatura({
   return (
     <div className="bg-white rounded-2xl border border-[#E2E8F0] shadow-[0_4px_20px_rgba(0,0,0,0.04)] overflow-hidden">
 
-      <div className="bg-gradient-to-r from-[#1E2E4F] to-[#2a4070] px-8 py-6">
+      <div className="bg-linear-to-r from-[#1E2E4F] to-[#2a4070] px-8 py-6">
         <h1 className="text-xl font-bold text-white">
           Candidatar-se ao projeto <span className="text-[#5bbcdc]">{tituloProjeto}</span>
         </h1>
@@ -223,7 +223,7 @@ export function FormularioCandidatura({
           <button
             onClick={handleSubmit}
             disabled={isLoading}
-            className="px-8 py-2 bg-gradient-to-r from-[#287999] to-[#1e5c75] text-white text-sm font-semibold rounded-lg shadow-[0_4px_12px_rgba(40,121,153,0.25)] hover:shadow-[0_6px_16px_rgba(40,121,153,0.35)] hover:-translate-y-0.5 transition-all disabled:opacity-50"
+            className="px-8 py-2 bg-linear-to-r from-[#287999] to-[#1e5c75] text-white text-sm font-semibold rounded-lg shadow-[0_4px_12px_rgba(40,121,153,0.25)] hover:shadow-[0_6px_16px_rgba(40,121,153,0.35)] hover:-translate-y-0.5 transition-all disabled:opacity-50"
           >
             {isLoading ? "Enviando..." : "Enviar candidatura"}
           </button>
