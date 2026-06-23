@@ -37,15 +37,8 @@ export const RegisterValidationSchema = z
           message: "Você deve ter pelo menos 14 anos",
         },
       ),
-    course: z.enum(["cc", "si"], {
-      message: "Selecione um curso",
-    }),
-    period: z.enum(
-      ["s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8", "s9", "s10", "s11", "s12"],
-      {
-        message: "Selecione um período",
-      },
-    ),
+    course: z.string().min(1, "Selecione um curso"),
+    period: z.string().min(1, "Selecione um curso"),
     password: z
       .string()
       .min(8, "Mínimo de 8 caracteres")
@@ -57,16 +50,6 @@ export const RegisterValidationSchema = z
         /[^A-Za-z0-9]/,
         "Sua senha deve conter pelo menos um caractere especial",
       ),
-    confirmPassword: z
-      .string()
-      .min(1, "Confirme sua senha"),
   })
-  .refine(
-    (data) => data.password === data.confirmPassword,
-    {
-      message: "As senhas não coincidem",
-      path: ["confirmPassword"]
-    }
-  );
 
-export type LoginFormData = z.infer<typeof RegisterValidationSchema>;
+export type RegisterFormData = z.infer<typeof RegisterValidationSchema>;

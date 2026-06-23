@@ -40,14 +40,12 @@ const Cadastro = () => {
       email: '',
       cpf: '',
       dateBirth: '',
-      course: undefined,
-      period: undefined,
+      course: '',
+      period: '',
       password: '',
-      confirmPassword: ''
     }
   })
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   return (
     <>
       <div className="min-h-screen flex">
@@ -371,48 +369,6 @@ const Cadastro = () => {
                       </Field>
                     )}
                   />
-
-                  <Controller 
-                    name='confirmPassword'
-                    control={RegisterForm.control}
-                    render={({ field, fieldState }) => (
-                      <Field data-invalid={fieldState.invalid}>
-                        <FieldLabel htmlFor="form-confirmPass" className="mb-2 text-2xl font-bold text-slate-700">
-                          Confirme senha
-                        </FieldLabel>
-                        <div className="relative">
-                          <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
-                          <Input
-                            {...field}
-                            id="form-confirmPass"
-                            required
-                            type={showConfirmPassword ? "text" : "password"}
-                            className="
-                          pl-10
-                          h-15
-                          font-semibold
-                          font-sans
-                          "
-                          />
-                          <button
-                            type="button"
-                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                            className="absolute right-3 top-1/2 -translate-y-1/2"
-                          >
-                            {showConfirmPassword ? (
-                              <EyeOff className="h-5 w-5 text-gray-500" />
-                            ) : (
-                              <Eye className="h-5 w-5 text-gray-500" />
-                            )} 
-                          </button>
-                        </div>
-                        {fieldState.invalid && (
-                          <FieldError errors={[fieldState.error]} />
-                        )}
-                      </Field>
-                    )}
-                  />
-
                   <div className="md:col-span-2 pt-2">
                     <Button
                       type="submit"
