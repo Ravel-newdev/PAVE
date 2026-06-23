@@ -1,5 +1,5 @@
 import { Plus, Folder, FileEdit, Flag, PauseCircle, FolderX, BellOff } from "lucide-react";
-import { Header } from "@/components/shared/Header";
+import { ProfessorNavbar } from "@/lib/layout/componente-professor/ProfessorNavbar";
 import { Footer } from "@/components/shared/Footer";
 import { EstatisticaCard } from "@/components/dashboard/EstatisticaCard";
 import { ProjetoResumoItem } from "@/components/dashboard/ProjetoResumoItem";
@@ -28,7 +28,7 @@ export default function DashboardProfessorPage({
 }: Props) {
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col">
-      <Header perfil="professor" paginaAtiva="Início" nomeUsuario={`Prof. ${nomeProfessor}`} notificacoesPendentes={notificacoes.length} />
+      <ProfessorNavbar />
 
       <main className="max-w-6xl mx-auto px-8 py-8 flex-1 w-full space-y-6">
 

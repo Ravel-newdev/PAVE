@@ -75,14 +75,14 @@ export function Header({
           <div className="relative cursor-pointer">
             <Bell className="w-5 h-5 text-white/70" />
             {notificacoesPendentes > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] bg-amber-400 rounded-full border-2 border-[#1E2E4F] flex items-center justify-center text-[10px] font-bold text-white px-1">
+              <span className="absolute -top-1.5 -right-1.5 min-w-4.5 h-4.5 bg-amber-400 rounded-full border-2 border-[#1E2E4F] flex items-center justify-center text-[10px] font-bold text-white px-1">
                 {notificacoesPendentes}
               </span>
             )}
           </div>
 
           <div className="flex items-center gap-2 cursor-pointer">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#287999] to-[#1E2E4F] flex items-center justify-center text-white text-xs font-bold">
+            <div className="w-8 h-8 rounded-full bg-linear-to-r from-[#287999] to-[#1E2E4F] flex items-center justify-center text-white text-xs font-bold">
               {getIniciais(nomeUsuario)}
             </div>
             <span className="text-sm text-white/80 font-medium">Olá, {nomeUsuario.split(" ")[0]}</span>
