@@ -26,7 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { RegisterValidationSchema } from './schema';
+import { RegisterValidationSchema, type RegisterFormData } from './schema';
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { useForm, Controller } from 'react-hook-form';
@@ -46,6 +46,10 @@ const Cadastro = () => {
     }
   })
   const [showPassword, setShowPassword] = useState(false);
+
+  function onSubmit(data: RegisterFormData) {
+    console.log(data)
+  }
   return (
     <>
       <div className="min-h-screen flex">
@@ -98,7 +102,11 @@ const Cadastro = () => {
 
             <CardContent>
               {/*onSubmit={form.handleSubmit(onSubmit)}*/}
-              <form>
+              <form
+                onSubmit={(e) => {
+                  RegisterForm.handleSubmit(onSubmit)(e);
+                }}
+              >
                 <FieldGroup className="grid grid-cols-1 gap-x-8 gap-y-6 md:grid-cols-2">
                   <Controller
                     name="name"
