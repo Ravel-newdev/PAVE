@@ -36,15 +36,6 @@ function ProfessorTopbar() {
   return <ProfessorNavbar />;
 }
 
-
-
-
-
-
-
-
-
-
 export default function ProjetoForm({ mode = "create" }: { mode?: ProjetoFormMode }) {
   const isEdit = mode === "edit";
   const [formData, setFormData] = useState<FormData>(isEdit ? initialEditData : initialCreateData);
@@ -211,7 +202,7 @@ export default function ProjetoForm({ mode = "create" }: { mode?: ProjetoFormMod
       }
 
       alert(status === "rascunho" ? "Rascunho salvo com sucesso." : isEdit ? "Projeto atualizado com sucesso." : "Projeto publicado com sucesso.");
-      navigate({ to: "/projeto-visao-geral", search: { id: idCriado } as never });
+      navigate({ to: "/professor/projeto-visao-geral", search: { id: idCriado } as never });
     } catch (error) {
       console.error("Erro ao salvar projeto", error, payloadPreview);
       alert("Não foi possível salvar. Verifique se você está logada e se o backend está rodando.");

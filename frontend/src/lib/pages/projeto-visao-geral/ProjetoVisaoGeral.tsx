@@ -48,7 +48,7 @@ export default function ProjetoVisaoGeral() {
   }, [projetoId]);
 
   const handleEditProject = () => {
-    navigate({ to: "/editar-projeto", search: { id: projetoId } as never });
+    navigate({ to: "/professor/editar-projeto", search: { id: projetoId } as never });
   };
 
   const handleExport = () => {
@@ -83,7 +83,7 @@ export default function ProjetoVisaoGeral() {
 
       <div className="po-container">
         <div className="po-breadcrumb">
-          <Link to="/projeto-visao-geral">Projetos</Link>
+          <Link to="/professor/projeto-visao-geral">Projetos</Link>
           <span>›</span>
           <span>{currentProjeto.titulo}</span>
         </div>
@@ -121,8 +121,8 @@ export default function ProjetoVisaoGeral() {
         </section>
 
         <div className="po-tabs" role="tablist">
-          <Link className="po-tab po-tab-active" to="/projeto-visao-geral" search={{ id: projetoId } as never}>Visão geral</Link>
-          <Link className="po-tab" to="/kanban-candidatos" search={{ processoId: projetoId } as never}>Candidatos</Link>
+          <Link className="po-tab po-tab-active" to="/professor/projeto-visao-geral" search={{ id: projetoId } as never}>Visão geral</Link>
+          <Link className="po-tab" to="/professor/kanban-candidatos" search={{ processoId: projetoId } as never}>Candidatos</Link>
         </div>
 
         <section className="po-grid-main">

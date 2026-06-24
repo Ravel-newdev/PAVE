@@ -5,7 +5,7 @@ import "./navbar.css";
 export function ProfessorNavbar() {
   const location = useLocation();
 
-  const isInicio = location.pathname === "/";
+  const isInicio = location.pathname === "/professor";
   
   const isProjetos =
     location.pathname.includes("/projeto-visao-geral") ||
@@ -15,13 +15,13 @@ export function ProfessorNavbar() {
   return (
     <nav className="navbar">
       <div className="navbar-left">
-        <Link className="logo" to="/">
+        <Link className="logo" to="/professor">
           <img className="logo-img" src="/logo.png" alt="PAVE" />
         </Link>
 
         <div className="nav-links">
           <Link
-            to="/dashboard-professor"
+            to="/professor"
             className={`nav-link ${isInicio ? "active" : ""}`}
           >
             <Home size={18} />
@@ -29,7 +29,7 @@ export function ProfessorNavbar() {
           </Link>
 
           <Link
-            to="/projeto-visao-geral"
+            to="/professor/projeto-visao-geral"
             className={`nav-link ${isProjetos ? "active" : ""}`}
           >
             <Briefcase size={18} />

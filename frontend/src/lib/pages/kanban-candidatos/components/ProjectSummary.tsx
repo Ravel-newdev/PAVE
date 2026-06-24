@@ -26,7 +26,7 @@ export function ProjectSummary({
   const isCandidates = location.pathname === "/kanban-candidatos";
 
   function handleEditProject() {
-    navigate({ to: "/editar-projeto", search: { id: project.id } as never });
+    navigate({ to: "/professor/editar-projeto", search: { id: project.id } as never });
   }
 
   function handleExport() {
@@ -53,7 +53,7 @@ export function ProjectSummary({
   return (
     <section className="kc-project-section">
       <div className="kc-breadcrumb">
-        <Link to="/projeto-visao-geral">Projetos</Link>
+        <Link to="/professor/projeto-visao-geral">Projetos</Link>
         <span>›</span>
         <span>{project.title}</span>
       </div>
@@ -98,7 +98,7 @@ export function ProjectSummary({
 
       <div className="kc-tabs" role="tablist" aria-label="Abas do projeto">
         <Link
-          to="/projeto-visao-geral"
+          to="/professor/projeto-visao-geral"
           search={{ id: project.id } as never}
           className={`kc-tab ${isOverview ? "active" : ""}`}
         >
@@ -106,7 +106,7 @@ export function ProjectSummary({
         </Link>
 
         <Link
-          to="/kanban-candidatos"
+          to="/professor/kanban-candidatos"
           search={{ processoId: project.id } as never}
           className={`kc-tab ${isCandidates ? "active" : ""}`}
         >
