@@ -29,10 +29,59 @@ const alunoVazio: DadosAluno = {
   matricula: "",
 };
 
+const mock = {
+  projeto: {
+    id: "1",
+    titulo: "Educação Ambiental nas Escolas Públicas",
+    tags: ["Meio Ambiente", "Educação"],
+    coordenador: "Prof. Carlos Alencar",
+    vagas: 6,
+    inscricoesAte: "30/05/2025 às 23:59",
+    processoSeletivoId: "ps-001",
+  } as Projeto,
+
+  aluno: {
+    nomeCompleto: "Ravena Marques Carvalho",
+    curso: "Ciência da Computação",
+    matricula: "552345",
+  } as DadosAluno,
+
+  campos: [
+    { id: "c1", chave_unica: "motivacao",    label: "Por que você tem interesse em participar deste projeto?",                          tipo: "textarea", obrigatoriedade: true },
+    { id: "c2", chave_unica: "experiencias", label: "Quais experiências ou habilidades você acredita que podem contribuir com o projeto?", tipo: "textarea", obrigatoriedade: true },
+    { id: "c3", chave_unica: "dedicacao",    label: "Como você pretende se dedicar ao projeto?",                                          tipo: "textarea", obrigatoriedade: true },
+    { id: "c4", chave_unica: "curriculo",    label: "Anexe seu currículo (PDF)",                                                          tipo: "arquivo",  obrigatoriedade: true },
+  ] as CampoFormulario[],
+};
+
+// Mock temporário — remova quando integrar com a API
+const projetoMock: Projeto = {
+  id: "1",
+  titulo: "Educação Ambiental nas Escolas Públicas",
+  tags: ["Meio Ambiente", "Educação"],
+  coordenador: "Prof. Carlos Alencar",
+  vagas: 6,
+  inscricoesAte: "30/06/2026 às 23:59",
+  processoSeletivoId: "ps-uuid-mock-001",
+};
+
+const alunoMock: DadosAluno = {
+  nomeCompleto: "Ravena Marques Carvalho",
+  curso: "Ciência da Computação",
+  matricula: "552345",
+};
+
+const camposMock: CampoFormulario[] = [
+  { id: "c1", chave_unica: "motivacao",    label: "Por que você tem interesse em participar deste projeto?",                     tipo: "textarea", obrigatoriedade: true },
+  { id: "c2", chave_unica: "experiencias", label: "Quais experiências ou habilidades você acredita que podem contribuir com o projeto?", tipo: "textarea", obrigatoriedade: true },
+  { id: "c3", chave_unica: "dedicacao",    label: "Como você pretende se dedicar ao projeto?",                                   tipo: "textarea", obrigatoriedade: true },
+  { id: "c4", chave_unica: "curriculo",    label: "Anexe seu currículo (PDF)",                                                   tipo: "arquivo",  obrigatoriedade: true },
+];
+
 export default function CandidaturaPage({
-  projeto = projetoVazio,
-  dadosAluno = alunoVazio,
-  campos = [],
+  projeto = mock.projeto,
+  dadosAluno = mock.aluno,
+  campos = mock.campos,
 }: Props) {
   const [isLoading, setIsLoading] = useState(false);
 

@@ -14,11 +14,54 @@ const notificacaoBoasVindas: Notificacao = {
   lida: false,
 };
 
+const mock: Notificacao[] = [
+  {
+    id: "1",
+    tipo: "aprovacao",
+    titulo: "Sua candidatura foi aprovada!",
+    mensagem: 'Parabéns! Você foi aprovado(a) no projeto "Educação Ambiental nas Escolas Públicas".',
+    dataFormatada: "2h atrás",
+    lida: false,
+  },
+  {
+    id: "2",
+    tipo: "novo_projeto",
+    titulo: "Novo projeto publicado",
+    mensagem: 'O projeto "Apoio ao Ensino de Matemática" está com inscrições abertas.',
+    dataFormatada: "Ontem, 14:30",
+    lida: false,
+  },
+  {
+    id: "3",
+    tipo: "prazo",
+    titulo: "Inscrição próxima do prazo",
+    mensagem: 'O prazo para se inscrever no projeto "Promoção da Saúde e Qualidade de Vida" termina em 2 dias.',
+    dataFormatada: "Ontem, 09:15",
+    lida: false,
+  },
+  {
+    id: "4",
+    tipo: "atualizacao",
+    titulo: "Atualização na sua candidatura",
+    mensagem: 'Seu status no projeto "Comunicação e Cultura Universitária" foi atualizado para "Em análise".',
+    dataFormatada: "12/05/2025",
+    lida: true,
+  },
+  {
+    id: "5",
+    tipo: "favorito",
+    titulo: "Projeto adicionado aos favoritos",
+    mensagem: 'O projeto "Sustentabilidade e Gestão de Resíduos" foi adicionado aos seus favoritos.',
+    dataFormatada: "09/05/2025",
+    lida: true,
+  },
+];
+
 interface Props {
   notificacoes?: Notificacao[];
 }
 
-export default function NotificacoesPage({ notificacoes: notificacoesApi = [] }: Props) {
+export default function NotificacoesPage({ notificacoes: notificacoesApi = mock }: Props) {
   const [lista, setLista] = useState<Notificacao[]>([
     ...notificacoesApi,
     notificacaoBoasVindas,

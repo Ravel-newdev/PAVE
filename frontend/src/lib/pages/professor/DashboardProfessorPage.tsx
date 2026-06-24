@@ -6,11 +6,25 @@ import { ProjetoResumoItem } from "@/components/dashboard/ProjetoResumoItem";
 import { NotificacaoResumoItem } from "@/components/dashboard/NotificacaoResumoItem";
 import type { EstatisticasDashboard, ProjetoResumo, NotificacaoResumo } from "@/types/dashboard";
 
-const estatisticasVazias: EstatisticasDashboard = {
-  projetosAtivos: 0,
-  projetosRascunho: 0,
-  projetosEncerrados: 0,
-  projetosSuspensos: 0,
+const mock = {
+  estatisticas: {
+    projetosAtivos: 4,
+    projetosRascunho: 2,
+    projetosEncerrados: 6,
+    projetosSuspensos: 1,
+  } as EstatisticasDashboard,
+
+  projetos: [
+    { id: "1", titulo: "Apoio ao Ensino de Matemática",           categoria: "Educação",    inscritos: 18, vagasPreenchidas: 12, vagasTotal: 20, status: "ativo",     diasRestantes: 15 },
+    { id: "2", titulo: "Projeto de Leitura e Produção de Textos", categoria: "Linguística", inscritos: 7,  vagasPreenchidas: 8,  vagasTotal: 10, status: "ativo",     diasRestantes: 30 },
+    { id: "3", titulo: "Comunicação e Cultura Universitária",     categoria: "Cultura",     inscritos: 22, vagasPreenchidas: 10, vagasTotal: 10, status: "encerrado", finalizadoEm: "20/05/2025" },
+  ] as ProjetoResumo[],
+
+  notificacoes: [
+    { id: "1", tipo: "candidatura",  titulo: "Nova candidatura recebida", mensagem: 'João Pedro Souza se inscreveu no processo seletivo do projeto "Apoio ao Ensino de Matemática".', dataFormatada: "2h atrás" },
+    { id: "2", tipo: "novo_projeto", titulo: "Novo projeto publicado",    mensagem: 'O projeto "Apoio ao Ensino de Matemática" está com inscrições abertas.',                            dataFormatada: "Hoje, 14:30" },
+    { id: "3", tipo: "resultado",    titulo: "Resultado divulgado",       mensagem: 'Você divulgou o resultado do projeto "Comunicação e Cultura Universitária".',                        dataFormatada: "Ontem, 10:15" },
+  ] as NotificacaoResumo[],
 };
 
 interface Props {
@@ -22,9 +36,9 @@ interface Props {
 
 export default function DashboardProfessorPage({
   nomeProfessor = "Carlos",
-  estatisticas = estatisticasVazias,
-  projetos = [],
-  notificacoes = [],
+  estatisticas = mock.estatisticas,
+  projetos = mock.projetos,
+  notificacoes = mock.notificacoes,
 }: Props) {
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col">
