@@ -12,11 +12,14 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as ProjetosRouteImport } from './routes/projetos'
 import { Route as ProjetoVisaoGeralRouteImport } from './routes/projeto-visao-geral'
 import { Route as OportunidadeRouteImport } from './routes/oportunidade'
+import { Route as NotificacoesRouteImport } from './routes/notificacoes'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as KanbanCandidatosRouteImport } from './routes/kanban-candidatos'
 import { Route as EditarProjetoRouteImport } from './routes/editar-projeto'
 import { Route as DetalheProjetoRouteImport } from './routes/detalheProjeto'
+import { Route as DashboardProfessorRouteImport } from './routes/dashboard-professor'
 import { Route as CriarProjetoRouteImport } from './routes/criar-projeto'
+import { Route as CandidaturaRouteImport } from './routes/candidatura'
 import { Route as CadastroProjetoRouteImport } from './routes/cadastroProjeto'
 import { Route as CadastroRouteImport } from './routes/cadastro'
 import { Route as IndexRouteImport } from './routes/index'
@@ -36,6 +39,11 @@ const ProjetoVisaoGeralRoute = ProjetoVisaoGeralRouteImport.update({
 const OportunidadeRoute = OportunidadeRouteImport.update({
   id: '/oportunidade',
   path: '/oportunidade',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NotificacoesRoute = NotificacoesRouteImport.update({
+  id: '/notificacoes',
+  path: '/notificacoes',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -58,9 +66,19 @@ const DetalheProjetoRoute = DetalheProjetoRouteImport.update({
   path: '/detalheProjeto',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardProfessorRoute = DashboardProfessorRouteImport.update({
+  id: '/dashboard-professor',
+  path: '/dashboard-professor',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CriarProjetoRoute = CriarProjetoRouteImport.update({
   id: '/criar-projeto',
   path: '/criar-projeto',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CandidaturaRoute = CandidaturaRouteImport.update({
+  id: '/candidatura',
+  path: '/candidatura',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CadastroProjetoRoute = CadastroProjetoRouteImport.update({
@@ -93,11 +111,14 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/cadastro': typeof CadastroRoute
   '/cadastroProjeto': typeof CadastroProjetoRoute
+  '/candidatura': typeof CandidaturaRoute
   '/criar-projeto': typeof CriarProjetoRoute
+  '/dashboard-professor': typeof DashboardProfessorRoute
   '/detalheProjeto': typeof DetalheProjetoRoute
   '/editar-projeto': typeof EditarProjetoRoute
   '/kanban-candidatos': typeof KanbanCandidatosRoute
   '/login': typeof LoginRoute
+  '/notificacoes': typeof NotificacoesRoute
   '/oportunidade': typeof OportunidadeRoute
   '/projeto-visao-geral': typeof ProjetoVisaoGeralRoute
   '/projetos': typeof ProjetosRouteWithChildren
@@ -108,11 +129,14 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/cadastro': typeof CadastroRoute
   '/cadastroProjeto': typeof CadastroProjetoRoute
+  '/candidatura': typeof CandidaturaRoute
   '/criar-projeto': typeof CriarProjetoRoute
+  '/dashboard-professor': typeof DashboardProfessorRoute
   '/detalheProjeto': typeof DetalheProjetoRoute
   '/editar-projeto': typeof EditarProjetoRoute
   '/kanban-candidatos': typeof KanbanCandidatosRoute
   '/login': typeof LoginRoute
+  '/notificacoes': typeof NotificacoesRoute
   '/oportunidade': typeof OportunidadeRoute
   '/projeto-visao-geral': typeof ProjetoVisaoGeralRoute
   '/projetos/$id': typeof ProjetosIdRoute
@@ -123,11 +147,14 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/cadastro': typeof CadastroRoute
   '/cadastroProjeto': typeof CadastroProjetoRoute
+  '/candidatura': typeof CandidaturaRoute
   '/criar-projeto': typeof CriarProjetoRoute
+  '/dashboard-professor': typeof DashboardProfessorRoute
   '/detalheProjeto': typeof DetalheProjetoRoute
   '/editar-projeto': typeof EditarProjetoRoute
   '/kanban-candidatos': typeof KanbanCandidatosRoute
   '/login': typeof LoginRoute
+  '/notificacoes': typeof NotificacoesRoute
   '/oportunidade': typeof OportunidadeRoute
   '/projeto-visao-geral': typeof ProjetoVisaoGeralRoute
   '/projetos': typeof ProjetosRouteWithChildren
@@ -140,11 +167,14 @@ export interface FileRouteTypes {
     | '/'
     | '/cadastro'
     | '/cadastroProjeto'
+    | '/candidatura'
     | '/criar-projeto'
+    | '/dashboard-professor'
     | '/detalheProjeto'
     | '/editar-projeto'
     | '/kanban-candidatos'
     | '/login'
+    | '/notificacoes'
     | '/oportunidade'
     | '/projeto-visao-geral'
     | '/projetos'
@@ -155,11 +185,14 @@ export interface FileRouteTypes {
     | '/'
     | '/cadastro'
     | '/cadastroProjeto'
+    | '/candidatura'
     | '/criar-projeto'
+    | '/dashboard-professor'
     | '/detalheProjeto'
     | '/editar-projeto'
     | '/kanban-candidatos'
     | '/login'
+    | '/notificacoes'
     | '/oportunidade'
     | '/projeto-visao-geral'
     | '/projetos/$id'
@@ -169,11 +202,14 @@ export interface FileRouteTypes {
     | '/'
     | '/cadastro'
     | '/cadastroProjeto'
+    | '/candidatura'
     | '/criar-projeto'
+    | '/dashboard-professor'
     | '/detalheProjeto'
     | '/editar-projeto'
     | '/kanban-candidatos'
     | '/login'
+    | '/notificacoes'
     | '/oportunidade'
     | '/projeto-visao-geral'
     | '/projetos'
@@ -185,11 +221,14 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CadastroRoute: typeof CadastroRoute
   CadastroProjetoRoute: typeof CadastroProjetoRoute
+  CandidaturaRoute: typeof CandidaturaRoute
   CriarProjetoRoute: typeof CriarProjetoRoute
+  DashboardProfessorRoute: typeof DashboardProfessorRoute
   DetalheProjetoRoute: typeof DetalheProjetoRoute
   EditarProjetoRoute: typeof EditarProjetoRoute
   KanbanCandidatosRoute: typeof KanbanCandidatosRoute
   LoginRoute: typeof LoginRoute
+  NotificacoesRoute: typeof NotificacoesRoute
   OportunidadeRoute: typeof OportunidadeRoute
   ProjetoVisaoGeralRoute: typeof ProjetoVisaoGeralRoute
   ProjetosRoute: typeof ProjetosRouteWithChildren
@@ -216,6 +255,13 @@ declare module '@tanstack/react-router' {
       path: '/oportunidade'
       fullPath: '/oportunidade'
       preLoaderRoute: typeof OportunidadeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/notificacoes': {
+      id: '/notificacoes'
+      path: '/notificacoes'
+      fullPath: '/notificacoes'
+      preLoaderRoute: typeof NotificacoesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -246,11 +292,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DetalheProjetoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard-professor': {
+      id: '/dashboard-professor'
+      path: '/dashboard-professor'
+      fullPath: '/dashboard-professor'
+      preLoaderRoute: typeof DashboardProfessorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/criar-projeto': {
       id: '/criar-projeto'
       path: '/criar-projeto'
       fullPath: '/criar-projeto'
       preLoaderRoute: typeof CriarProjetoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/candidatura': {
+      id: '/candidatura'
+      path: '/candidatura'
+      fullPath: '/candidatura'
+      preLoaderRoute: typeof CandidaturaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/cadastroProjeto': {
@@ -309,11 +369,14 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CadastroRoute: CadastroRoute,
   CadastroProjetoRoute: CadastroProjetoRoute,
+  CandidaturaRoute: CandidaturaRoute,
   CriarProjetoRoute: CriarProjetoRoute,
+  DashboardProfessorRoute: DashboardProfessorRoute,
   DetalheProjetoRoute: DetalheProjetoRoute,
   EditarProjetoRoute: EditarProjetoRoute,
   KanbanCandidatosRoute: KanbanCandidatosRoute,
   LoginRoute: LoginRoute,
+  NotificacoesRoute: NotificacoesRoute,
   OportunidadeRoute: OportunidadeRoute,
   ProjetoVisaoGeralRoute: ProjetoVisaoGeralRoute,
   ProjetosRoute: ProjetosRouteWithChildren,

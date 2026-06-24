@@ -21,7 +21,7 @@ export function ProfessorNavbar() {
 
         <div className="nav-links">
           <Link
-            to="/"
+            to="/dashboard-professor"
             className={`nav-link ${isInicio ? "active" : ""}`}
           >
             <Home size={18} />
