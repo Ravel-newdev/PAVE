@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Check, BellOff } from "lucide-react";
 import { Header } from "@/components/shared/Header";
 import { Footer } from "@/components/shared/Footer";
-import { Button } from "@/components/ui/button";
 import { NotificacaoItem } from "@/components/notificacoes/NotificacaoItem";
 import type { Notificacao } from "@/types/notificacao";
 
