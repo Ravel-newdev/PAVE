@@ -14,10 +14,6 @@ import { CandidateDrawer } from "./components/CandidateDrawer";
 import { columns } from "./data/columns";
 import { project } from "./data/project";
 
-
-
-
-
 export default function KanbanCandidatos() {
   const [query, setQuery] = useState<string>("");
   const processoId = getIdFromUrl("1");
@@ -30,8 +26,6 @@ export default function KanbanCandidatos() {
     startDragging,
     handleDrop,
   } = useCandidates(processoId, query);
-
-  
 
   function handleDragOver(event: DragEvent<HTMLDivElement>) {
     event.preventDefault();

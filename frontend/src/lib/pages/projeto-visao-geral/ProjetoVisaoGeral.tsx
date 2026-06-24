@@ -23,13 +23,6 @@ import { StatCard } from "./components/StatCard";
 import { projeto } from "./constants/projetoVisaoData";
 import { mapProjeto } from "./utils/projetoMapper";
 
-
-
-
-
-
-
-
 export default function ProjetoVisaoGeral() {
   const projetoId = getIdFromUrl("1");
   const [currentProjeto, setCurrentProjeto] = useState(projeto);
