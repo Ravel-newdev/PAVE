@@ -18,7 +18,7 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-import { Field, FieldLabel } from "@/components/ui/field";
+import { Field, FieldLabel, FieldGroup, FieldError } from "@/components/ui/field";
 import {
   Select,
   SelectContent,
@@ -26,10 +26,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { RegisterValidationSchema } from './schema';
+import { RegisterValidationSchema, type RegisterFormData } from './schema';
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 
 const Cadastro = () => {
   const RegisterForm = useForm({
@@ -37,17 +37,19 @@ const Cadastro = () => {
     mode: 'onChange',
     defaultValues: {
       name: '',
-      address: '',
+      email: '',
       cpf: '',
       dateBirth: '',
       course: '',
       period: '',
       password: '',
-      confirmPassword: ''
     }
   })
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  function onSubmit(data: RegisterFormData) {
+    console.log(data)
+  }
   return (
     <>
       <div className="min-h-screen flex">
@@ -100,241 +102,290 @@ const Cadastro = () => {
 
             <CardContent>
               {/*onSubmit={form.handleSubmit(onSubmit)}*/}
-              <form className="grid grid-cols-1 gap-x-8 gap-y-6 md:grid-cols-2">
-                <Field>
-                  <FieldLabel htmlFor="form-name" className="mb-2 text-2xl font-bold text-slate-700">
-                    Nome completo
-                  </FieldLabel>
-                  <div className="relative">
-                    <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
-                    <Input
-                      placeholder="Digite seu nome completo"
-                      id="form-name"
-                      required
-                      className="
-                      pl-10
-                      h-15
-                      font-semibold
-                      font-sans
-                      "
-                      //   {...form.register("nome")}
-                    />
-                  </div>
-                </Field>
-
-                <Field>
-                  <FieldLabel htmlFor="form-email" className="mb-2 text-2xl font-bold text-slate-700">
-                    E-mail institucional
-                  </FieldLabel>
-
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
-                    <Input
-                      id="form-email"
-                      type="email"
-                      placeholder="seu.email@instituicao.edu.br"
-                      required
-                      className="
-                      pl-10
-                      h-15
-                      font-semibold
-                      font-sans
-                      "
-                      //   {...form.register("email")}
-                    />
-                  </div>
-                </Field>
-
-                <Field>
-                  <FieldLabel htmlFor="form-cpf" className="mb-2 text-2xl font-bold text-slate-700">
-                    CPF
-                  </FieldLabel>
-
-                  <div className="relative">
-                    <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
-                    <Input
-                      id="form-cpf"
-                      placeholder="000.000.000-00"
-                      required
-                      className="
-                    pl-10
-                    h-15
-                    font-semibold
-                    font-sans"
-                    />
-                  </div>
-                  {/*{...form.register("cpf")}*/}
-                </Field>
-
-                <Field>
-                  <FieldLabel htmlFor="form-data" className="mb-2 text-2xl font-bold text-slate-700">
-                    Data de nascimento
-                  </FieldLabel>
-                  <div className="relative">
-                    <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
-                    <Input
-                      id="form-data"
-                      required
-                      type="date"
-                      className="
-                    pl-10
-                    h-15
-                    font-semibold
-                    font-sans
-                    "
-                    />
-                  </div>
-                </Field>
-
-                <Field>
-                  <FieldLabel htmlFor="form-course" className="mb-2 text-2xl font-bold text-slate-700">
-                    Curso
-                  </FieldLabel>
-                  <div className="relative">
-                    <GraduationCap
-                      className="
-                    pointer-events-none
-                    absolute
-                    left-3 
-                    top-1/2 
-                    -translate-y-1/2 
-                    h-4 
-                    w-4 
-                    text-gray-500"
-                    />
-                    <Select required>
-                      <SelectTrigger
-                        id="form-course"
-                        className="
-                        pl-10
-                        p-8
-                        h-15
-                        w-full
-                        font-semibold
-                        font-sans"
-                      >
-                        <SelectValue placeholder="Selecione o curso" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="cc">
-                          Ciência da Computação
-                        </SelectItem>
-                        <SelectItem value="si">
-                          Sistemas de Informação
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </Field>
-
-                <Field>
-                  <FieldLabel htmlFor="form-period" className="mb-2 text-2xl font-bold text-slate-700">
-                    Período
-                  </FieldLabel>
-                  <div className="relative">
-                    <University className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
-                    <Select required>
-                      <SelectTrigger
-                        id="form-period"
-                        className="
-                        pl-10
-                        p-8
-                        h-15
-                        w-full
-                        font-semibold
-                        font-sans"
-                      >
-                        <SelectValue placeholder="Selecione o curso" />
-                      </SelectTrigger>
-
-                      <SelectContent>
-                        <SelectItem value="s1">1° semestre</SelectItem>
-                        <SelectItem value="s2">2° semestre</SelectItem>
-                        <SelectItem value="s3">3° semestre</SelectItem>
-                        <SelectItem value="s4">4° semestre</SelectItem>
-                        <SelectItem value="s5">5° semestre</SelectItem>
-                        <SelectItem value="s6">6° semestre</SelectItem>
-                        <SelectItem value="s7">7° semestre</SelectItem>
-                        <SelectItem value="s8">8° semestre</SelectItem>
-                        <SelectItem value="s9">9° semestre</SelectItem>
-                        <SelectItem value="s10">10° semestre</SelectItem>
-                        <SelectItem value="s11">11° semestre</SelectItem>
-                        <SelectItem value="s12">12° semestre</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </Field>
-
-                <Field>
-                  <FieldLabel htmlFor="form-password" className="mb-2 text-2xl font-bold text-slate-700">
-                    Senha
-                  </FieldLabel>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
-                    <Input
-                      id="form-password"
-                      required
-                      type={showPassword ? "text" : "password"}
-                      className="
-                    pl-10
-                    h-15
-                    font-semibold
-                    font-sans
-                    "
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2"
-                    >
-                      {showPassword ? (
-                        <EyeOff className="h-5 w-5 text-gray-500" />
-                      ) : (
-                        <Eye className="h-5 w-5 text-gray-500" />
+              <form
+                onSubmit={(e) => {
+                  RegisterForm.handleSubmit(onSubmit)(e);
+                }}
+              >
+                <FieldGroup className="grid grid-cols-1 gap-x-8 gap-y-6 md:grid-cols-2">
+                  <Controller
+                    name="name"
+                    control={RegisterForm.control}
+                    render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel htmlFor="form-name" className="mb-2 text-2xl font-bold text-slate-700">
+                        Nome completo
+                      </FieldLabel>
+                      <div className="relative">
+                        <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+                        <Input
+                          {...field}
+                          placeholder="Digite seu nome completo"
+                          id="form-name"
+                          required
+                          className="
+                          pl-10
+                          h-15
+                          font-semibold
+                          font-sans
+                          "
+                          //   {...form.register("nome")}
+                        />
+                      </div>
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
                       )}
-                    </button>
-                  </div>
-                </Field>
+                    </Field>
+                    )}
+                  />
 
-                <Field>
-                  <FieldLabel htmlFor="form-confirmPass" className="mb-2 text-2xl font-bold text-slate-700">
-                    Confirme senha
-                  </FieldLabel>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
-                    <Input
-                      id="form-confirmPass"
-                      required
-                      type={showConfirmPassword ? "text" : "password"}
-                      className="
-                    pl-10
-                    h-15
-                    font-semibold
-                    font-sans
-                    "
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2"
+                  <Controller
+                    name="email"
+                    control={RegisterForm.control}
+                    render={({ field, fieldState}) => (
+                      <Field data-invalid={fieldState.invalid}>
+                        <FieldLabel htmlFor="form-email" className="mb-2 text-2xl font-bold text-slate-700">
+                          E-mail institucional
+                        </FieldLabel>
+
+                        <div className="relative">
+                          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+                          <Input
+                            {...field}
+                            id="form-email"
+                            type="email"
+                            placeholder="seu.email@instituicao.edu.br"
+                            required
+                            className="
+                            pl-10
+                            h-15
+                            font-semibold
+                            font-sans
+                            "
+                          />
+                        </div>
+                        {fieldState.invalid && (
+                          <FieldError errors={[fieldState.error]} />
+                        )}
+                      </Field>
+                    )}
+                  />
+
+                  <Controller 
+                    name='cpf'
+                    control={RegisterForm.control}
+                    render={({ field, fieldState }) => (
+                      <Field data-invalid={fieldState.invalid}> 
+                        <FieldLabel htmlFor="form-cpf" className="mb-2 text-2xl font-bold text-slate-700">
+                          CPF
+                        </FieldLabel>
+
+                        <div className="relative">
+                          <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+                          <Input
+                            {...field}
+                            id="form-cpf"
+                            placeholder="00000000000"
+                            required
+                            className="
+                          pl-10
+                          h-15
+                          font-semibold
+                          font-sans"
+                          />
+                        </div>
+                        {fieldState.invalid && (
+                          <FieldError errors={[fieldState.error]} />
+                        )}
+                      </Field>
+                    )}
+                  />
+
+                  <Controller 
+                    name='dateBirth'
+                    control={RegisterForm.control}
+                    render={({ field, fieldState }) => (
+                      <Field data-invalid={fieldState.invalid}>
+                        <FieldLabel htmlFor="form-data" className="mb-2 text-2xl font-bold text-slate-700">
+                          Data de nascimento
+                        </FieldLabel>
+                        <div className="relative">
+                          <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+                          <Input
+                            {...field}
+                            id="form-data"
+                            required
+                            type="date"
+                            max={new Date().toISOString().split("T")[0]}
+                            className="
+                          pl-10
+                          h-15
+                          font-semibold
+                          font-sans
+                          "
+                          />
+                        </div>
+                        {fieldState.invalid && (
+                          <FieldError errors={[fieldState.error]} />
+                        )}
+                      </Field>
+                    )}
+                  />
+
+                  <Controller 
+                    name="course"
+                    control={RegisterForm.control}
+                    render={({ field, fieldState }) => (
+                      <Field data-invalid={fieldState.invalid}>
+                        <FieldLabel htmlFor="form-course" className="mb-2 text-2xl font-bold text-slate-700">
+                          Curso
+                        </FieldLabel>
+                        <div className="relative">
+                          <GraduationCap
+                            className="
+                          pointer-events-none
+                          absolute
+                          left-3 
+                          top-1/2 
+                          -translate-y-1/2 
+                          h-4 
+                          w-4 
+                          text-gray-500"
+                          />
+                          <Select 
+                            required
+                            value={field.value}
+                            onValueChange={field.onChange}
+                          >
+                            <SelectTrigger
+                              id="form-course"
+                              className="
+                              pl-10
+                              p-8
+                              h-15
+                              w-full
+                              font-semibold
+                              font-sans"
+                            >
+                              <SelectValue placeholder="Selecione o curso" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="cc">
+                                Ciência da Computação
+                              </SelectItem>
+                              <SelectItem value="si">
+                                Sistemas de Informação
+                              </SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        {fieldState.invalid && (
+                          <FieldError errors={[fieldState.error]} />
+                        )}
+                      </Field>
+                    )}
+                  />
+
+                  <Controller 
+                    name="period"
+                    control={RegisterForm.control}
+                    render={({ field, fieldState }) => (
+                      <Field data-invalid={fieldState.invalid}>
+                        <FieldLabel htmlFor="form-period" className="mb-2 text-2xl font-bold text-slate-700">
+                          Período
+                        </FieldLabel>
+                        <div className="relative">
+                          <University className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+                          <Select 
+                            required
+                            value={field.value}
+                            onValueChange={field.onChange}
+                          >
+                            <SelectTrigger
+                              id="form-period"
+                              className="
+                              pl-10
+                              p-8
+                              h-15
+                              w-full
+                              font-semibold
+                              font-sans"
+                            >
+                              <SelectValue placeholder="Selecione o curso" />
+                            </SelectTrigger>
+
+                            <SelectContent>
+                              <SelectItem value="s1">1° semestre</SelectItem>
+                              <SelectItem value="s2">2° semestre</SelectItem>
+                              <SelectItem value="s3">3° semestre</SelectItem>
+                              <SelectItem value="s4">4° semestre</SelectItem>
+                              <SelectItem value="s5">5° semestre</SelectItem>
+                              <SelectItem value="s6">6° semestre</SelectItem>
+                              <SelectItem value="s7">7° semestre</SelectItem>
+                              <SelectItem value="s8">8° semestre</SelectItem>
+                              <SelectItem value="s9">9° semestre</SelectItem>
+                              <SelectItem value="s10">10° semestre</SelectItem>
+                              <SelectItem value="s11">11° semestre</SelectItem>
+                              <SelectItem value="s12">12° semestre</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        {fieldState.invalid && (
+                          <FieldError errors={[fieldState.error]} />
+                        )}
+                      </Field>
+                    )}
+                  />
+
+                  <Controller
+                    name='password'
+                    control={RegisterForm.control}
+                    render={({ field, fieldState }) => (
+                      <Field data-invalid={fieldState.invalid}>
+                        <FieldLabel htmlFor="form-password" className="mb-2 text-2xl font-bold text-slate-700">
+                          Senha
+                        </FieldLabel>
+                        <div className="relative">
+                          <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+                          <Input
+                            {...field}
+                            id="form-password"
+                            required
+                            type={showPassword ? "text" : "password"}
+                            className="
+                          pl-10
+                          h-15
+                          font-semibold
+                          font-sans
+                          "
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute right-3 top-1/2 -translate-y-1/2"
+                          >
+                            {showPassword ? (
+                              <EyeOff className="h-5 w-5 text-gray-500" />
+                            ) : (
+                              <Eye className="h-5 w-5 text-gray-500" />
+                            )}
+                          </button>
+                        </div>
+                        {fieldState.invalid && (
+                          <FieldError errors={[fieldState.error]} />
+                        )}
+                      </Field>
+                    )}
+                  />
+                  <div className="md:col-span-2 pt-2">
+                    <Button
+                      type="submit"
+                      className="h-12 w-full text-white text-2xl font-semibold bg-cyan-900"
                     >
-                      {showConfirmPassword ? (
-                        <EyeOff className="h-5 w-5 text-gray-500" />
-                      ) : (
-                        <Eye className="h-5 w-5 text-gray-500" />
-                      )} 
-                    </button>
+                      Cadastrar
+                    </Button>
                   </div>
-                </Field>
-
-                <div className="md:col-span-2 pt-2">
-                  <Button
-                    type="submit"
-                    className="h-12 w-full text-white text-2xl font-semibold bg-cyan-900"
-                  >
-                    Cadastrar
-                  </Button>
-                </div>
+                </FieldGroup>
               </form>
               <p className="mt-6 text-2xl text-slate-500 text-center">
                 Já tem uma conta?{"\u00A0"}
