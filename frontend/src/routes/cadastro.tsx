@@ -4,4 +4,3 @@ import Cadastro from '@/lib/pages/cadastro'
 export const Route = createFileRoute('/cadastro')({
   component: Cadastro,
 })
-

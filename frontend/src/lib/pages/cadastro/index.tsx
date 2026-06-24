@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from "../../layout/components/ui/button";
+import { Input } from "../../layout/components/ui/input";
 import {
   User,
   Mail,
@@ -17,38 +17,39 @@ import {
   CardHeader,
   CardTitle,
   CardDescription,
-} from "@/components/ui/card";
-import { Field, FieldLabel } from "@/components/ui/field";
+} from "../../layout/components/ui/card";
+import { Field, FieldLabel } from "../../layout/components/ui/field";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "../../layout/components/ui/select";
 import { RegisterValidationSchema } from './schema';
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { useForm } from 'react-hook-form';
 
 const Cadastro = () => {
-  const RegisterForm = useForm({
-    resolver: zodResolver(RegisterValidationSchema),
-    mode: 'onChange',
-    defaultValues: {
-      name: '',
-      address: '',
-      cpf: '',
-      dateBirth: '',
-      course: '',
-      period: '',
-      password: '',
-      confirmPassword: ''
-    }
-  })
+  const form = useForm({
+  resolver: zodResolver(RegisterValidationSchema),
+  mode: 'onChange',
+  defaultValues: {
+    name: '',
+    address: '',
+    cpf: '',
+    dateBirth: '',
+    course: '',
+    period: '',
+    password: '',
+    confirmPassword: ''
+  }
+});
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   return (
+
     <>
       <div className="min-h-screen flex">
         {/* Lado esquerdo */}
