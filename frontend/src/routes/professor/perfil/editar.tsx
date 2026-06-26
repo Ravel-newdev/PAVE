@@ -1,5 +1,5 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
-import EditarPerfil from '../../../lib/pages/professor/editarperfil'
+import EditarPerfil from '@/lib/pages/professor/editarperfil' // Agora vai funcionar
 
 export const Route = createFileRoute('/professor/perfil/editar')({
   beforeLoad: async () => {
