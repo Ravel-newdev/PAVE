@@ -1,6 +1,7 @@
 import { api } from '@/lib/services/constants'
 import { useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
+import { ChevronRight, Bell, ArrowLeft, PlusCircle, Loader2 } from 'lucide-react'
 
 const NovoProjeto = () => {
   const navigate = useNavigate()
@@ -59,42 +60,50 @@ const NovoProjeto = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#F5F7FA]">
-      {/* Header */}
-      <header className="bg-white border-b border-gray-100 px-8 py-4 flex items-center justify-between">
+    <div className="min-h-screen bg-[#F8FAFC] font-sans antialiased text-gray-800">
+      {/* Header Premium Alinhado */}
+      <header className="bg-white border-b border-gray-100 px-8 py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm/5">
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-full bg-[#2E7D32] flex items-center justify-center">
+          <div className="w-8 h-8 rounded-xl bg-[#2E7D32] flex items-center justify-center shadow-sm shadow-[#2E7D32]/20">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M17 8c0 0-2 7-10 11" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+              <path d="M17 8c0 0-2 7-10 11" stroke="white" strokeWidth="2.5" strokeLinecap="round"/>
             </svg>
           </div>
-          <span className="font-bold text-[#1B5E20] tracking-tight">PAVE <span className="text-gray-300 font-normal">UFC</span></span>
+          <span className="font-bold text-lg text-[#1B5E20] tracking-tight">PAVE <span className="text-gray-300 font-light">UFC</span></span>
         </div>
-        <nav className="flex items-center gap-6 text-sm">
-          <a href="/" className="text-gray-500 hover:text-gray-800">Início</a>
-          <a href="/professor/projetos" className="text-gray-500 hover:text-gray-800">Projetos</a>
+        <nav className="flex items-center gap-8 text-sm font-medium">
+          <a href="/" className="text-gray-400 hover:text-gray-600 transition">Início</a>
+          <a href="/professor/projetos" className="text-[#2E7D32] border-b-2 border-[#2E7D32] pb-4 -mb-4">Projetos</a>
         </nav>
-        <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-sm font-medium text-gray-600">P</div>
+        <div className="flex items-center gap-4">
+          <button type="button" className="text-gray-400 hover:text-gray-600 transition p-1.5 hover:bg-gray-50 rounded-lg">
+            <Bell className="w-5 h-5" />
+          </button>
+          <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center text-sm font-semibold text-gray-600 border border-gray-200">P</div>
+        </div>
       </header>
 
-      <main className="max-w-2xl mx-auto px-6 py-10">
-        {/* Breadcrumb */}
-        <div className="flex items-center gap-2 text-sm text-gray-400 mb-6">
-          <a href="/professor/projetos" className="hover:text-gray-600">Projetos</a>
-          <span>›</span>
+      <main className="max-w-3xl mx-auto px-6 py-10">
+        {/* Breadcrumb Figma */}
+        <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-gray-400 mb-6">
+          <a href="/professor/projetos" className="hover:text-[#2E7D32] transition">Projetos</a>
+          <ChevronRight className="w-3.5 h-3.5 text-gray-300" />
           <span className="text-gray-600">Novo projeto</span>
         </div>
 
-        <h1 className="text-2xl font-semibold text-gray-800 mb-1">Criar novo projeto</h1>
-        <p className="text-sm text-gray-400 mb-8">Preencha as informações do projeto de extensão.</p>
+        {/* Cabeçalho da Página */}
+        <div className="mb-8 pb-4 border-b border-gray-100">
+          <h1 className="text-3xl font-bold tracking-tight text-gray-900 mb-1.5">Criar novo projeto</h1>
+          <p className="text-sm text-gray-500 font-medium">Cadastre um novo projeto de extensão preenchendo as especificações abaixo.</p>
+        </div>
 
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm px-8 py-8">
-          <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+            
             {/* Título */}
-            <div className="flex flex-col gap-1">
-              <label className="text-sm font-medium text-gray-600">
-                Título <span className="text-red-400">*</span>
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">
+                Título do Projeto <span className="text-red-500">*</span>
               </label>
               <input
                 name="titulo"
@@ -102,96 +111,122 @@ const NovoProjeto = () => {
                 placeholder="Ex: Apoio ao Ensino de Matemática"
                 value={form.titulo}
                 onChange={handleChange}
-                className="border border-gray-200 rounded-lg px-4 py-2.5 text-sm outline-none focus:border-[#2E7D32] focus:ring-2 focus:ring-[#2E7D32]/10 transition"
+                className="border border-gray-200 rounded-xl h-11 px-4 text-sm font-medium text-gray-800 outline-none focus:border-[#2E7D32] focus:ring-4 focus:ring-[#2E7D32]/5 transition bg-gray-50/30 hover:bg-white"
               />
             </div>
 
             {/* Descrição */}
-            <div className="flex flex-col gap-1">
-              <label className="text-sm font-medium text-gray-600">Descrição</label>
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Descrição Detalhada</label>
               <textarea
                 name="descricao"
-                placeholder="Descreva os objetivos e atividades do projeto..."
+                placeholder="Descreva os objetivos, a metodologia e o público-alvo do projeto..."
                 value={form.descricao}
                 onChange={handleChange}
-                rows={4}
-                className="border border-gray-200 rounded-lg px-4 py-2.5 text-sm outline-none focus:border-[#2E7D32] focus:ring-2 focus:ring-[#2E7D32]/10 transition resize-none"
+                rows={5}
+                className="border border-gray-200 rounded-xl p-4 text-sm font-medium text-gray-800 outline-none focus:border-[#2E7D32] focus:ring-4 focus:ring-[#2E7D32]/5 transition resize-none bg-gray-50/30 hover:bg-white leading-relaxed"
               />
             </div>
 
-            {/* Centro/Departamento */}
-            <div className="flex flex-col gap-1">
-              <label className="text-sm font-medium text-gray-600">Centro / Departamento</label>
-              <input
-                name="centro_dep"
-                type="text"
-                placeholder="Ex: Instituto de Matemática"
-                value={form.centro_dep}
-                onChange={handleChange}
-                className="border border-gray-200 rounded-lg px-4 py-2.5 text-sm outline-none focus:border-[#2E7D32] focus:ring-2 focus:ring-[#2E7D32]/10 transition"
-              />
+            {/* Grid Centro + Carga Horária */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Centro / Departamento</label>
+                <input
+                  name="centro_dep"
+                  type="text"
+                  placeholder="Ex: Instituto de Matemática"
+                  value={form.centro_dep}
+                  onChange={handleChange}
+                  className="border border-gray-200 rounded-xl h-11 px-4 text-sm font-medium text-gray-800 outline-none focus:border-[#2E7D32] focus:ring-4 focus:ring-[#2E7D32]/5 transition bg-gray-50/30 hover:bg-white"
+                />
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Carga horária semanal (horas)</label>
+                <input
+                  name="carga_hora"
+                  type="number"
+                  min={1}
+                  placeholder="Ex: 12"
+                  value={form.carga_hora}
+                  onChange={handleChange}
+                  className="border border-gray-200 rounded-xl h-11 px-4 text-sm font-medium text-gray-800 outline-none focus:border-[#2E7D32] focus:ring-4 focus:ring-[#2E7D32]/5 transition bg-gray-50/30 hover:bg-white"
+                />
+              </div>
             </div>
 
-            {/* Carga horária */}
-            <div className="flex flex-col gap-1">
-              <label className="text-sm font-medium text-gray-600">Carga horária semanal (h)</label>
-              <input
-                name="carga_hora"
-                type="number"
-                placeholder="Ex: 12"
-                min={1}
-                value={form.carga_hora}
-                onChange={handleChange}
-                className="border border-gray-200 rounded-lg px-4 py-2.5 text-sm outline-none focus:border-[#2E7D32] focus:ring-2 focus:ring-[#2E7D32]/10 transition"
-              />
-            </div>
-
-            {/* Datas */}
-            <div className="grid grid-cols-2 gap-4">
-              <div className="flex flex-col gap-1">
-                <label className="text-sm font-medium text-gray-600">Data de início</label>
+            {/* Grid de Datas */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Data de início</label>
                 <input
                   name="data_inic"
                   type="date"
                   value={form.data_inic}
                   onChange={handleChange}
-                  className="border border-gray-200 rounded-lg px-4 py-2.5 text-sm outline-none focus:border-[#2E7D32] focus:ring-2 focus:ring-[#2E7D32]/10 transition"
+                  className="border border-gray-200 rounded-xl h-11 px-4 text-sm font-medium text-gray-800 outline-none focus:border-[#2E7D32] focus:ring-4 focus:ring-[#2E7D32]/5 transition bg-gray-50/30 hover:bg-white color-scheme-light"
                 />
               </div>
-              <div className="flex flex-col gap-1">
-                <label className="text-sm font-medium text-gray-600">Data de término</label>
+              
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Data de término</label>
                 <input
                   name="data_termino"
                   type="date"
                   value={form.data_termino}
                   onChange={handleChange}
-                  className="border border-gray-200 rounded-lg px-4 py-2.5 text-sm outline-none focus:border-[#2E7D32] focus:ring-2 focus:ring-[#2E7D32]/10 transition"
+                  className="border border-gray-200 rounded-xl h-11 px-4 text-sm font-medium text-gray-800 outline-none focus:border-[#2E7D32] focus:ring-4 focus:ring-[#2E7D32]/5 transition bg-gray-50/30 hover:bg-white color-scheme-light"
                 />
               </div>
             </div>
 
+            {/* Alert de Erro Customizado */}
             {erro && (
-              <p className="text-sm text-red-500 bg-red-50 px-3 py-2 rounded-lg">{erro}</p>
+              <div className="text-sm font-medium text-red-600 bg-red-50/80 border border-red-100 p-4 rounded-xl">
+                {erro}
+              </div>
             )}
 
-            {/* Botões */}
-            <div className="flex gap-3 pt-2">
+            {/* Bloco de Botões Alinhado */}
+            <div className="flex flex-col sm:flex-row items-center justify-end gap-3 pt-4 border-t border-gray-100 mt-2">
               <a
                 href="/professor/projetos"
-                className="flex-1 text-center border border-gray-200 text-gray-600 font-medium py-2.5 rounded-lg text-sm hover:bg-gray-50 transition"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 border border-gray-200 text-gray-500 font-semibold h-11 px-5 rounded-xl text-sm hover:bg-gray-50 hover:text-gray-800 transition"
               >
                 Cancelar
               </a>
               <button
                 type="submit"
                 disabled={loading}
-                className="flex-1 bg-[#2E7D32] hover:bg-[#1B5E20] text-white font-medium py-2.5 rounded-lg text-sm transition disabled:opacity-60"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#2E7D32] hover:bg-[#1B5E20] text-white font-semibold h-11 px-6 rounded-xl text-sm transition disabled:opacity-60 shadow-md shadow-[#2E7D32]/10"
               >
-                {loading ? 'Criando...' : 'Criar projeto'}
+                {loading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Criando...
+                  </>
+                ) : (
+                  <>
+                    <PlusCircle className="w-4 h-4" />
+                    Criar projeto
+                  </>
+                )}
               </button>
             </div>
 
           </form>
+        </div>
+        
+        {/* Link para voltar */}
+        <div className="flex justify-start mt-6">
+          <a 
+            href="/professor/projetos"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-gray-400 hover:text-gray-600 transition"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Voltar para a lista
+          </a>
         </div>
       </main>
     </div>

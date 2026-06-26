@@ -1,6 +1,21 @@
 import { api } from '@/lib/services/constants'
 import { useEffect, useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
+import { 
+  MoreVertical, 
+  GraduationCap, 
+  User, 
+  Calendar, 
+  Clock, 
+  Users, 
+  BookOpen, 
+  Plus, 
+  Search, 
+  FolderKanban,
+  Bell,
+  Eye
+} from 'lucide-react'
+
 type Projeto = {
   id: number
   titulo: string
@@ -15,9 +30,9 @@ type Projeto = {
 }
 
 const badgeStyles = {
-  ativo: 'bg-green-100 text-green-700',
-  rascunho: 'bg-gray-100 text-gray-500',
-  encerrado: 'bg-red-100 text-red-600',
+  ativo: 'bg-green-50 text-green-700 border border-green-200/60',
+  rascunho: 'bg-gray-50 text-gray-500 border border-gray-200/60',
+  encerrado: 'bg-red-50 text-red-600 border border-red-200/60',
 }
 
 const badgeLabel = {
@@ -32,7 +47,7 @@ const ProjetorProfessor = () => {
   const [loading, setLoading] = useState(true)
   const [busca, setBusca] = useState('')
   const [filtroStatus, setFiltroStatus] = useState('todos')
-  const [menuAberto, setMenuAberto] = useState<string | null>(null)
+  const [menuAberto, setMenuAberto] = useState<number | null>(null)
 
   useEffect(() => {
     const token = localStorage.getItem('token')
@@ -56,67 +71,59 @@ const ProjetorProfessor = () => {
   const grupos = ['ativo', 'rascunho', 'encerrado'] as const
 
   return (
-    <div className="min-h-screen bg-[#F5F7FA]">
-      {/* Header */}
-      <header className="bg-white border-b border-gray-100 px-8 py-4 flex items-center justify-between">
+    <div className="min-h-screen bg-[#F8FAFC] font-sans antialiased text-gray-800">
+      <header className="bg-white border-b border-gray-100 px-8 py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm/5">
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-full bg-[#2E7D32] flex items-center justify-center">
+          <div className="w-8 h-8 rounded-xl bg-[#2E7D32] flex items-center justify-center shadow-sm shadow-[#2E7D32]/20">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M17 8c0 0-2 7-10 11" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+              <path d="M17 8c0 0-2 7-10 11" stroke="white" strokeWidth="2.5" strokeLinecap="round"/>
             </svg>
           </div>
-          <span className="font-bold text-[#1B5E20] tracking-tight">PAVE <span className="text-gray-300 font-normal">UFC</span></span>
+          <span className="font-bold text-lg text-[#1B5E20] tracking-tight">PAVE <span className="text-gray-300 font-light">UFC</span></span>
         </div>
-        <nav className="flex items-center gap-6 text-sm">
-          <a href="/" className="text-gray-500 hover:text-gray-800">Início</a>
-          <a href="/professor/projetos" className="text-[#2E7D32] font-medium border-b-2 border-[#2E7D32] pb-0.5">Projetos</a>
+        <nav className="flex items-center gap-8 text-sm font-medium">
+          <a href="/" className="text-gray-400 hover:text-gray-600 transition">Início</a>
+          <a href="/professor/projetos" className="text-[#2E7D32] border-b-2 border-[#2E7D32] pb-4 -mb-4">Projetos</a>
         </nav>
-        <div className="flex items-center gap-3">
-          <button type="button" className="text-gray-400 hover:text-gray-600">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
-              <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
-            </svg>
+        <div className="flex items-center gap-4">
+          <button type="button" className="text-gray-400 hover:text-gray-600 transition p-1.5 hover:bg-gray-50 rounded-lg">
+            <Bell className="w-5 h-5" />
           </button>
-          <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-sm font-medium text-gray-600">P</div>
+          <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center text-sm font-semibold text-gray-600 border border-gray-200">P</div>
         </div>
       </header>
 
-      <main className="max-w-5xl mx-auto px-6 py-8">
-        {/* Título + botão */}
-        <div className="flex items-start justify-between mb-6">
+      <main className="max-w-5xl mx-auto px-6 py-10">
+        {/* Título + Botão Nova Ação */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-2xl font-semibold text-gray-800">Meus projetos</h1>
-            <p className="text-sm text-gray-400 mt-0.5">Gerencie seus projetos de extensão e processos seletivos.</p>
+            <h1 className="text-2xl font-bold tracking-tight text-gray-900">Meus projetos</h1>
+            <p className="text-sm text-gray-500 mt-0.5">Gerencie e acompanhe seus projetos de extensão cadastrados.</p>
           </div>
           <a
             href="/professor/projetos/novo"
-            className="flex items-center gap-2 bg-[#2E7D32] hover:bg-[#1B5E20] text-white text-sm font-medium px-4 py-2.5 rounded-lg transition"
+            className="inline-flex items-center justify-center gap-2 bg-[#2E7D32] hover:bg-[#1B5E20] text-white text-sm font-semibold h-11 px-5 rounded-xl transition shadow-md shadow-[#2E7D32]/10"
           >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-              <path d="M12 5v14M5 12h14" strokeLinecap="round"/>
-            </svg>
+            <Plus className="w-4 h-4" />
             Novo projeto
           </a>
         </div>
 
-        {/* Filtros */}
-        <div className="flex gap-3 mb-8">
-          <div className="relative flex-1 max-w-xs">
-            <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-              <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
-            </svg>
+        <div className="flex flex-col sm:flex-row gap-3 mb-8">
+          <div className="relative flex-1 max-w-sm">
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
             <input
               type="text"
-              placeholder="Buscar projetos..."
+              placeholder="Buscar projetos pelo título..."
               value={busca}
               onChange={e => setBusca(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 text-sm border border-gray-200 rounded-lg outline-none focus:border-[#2E7D32] focus:ring-2 focus:ring-[#2E7D32]/10 transition bg-white"
+              className="w-full pl-10 pr-4 h-11 text-sm border border-gray-200 rounded-xl outline-none focus:border-[#2E7D32] focus:ring-4 focus:ring-[#2E7D32]/5 transition bg-white shadow-inner/5"
             />
           </div>
           <select
             value={filtroStatus}
             onChange={e => setFiltroStatus(e.target.value)}
-            className="text-sm border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-[#2E7D32] bg-white text-gray-600"
+            className="text-sm border border-gray-200 rounded-xl px-4 h-11 outline-none focus:border-[#2E7D32] bg-white text-gray-600 font-medium cursor-pointer transition shadow-inner/5"
           >
             <option value="todos">Todos os status</option>
             <option value="ativo">Ativos</option>
@@ -126,93 +133,127 @@ const ProjetorProfessor = () => {
         </div>
 
         {loading ? (
-          <div className="text-center py-20 text-gray-400 text-sm">Carregando projetos...</div>
+          <div className="text-center py-24 text-gray-400 text-sm font-medium flex flex-col items-center gap-3">
+            <div className="w-6 h-6 border-2 border-[#2E7D32] border-t-transparent rounded-full animate-spin"></div>
+            Carregando projetos...
+          </div>
         ) : projetosFiltrados.length === 0 ? (
-          <div className="text-center py-20 text-gray-400 text-sm">Nenhum projeto encontrado.</div>
+          <div className="text-center py-20 bg-white rounded-2xl border border-gray-100 text-gray-400 text-sm font-medium shadow-sm">
+            Nenhum projeto encontrado para os filtros aplicados.
+          </div>
         ) : (
           <div className="flex flex-col gap-10">
             {grupos.map(grupo => {
               const lista = projetosFiltrados.filter(p => p.status === grupo)
               if (lista.length === 0) return null
               const labelGrupo = { ativo: 'Ativos', rascunho: 'Rascunhos', encerrado: 'Encerrados' }[grupo]
-              const corGrupo = { ativo: 'text-green-700', rascunho: 'text-gray-500', encerrado: 'text-red-600' }[grupo]
+              const corGrupo = { ativo: 'text-green-800', rascunho: 'text-gray-500', encerrado: 'text-red-700' }[grupo]
+              
               return (
-                <div key={grupo}>
-                  <h2 className={`text-sm font-semibold mb-3 ${corGrupo}`}>
+                <div key={grupo} className="flex flex-col gap-3.5">
+                  <h2 className={`text-xs font-bold uppercase tracking-wider ${corGrupo} px-1`}>
                     {labelGrupo} ({lista.length})
                   </h2>
-                  <div className="flex flex-col gap-3">
+                  <div className="flex flex-col gap-3.5">
                     {lista.map(p => (
-                      <div key={p.id} className="bg-white rounded-xl border border-gray-100 px-5 py-4 flex items-center gap-4 hover:shadow-sm transition">
-                        {/* Ícone */}
-                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${p.status === 'ativo' ? 'bg-green-50' : p.status === 'rascunho' ? 'bg-gray-100' : 'bg-red-50'}`}>
-                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={p.status === 'ativo' ? '#2E7D32' : p.status === 'rascunho' ? '#9CA3AF' : '#DC2626'} strokeWidth="1.5" aria-hidden="true">
-                            <path d="M9 12h6M9 16h6M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z" strokeLinecap="round"/>
-                            <path d="M13 2v7h7"/>
-                          </svg>
-                        </div>
-
-                        {/* Info */}
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2">
-                            <span className="font-medium text-gray-800 text-sm truncate">{p.titulo}</span>
-                            <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${badgeStyles[p.status]}`}>
-                              {badgeLabel[p.status]}
-                            </span>
+                      <div key={p.id} className="bg-white rounded-2xl border border-gray-100 px-6 py-5 flex flex-col sm:flex-row sm:items-center justify-between gap-5 hover:shadow-md hover:border-gray-200/80 transition-all duration-200 group relative">
+                        
+                        <div className="flex items-start gap-4 flex-1 min-w-0">
+                          <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 shadow-inner ${p.status === 'ativo' ? 'bg-green-50/70 text-green-600' : p.status === 'rascunho' ? 'bg-gray-50 text-gray-400' : 'bg-red-50/70 text-red-600'}`}>
+                            <FolderKanban className="w-5 h-5" />
                           </div>
-                          <div className="flex items-center gap-3 mt-1 text-xs text-gray-400">
-                            <span>{p.area_tematica}</span>
-                            <span>·</span>
-                            <span>{p.tipo_vaga}</span>
-                            {p.data_fim_inscricoes && (
-                              <>
-                                <span>·</span>
-                                <span className="text-[#2E7D32]">Inscrições até {new Date(p.data_fim_inscricoes).toLocaleDateString('pt-BR')}</span>
-                              </>
-                            )}
-                          </div>
-                        </div>
 
-                        {/* Stats */}
-                        {p.status === 'ativo' && (
-                          <div className="hidden sm:flex items-center gap-5 text-xs text-gray-500 shrink-0">
-                            <div className="flex items-center gap-1">
-                              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
-                              <span>{p.total_inscritos} inscritos</span>
+                          <div className="flex flex-col gap-1 min-w-0">
+                            <div className="flex items-center gap-2.5 flex-wrap">
+                              <h3 className="font-semibold text-gray-900 text-base leading-snug group-hover:text-[#2E7D32] transition truncate max-w-md">
+                                {p.titulo}
+                              </h3>
+                              <span className={`text-[11px] px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider shrink-0 ${badgeStyles[p.status]}`}>
+                                {badgeLabel[p.status]}
+                              </span>
                             </div>
-                            <div className="flex items-center gap-1">
-                              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-                              <span>{p.vagas_preenchidas}/{p.total_vagas} vagas</span>
+                            
+                            <div className="flex items-center gap-3.5 flex-wrap text-xs text-gray-400 font-medium mt-0.5">
+                              <span className="flex items-center gap-1 text-gray-500">
+                                <BookOpen className="w-3.5 h-3.5 text-gray-400" /> {p.area_tematica || 'Sem Área'}
+                              </span>
+                              <span className="text-gray-200">•</span>
+                              <span className="flex items-center gap-1 text-gray-500">
+                                <User className="w-3.5 h-3.5 text-gray-400" /> {p.tipo_vaga || 'Não Definido'}
+                              </span>
+                              {p.data_fim_inscricoes && (
+                                <>
+                                  <span className="text-gray-200">•</span>
+                                  <span className="flex items-center gap-1 text-[#2E7D32] font-semibold">
+                                    Inscrições até {new Date(p.data_fim_inscricoes).toLocaleDateString('pt-BR')}
+                                  </span>
+                                </>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+
+                        {p.status === 'ativo' && (
+                          <div className="flex items-center gap-8 text-xs text-gray-500 shrink-0 bg-gray-50/50 border border-gray-100 rounded-xl px-5 py-2.5 sm:mt-0">
+                            <div className="flex items-center gap-2">
+                              <Users className="w-4 h-4 text-gray-400" />
+                              <div>
+                                <span className="block text-gray-900 font-bold text-sm leading-none">{p.total_inscritos}</span>
+                                <span className="text-[10px] text-gray-400 uppercase font-bold tracking-tight mt-0.5 block">inscritos</span>
+                              </div>
+                            </div>
+                            <div className="w-px h-6 bg-gray-200"></div>
+                            <div className="flex items-center gap-2">
+                              <Calendar className="w-4 h-4 text-gray-400" />
+                              <div>
+                                <span className="block text-gray-900 font-bold text-sm leading-none">{p.vagas_preenchidas}/{p.total_vagas}</span>
+                                <span className="text-[10px] text-gray-400 uppercase font-bold tracking-tight mt-0.5 block">vagas</span>
+                              </div>
                             </div>
                             {p.dias_restantes != null && (
-                              <div className="flex items-center gap-1">
-                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-                                <span>{p.dias_restantes} dias restantes</span>
-                              </div>
+                              <>
+                                <div className="w-px h-6 bg-gray-200"></div>
+                                <div className="flex items-center gap-2">
+                                  <Clock className="w-4 h-4 text-[#2E7D32]" />
+                                  <div>
+                                    <span className="block text-[#2E7D32] font-bold text-sm leading-none">{p.dias_restantes} d</span>
+                                    <span className="text-[10px] text-gray-400 uppercase font-bold tracking-tight mt-0.5 block">restantes</span>
+                                  </div>
+                                </div>
+                              </>
                             )}
                           </div>
                         )}
 
-                        <div className="relative ml-2">
-                          <button type="button" onClick={() => setMenuAberto(menuAberto === p.id ? null : p.id)} className="text-gray-300 hover:text-gray-500">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                              <circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/>
-                            </svg>
+                        {/* Menu de Contexto 3 Pontinhos */}
+                        <div className="relative self-end sm:self-center ml-2">
+                          <button 
+                            type="button" 
+                            onClick={() => setMenuAberto(menuAberto === p.id ? null : p.id)} 
+                            className="text-gray-400 hover:text-gray-600 p-1.5 hover:bg-gray-50 rounded-lg transition"
+                          >
+                            <MoreVertical className="w-4 h-4" />
                           </button>
                           {menuAberto === p.id && (
-                            <div className="absolute right-0 top-6 z-10 bg-white border border-gray-100 rounded-xl shadow-lg py-1 w-44">
-
-                             <a href={`/professor/projetos/${p.id}`} className="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:bg-gray-50">
-                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-                                <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
-                                <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
-                              </svg>
-                                Ver projeto
-                              </a>
-                            </div>
+                            <>
+                              <div className="fixed inset-0 z-10" onClick={() => setMenuAberto(null)} />
+                              <div className="absolute right-0 top-8 z-20 bg-white border border-gray-100 rounded-xl shadow-xl py-1.5 w-44 animate-in fade-in slide-in-from-top-1 duration-150">
+                                <button 
+                                  onClick={() => {
+                                    setMenuAberto(null);
+                                    navigate({ to: `/professor/projetos/${p.id}` });
+                                  }} 
+                                  className="flex items-center gap-2 px-4 py-2 text-sm w-full text-left text-gray-600 hover:bg-gray-50 font-medium transition"
+                                >
+                                  <Eye className="w-4 h-4 text-gray-400" />
+                                  Ver projeto
+                                </button>
+                              </div>
+                            </>
                           )}
-                          </div>
                         </div>
+
+                      </div>
                     ))}
                   </div>
                 </div>
