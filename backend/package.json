@@ -1,6 +1,7 @@
 {
   "name": "pave",
   "version": "1.0.0",
+  "packageManager": "pnpm@9.1.0",
   "description": "Plataforma de Acesso ao Voluntariado e Extensão",
   "main": "src/index.js",
   "scripts": {
