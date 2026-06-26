@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ProjetosRouteImport } from './routes/projetos'
+import { Route as PerfilAlunoRouteImport } from './routes/perfilAluno'
 import { Route as OportunidadeRouteImport } from './routes/oportunidade'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as DetalheProjetoRouteImport } from './routes/detalheProjeto'
@@ -30,6 +31,11 @@ import { Route as AlunoCandidaturaRouteImport } from './routes/aluno/candidatura
 const ProjetosRoute = ProjetosRouteImport.update({
   id: '/projetos',
   path: '/projetos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PerfilAlunoRoute = PerfilAlunoRouteImport.update({
+  id: '/perfilAluno',
+  path: '/perfilAluno',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OportunidadeRoute = OportunidadeRouteImport.update({
@@ -122,6 +128,7 @@ export interface FileRoutesByFullPath {
   '/detalheProjeto': typeof DetalheProjetoRoute
   '/login': typeof LoginRoute
   '/oportunidade': typeof OportunidadeRoute
+  '/perfilAluno': typeof PerfilAlunoRoute
   '/projetos': typeof ProjetosRouteWithChildren
   '/aluno/candidatura': typeof AlunoCandidaturaRoute
   '/aluno/notificacoes': typeof AlunoNotificacoesRoute
@@ -141,6 +148,7 @@ export interface FileRoutesByTo {
   '/detalheProjeto': typeof DetalheProjetoRoute
   '/login': typeof LoginRoute
   '/oportunidade': typeof OportunidadeRoute
+  '/perfilAluno': typeof PerfilAlunoRoute
   '/aluno/candidatura': typeof AlunoCandidaturaRoute
   '/aluno/notificacoes': typeof AlunoNotificacoesRoute
   '/professor/criar-projeto': typeof ProfessorCriarProjetoRoute
@@ -160,6 +168,7 @@ export interface FileRoutesById {
   '/detalheProjeto': typeof DetalheProjetoRoute
   '/login': typeof LoginRoute
   '/oportunidade': typeof OportunidadeRoute
+  '/perfilAluno': typeof PerfilAlunoRoute
   '/projetos': typeof ProjetosRouteWithChildren
   '/aluno/candidatura': typeof AlunoCandidaturaRoute
   '/aluno/notificacoes': typeof AlunoNotificacoesRoute
@@ -181,6 +190,7 @@ export interface FileRouteTypes {
     | '/detalheProjeto'
     | '/login'
     | '/oportunidade'
+    | '/perfilAluno'
     | '/projetos'
     | '/aluno/candidatura'
     | '/aluno/notificacoes'
@@ -200,6 +210,7 @@ export interface FileRouteTypes {
     | '/detalheProjeto'
     | '/login'
     | '/oportunidade'
+    | '/perfilAluno'
     | '/aluno/candidatura'
     | '/aluno/notificacoes'
     | '/professor/criar-projeto'
@@ -218,6 +229,7 @@ export interface FileRouteTypes {
     | '/detalheProjeto'
     | '/login'
     | '/oportunidade'
+    | '/perfilAluno'
     | '/projetos'
     | '/aluno/candidatura'
     | '/aluno/notificacoes'
@@ -238,6 +250,7 @@ export interface RootRouteChildren {
   DetalheProjetoRoute: typeof DetalheProjetoRoute
   LoginRoute: typeof LoginRoute
   OportunidadeRoute: typeof OportunidadeRoute
+  PerfilAlunoRoute: typeof PerfilAlunoRoute
   ProjetosRoute: typeof ProjetosRouteWithChildren
   AlunoCandidaturaRoute: typeof AlunoCandidaturaRoute
   AlunoNotificacoesRoute: typeof AlunoNotificacoesRoute
@@ -256,6 +269,13 @@ declare module '@tanstack/react-router' {
       path: '/projetos'
       fullPath: '/projetos'
       preLoaderRoute: typeof ProjetosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/perfilAluno': {
+      id: '/perfilAluno'
+      path: '/perfilAluno'
+      fullPath: '/perfilAluno'
+      preLoaderRoute: typeof PerfilAlunoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/oportunidade': {
@@ -394,6 +414,7 @@ const rootRouteChildren: RootRouteChildren = {
   DetalheProjetoRoute: DetalheProjetoRoute,
   LoginRoute: LoginRoute,
   OportunidadeRoute: OportunidadeRoute,
+  PerfilAlunoRoute: PerfilAlunoRoute,
   ProjetosRoute: ProjetosRouteWithChildren,
   AlunoCandidaturaRoute: AlunoCandidaturaRoute,
   AlunoNotificacoesRoute: AlunoNotificacoesRoute,

@@ -4,8 +4,8 @@ import {
   Star, Heart, Calendar, Users, MapPin, Monitor, Layers,
   Filter, ChevronDown, Zap, Search, ChevronRight, Bookmark,
 } from "lucide-react";
-import Navbar from "../../lib/layout/components/Navbar/Navbar";
-import { useFavoritos } from "../../context/FavoritosContext";
+import Navbar from "@/layout/components/Navbar/Navbar";
+import { useFavoritos } from "@/context/FavoritosContext";
 import { useInscricoes } from "../../context/InscricoesContext"; // Contexto de Inscrições importado
 import { projetos } from "../../data/projetos";
 import "./Oportunidade.css";
