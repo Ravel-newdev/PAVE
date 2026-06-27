@@ -5,6 +5,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { X } from "lucide-react";
@@ -92,6 +93,8 @@ export function InterestSelect({ control }: Props) {
               ))}
             </div>
           </FormControl>
+
+          <FormMessage />
         </FormItem>
       )}
     />

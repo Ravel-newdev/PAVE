@@ -32,6 +32,7 @@ export interface Projeto {
   autor_nome: string;
   tags: Tag[];
   criado_em: string;
+  n_vagas?: number | null;
 }
 
 /** Corpo de criação de projeto — POST /api/projetos. */

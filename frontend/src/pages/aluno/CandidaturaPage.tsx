@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { ArrowLeft, ChevronRight } from "lucide-react";
+import { toast } from "sonner";
+import { ArrowLeft, ChevronRight, CheckCircle2 } from "lucide-react";
 import { useSearch, useNavigate } from "@tanstack/react-router";
 import { Header } from "@/components/shared/Header";
 import { Footer } from "@/components/shared/Footer";
@@ -12,12 +13,14 @@ import { ApiError } from "@/errors/ApiError";
 import type { ProjetoCandidaturaView, CampoFormulario, RespostaCampo } from "@/types/candidatura";
 
 export default function CandidaturaPage() {
-  const { processoId } = useSearch({ strict: false }) as { processoId?: string };
+  const { processoId } = useSearch({ from: "/aluno/candidatura" });
   const { session } = useAuth();
   const navigate = useNavigate();
 
   const [projeto, setProjeto] = useState<ProjetoCandidaturaView | null>(null);
   const [campos, setCampos] = useState<CampoFormulario[]>([]);
+  const [perfil, setPerfil] = useState<{ nome: string; matricula: string; curso: string | null } | null>(null);
+  const [jaInscrito, setJaInscrito] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -29,7 +32,16 @@ export default function CandidaturaPage() {
 
     async function carregar() {
       try {
-        const processo = await paveApi.buscarProcesso(processoId!);
+        const [processo, perfilDiscente, minhasInscricoes] = await Promise.all([
+          paveApi.buscarProcesso(processoId!),
+          paveApi.obterPerfilDiscente(),
+          paveApi.listarMinhasInscricoes(),
+        ]);
+
+        if (minhasInscricoes.some((i) => i.ps_id === processoId)) {
+          setJaInscrito(true);
+        }
+        setPerfil(perfilDiscente);
         const projetoBase = await paveApi.buscarProjeto(processo.projeto_id);
 
         setProjeto({
@@ -44,13 +56,8 @@ export default function CandidaturaPage() {
         });
 
         if (processo.formulario_id) {
-          const tiposCampo = await paveApi.listarTiposCampo();
-          setCampos(tiposCampo.map((c) => ({
-            id: c.id,
-            label: c.nome,
-            tipo: "texto" as const,
-            obrigatoriedade: false,
-          })));
+          const camposFormulario = await paveApi.listarCamposFormulario(processo.formulario_id);
+          setCampos(camposFormulario);
         }
       } catch (e) {
         setErro(e instanceof ApiError ? e.message : "Erro ao carregar candidatura.");
@@ -60,14 +67,43 @@ export default function CandidaturaPage() {
     carregar();
   }, [processoId]);
 
-  async function handleSubmit(respostas: RespostaCampo[]) {
-    if (!projeto) return;
+  async function handleSubmit(respostas: RespostaCampo[], arquivos: Record<string, File>, urlsPreenchidasUsadas: Record<string, string>) {
+    if (!projeto || !processoId) return;
     setIsLoading(true);
+    setErro(null);
     try {
-      await paveApi.criarInscricao({ ps_id: projeto.processoSeletivoId, respostas });
-      navigate({ to: "/aluno" });
+      const respostasArquivos: RespostaCampo[] = [];
+
+      // Campos com nova URL do perfil (sem upload novo)
+      for (const [campoId, url] of Object.entries(urlsPreenchidasUsadas)) {
+        if (!arquivos[campoId]) {
+          respostasArquivos.push({ campo_id: campoId, arquivo_url: url });
+        }
+      }
+
+      for (const [campoId, file] of Object.entries(arquivos)) {
+        const { url } = await paveApi.uploadArquivo(file, processoId, campoId);
+        respostasArquivos.push({ campo_id: campoId, arquivo_url: url });
+      }
+
+      await paveApi.criarInscricao({
+        ps_id: projeto.processoSeletivoId,
+        respostas: [...respostas, ...respostasArquivos],
+      });
+
+      toast.success("Candidatura enviada com sucesso!", {
+        description: "Acompanhe o andamento em Minhas Oportunidades.",
+      });
+
+      await navigate({ to: "/aluno" });
     } catch (e) {
-      setErro(e instanceof ApiError ? e.message : "Erro ao enviar candidatura.");
+      if (e instanceof ApiError) {
+        const det = e.details as { errors?: { campo: string; mensagem: string }[] } | null;
+        const campos = det?.errors?.map((err) => `[${err.campo}]: ${err.mensagem}`).join(" | ");
+        setErro(campos ? `${e.message} → ${campos}` : e.message);
+      } else {
+        setErro("Erro ao enviar candidatura.");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -94,10 +130,17 @@ export default function CandidaturaPage() {
   );
 
   const dadosAluno = {
-    nomeCompleto: session?.email?.split("@")[0] ?? "",
-    curso: "",
-    matricula: "",
+    nomeCompleto: perfil?.nome ?? session?.email?.split("@")[0] ?? "",
+    curso: perfil?.curso ?? "",
+    matricula: perfil?.matricula ?? "",
   };
+
+  const urlsCurriculoPerfil: Record<string, string> = {};
+  if (perfil?.curriculo_url) {
+    campos
+      .filter((c) => c.chave_unica === "curriculo" && c.tipo === "arquivo")
+      .forEach((c) => { urlsCurriculoPerfil[c.id] = perfil.curriculo_url!; });
+  }
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col">
@@ -125,14 +168,38 @@ export default function CandidaturaPage() {
       <main className="max-w-7xl mx-auto px-8 pb-16 w-full flex-1">
         <div className="grid grid-cols-3 gap-8 items-start">
           <div className="col-span-2">
-            <FormularioCandidatura
-              tituloProjeto={projeto.titulo}
-              dadosAluno={dadosAluno}
-              campos={campos}
-              onSubmit={handleSubmit}
-              onCancelar={() => navigate({ to: "/aluno" })}
-              isLoading={isLoading}
-            />
+            {jaInscrito ? (
+              <div className="bg-white rounded-2xl border border-[#E2E8F0] shadow-[0_4px_20px_rgba(0,0,0,0.04)] p-10 flex flex-col items-center gap-4 text-center">
+                <CheckCircle2 className="w-14 h-14 text-emerald-500" />
+                <h2 className="text-xl font-bold text-[#1E2E4F]">Você já se candidatou a este processo</h2>
+                <p className="text-[#64748B] text-sm max-w-sm">
+                  Sua candidatura já foi registrada. Acompanhe o andamento em{" "}
+                  <button
+                    className="text-[#287999] font-semibold underline underline-offset-2"
+                    onClick={() => navigate({ to: "/oportunidade" })}
+                  >
+                    Minhas Oportunidades
+                  </button>.
+                </p>
+                <Button
+                  variant="outline"
+                  className="mt-2"
+                  onClick={() => navigate({ to: "/aluno" })}
+                >
+                  Voltar para início
+                </Button>
+              </div>
+            ) : (
+              <FormularioCandidatura
+                tituloProjeto={projeto.titulo}
+                dadosAluno={dadosAluno}
+                campos={campos}
+                urlsPreenchidas={urlsCurriculoPerfil}
+                onSubmit={handleSubmit}
+                onCancelar={() => navigate({ to: "/aluno" })}
+                isLoading={isLoading}
+              />
+            )}
           </div>
           <div className="col-span-1 sticky top-6">
             <ProjetoInfoSidebar projeto={projeto} />

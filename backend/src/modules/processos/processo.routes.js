@@ -23,6 +23,8 @@ inscricaoRouter.use(authenticate);
 processoRouter.post("/", authorize("docente"), validate(createProcessoSchema), processoController.criarProcesso);
 processoRouter.put("/:id", authorize("docente"), validate(updateProcessoSchema), processoController.atualizarProcesso);
 processoRouter.get("/:id/candidatos", authorize("docente"), processoController.listarCandidatos);
+processoRouter.get("/projeto/:projetoId", processoController.listarProcessosDoProjeto);
+processoRouter.get("/:id", processoController.obterProcesso);
 
 inscricaoRouter.post("/", authorize("discente"), validate(createInscricaoSchema), processoController.realizarInscricao);
 inscricaoRouter.get("/", authorize("discente"), processoController.listarMinhasInscricoes);

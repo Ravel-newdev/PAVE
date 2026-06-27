@@ -18,4 +18,60 @@ const listarFavoritos = async (discenteId) => {
   return rows;
 };
 
-module.exports = { listarFavoritos };
+const obterPerfil = async (discenteId) => {
+  const { rows } = await query(
+    `SELECT d.nome, d.matricula, d.curso, d.telefone, d.foto_url, d.curriculo_url,
+            d.bio, d.data_nascimento, d.semestre, d.ano_conclusao, d.linkedin,
+            d.disponibilidade, d.remoto, d.notificacoes, d.interesses,
+            u.email
+     FROM discentes d
+     INNER JOIN usuarios u ON u.id = d.id
+     WHERE d.id = $1`,
+    [discenteId]
+  );
+  if (!rows[0]) throw new Error("Discente não encontrado.");
+  return rows[0];
+};
+
+const atualizarPerfil = async (discenteId, dados) => {
+  const {
+    nome, telefone, curso, bio, data_nascimento, semestre, ano_conclusao,
+    linkedin, disponibilidade, remoto, notificacoes, interesses,
+  } = dados;
+
+  const { rows } = await query(
+    `UPDATE discentes SET
+       nome            = COALESCE($1,  nome),
+       telefone        = COALESCE($2,  telefone),
+       curso           = COALESCE($3,  curso),
+       bio             = COALESCE($4,  bio),
+       data_nascimento = COALESCE($5,  data_nascimento),
+       semestre        = COALESCE($6,  semestre),
+       ano_conclusao   = COALESCE($7,  ano_conclusao),
+       linkedin        = COALESCE($8,  linkedin),
+       disponibilidade = COALESCE($9,  disponibilidade),
+       remoto          = COALESCE($10, remoto),
+       notificacoes    = COALESCE($11, notificacoes),
+       interesses      = COALESCE($12, interesses)
+     WHERE id = $13
+     RETURNING nome, matricula, curso`,
+    [
+      nome, telefone, curso, bio, data_nascimento, semestre, ano_conclusao,
+      linkedin, disponibilidade, remoto, notificacoes,
+      interesses ? interesses : null,
+      discenteId,
+    ]
+  );
+  if (!rows[0]) throw new Error("Discente não encontrado.");
+  return rows[0];
+};
+
+const atualizarFoto = async (discenteId, fotoUrl) => {
+  await query(`UPDATE discentes SET foto_url = $1 WHERE id = $2`, [fotoUrl, discenteId]);
+};
+
+const atualizarCurriculo = async (discenteId, curriculoUrl) => {
+  await query(`UPDATE discentes SET curriculo_url = $1 WHERE id = $2`, [curriculoUrl, discenteId]);
+};
+
+module.exports = { listarFavoritos, obterPerfil, atualizarPerfil, atualizarFoto, atualizarCurriculo };

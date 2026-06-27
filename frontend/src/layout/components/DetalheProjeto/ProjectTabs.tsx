@@ -1,55 +1,54 @@
-import {
-  CheckCircle,
-  Shield,
-  MessageCircle,
-  Facebook,
-  Linkedin,
-  Link as LinkIcon,
-  Mail,
-  ChevronRight,
-} from "lucide-react";
-import type { Project } from "../../../data/projetos";
+import { CheckCircle, Shield, MessageCircle, Facebook, Linkedin, Link as LinkIcon } from "lucide-react";
+import type { Projeto } from "@/types/projeto";
 
-export function TabSobre({ projeto }: { projeto: Project }) {
+export function TabSobre({ projeto }: { projeto: Projeto }) {
   return (
     <div className="dp-fade-in">
       <h2 className="dp-section-title">Sobre o projeto</h2>
-      <p className="dp-section-p">{projeto.descricaoCompleta}</p>
-
-      <div className="dp-stats">
-        {projeto.stats.map((s, i) => (
-          <div key={i} className="dp-stat">
-            <span className="dp-stat__icon">{s.icon}</span>
-            <div>
-              <div className="dp-stat__val">{s.valor}</div>
-              <div className="dp-stat__lbl">{s.label}</div>
-              <div className="dp-stat__sub">{s.detalhe}</div>
-            </div>
-          </div>
-        ))}
-      </div>
+      <p className="dp-section-p">{projeto.descricao ?? "Sem descrição disponível."}</p>
 
       <div className="dp-two-col">
+        {projeto.tags.length > 0 && (
+          <div className="dp-box">
+            <h3 className="dp-box__title">Áreas de atuação</h3>
+            <ul className="dp-list">
+              {projeto.tags.map((t) => (
+                <li key={t.id} className="dp-list__bullet">
+                  <div className="dp-list__bullet-dot" />
+                  <span>{t.nome}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
         <div className="dp-box">
-          <h3 className="dp-box__title">O que você vai fazer</h3>
+          <h3 className="dp-box__title">Informações gerais</h3>
           <ul className="dp-list">
-            {projeto.atividades.map((a, i) => (
-              <li key={i} className="dp-list__bullet">
+            {projeto.carga_hora && (
+              <li className="dp-list__bullet">
                 <div className="dp-list__bullet-dot" />
-                <span>{a}</span>
+                <span>Carga horária: {projeto.carga_hora}h/semana</span>
               </li>
-            ))}
-          </ul>
-        </div>
-        <div className="dp-box">
-          <h3 className="dp-box__title">Por que participar?</h3>
-          <ul className="dp-list">
-            {projeto.beneficios.map((b, i) => (
-              <li key={i} className="dp-list__check">
-                <CheckCircle className="dp-list__check-icon" size={18} />
-                <span>{b}</span>
+            )}
+            {projeto.data_inic && (
+              <li className="dp-list__bullet">
+                <div className="dp-list__bullet-dot" />
+                <span>Início: {new Date(projeto.data_inic).toLocaleDateString("pt-BR")}</span>
               </li>
-            ))}
+            )}
+            {projeto.data_termino && (
+              <li className="dp-list__bullet">
+                <div className="dp-list__bullet-dot" />
+                <span>Término: {new Date(projeto.data_termino).toLocaleDateString("pt-BR")}</span>
+              </li>
+            )}
+            {projeto.centro_dep && (
+              <li className="dp-list__bullet">
+                <div className="dp-list__bullet-dot" />
+                <span>Centro: {projeto.centro_dep}</span>
+              </li>
+            )}
           </ul>
         </div>
       </div>
@@ -78,81 +77,39 @@ export function TabSobre({ projeto }: { projeto: Project }) {
   );
 }
 
-export function TabAtividades({ projeto }: { projeto: Project }) {
-  return (
-    <div className="dp-fade-in">
-      <h2 className="dp-section-title">Atividades do projeto</h2>
-      <p className="dp-section-sub">Confira o que você irá realizar ao participar deste projeto.</p>
-      {projeto.atividades.map((a, i) => (
-        <div key={i} className="dp-activity">
-          <span className="dp-activity__num">{i + 1}</span>
-          <span className="dp-activity__text">{a}</span>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-export function TabRequisitos({ projeto }: { projeto: Project }) {
+export function TabRequisitos({ projeto }: { projeto: Projeto }) {
   return (
     <div className="dp-fade-in">
       <h2 className="dp-section-title">Requisitos</h2>
       <p className="dp-section-sub">
-        Para se candidatar, é importante que você atenda aos seguintes critérios:
+        Confira as áreas de conhecimento e o período de dedicação esperado.
       </p>
-      {projeto.requisitos.map((r, i) => (
-        <div key={i} className="dp-req">
-          <CheckCircle className="dp-req__icon" size={20} />
-          <span className="dp-req__text">{r}</span>
-        </div>
-      ))}
+      {projeto.tags.length > 0
+        ? projeto.tags.map((t) => (
+            <div key={t.id} className="dp-req">
+              <CheckCircle className="dp-req__icon" size={20} />
+              <span className="dp-req__text">Conhecimentos em {t.nome}</span>
+            </div>
+          ))
+        : <p className="dp-section-p">Nenhum requisito específico informado.</p>
+      }
     </div>
   );
 }
 
-export function TabBeneficios({ projeto }: { projeto: Project }) {
-  return (
-    <div className="dp-fade-in">
-      <h2 className="dp-section-title">Benefícios</h2>
-      <p className="dp-section-sub">Veja o que você ganha ao participar deste projeto:</p>
-      <div className="dp-beneficios-grid">
-        {projeto.beneficios.map((b, i) => (
-          <div key={i} className="dp-beneficio">
-            <CheckCircle className="dp-beneficio__icon" size={20} />
-            <span>{b}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-export function TabProfessor({
-  projeto,
-  onViewProfile,
-}: {
-  projeto: Project;
-  onViewProfile: () => void;
-}) {
-  const p = projeto.professor;
+export function TabProfessor({ projeto }: { projeto: Projeto }) {
+  const inicial = projeto.autor_nome.charAt(0).toUpperCase();
   return (
     <div className="dp-fade-in">
       <h2 className="dp-section-title" style={{ marginBottom: 20 }}>
         Professor responsável
       </h2>
       <div className="dp-prof-card">
-        <div className="dp-prof-avatar">{p.nome.charAt(6)}</div>
+        <div className="dp-prof-avatar">{inicial}</div>
         <div className="dp-prof-info">
-          <div className="dp-prof-info__name">{p.nome}</div>
-          <div className="dp-prof-info__dept">{p.departamento}</div>
-          <div className="dp-prof-info__email">
-            <Mail size={14} style={{ marginRight: 6 }} />
-            {p.email}
-          </div>
+          <div className="dp-prof-info__name">{projeto.autor_nome}</div>
+          <div className="dp-prof-info__dept">{projeto.centro_dep ?? "—"}</div>
         </div>
-        <button type="button" className="dp-outline-btn" onClick={onViewProfile}>
-          Ver perfil <ChevronRight size={16} />
-        </button>
       </div>
     </div>
   );

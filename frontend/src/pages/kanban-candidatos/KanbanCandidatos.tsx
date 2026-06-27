@@ -1,12 +1,12 @@
 import { useState } from "react";
 import type { DragEvent } from "react";
 import { Search } from "lucide-react";
-import { ProfessorNavbar } from "@/lib/layout/componente-professor/ProfessorNavbar";
+import { ProfessorNavbar } from "@/layout/componente-professor/ProfessorNavbar";
 import "./KanbanCandidatos.css";
-import { getIdFromUrl } from "../../services/paveApi";
+import { useSearch } from "@tanstack/react-router";
 
 import type { Candidate } from "./types/candidate";
-import { useCandidates } from "@/lib/hooks/useCandidates";
+import { useCandidates } from "@/hooks/useCandidates";
 import { ProjectSummary } from "./components/ProjectSummary";
 import { CandidateCard } from "./components/CandidateCard";
 import { CandidateDrawer } from "./components/CandidateDrawer";
@@ -16,7 +16,7 @@ import { project } from "./data/project";
 
 export default function KanbanCandidatos() {
   const [query, setQuery] = useState<string>("");
-  const processoId = getIdFromUrl("1");
+  const { processoId = "" } = useSearch({ strict: false }) as { processoId?: string };
   const [selectedCandidate, setSelectedCandidate] = useState<Candidate | null>(null);
 
   const {

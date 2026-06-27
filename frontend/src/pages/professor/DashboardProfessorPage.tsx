@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Plus, Folder, FileEdit, Flag, PauseCircle, FolderX, BellOff } from "lucide-react";
+import { Plus, Folder, FileEdit, Flag, FolderX, BellOff, Bell } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
 import { ProfessorNavbar } from "@/layout/componente-professor/ProfessorNavbar";
 import { Footer } from "@/components/shared/Footer";
@@ -62,10 +62,10 @@ export default function DashboardProfessorPage() {
         </div>
 
         <div className="grid grid-cols-2 gap-5">
-          <EstatisticaCard icone={Folder}      corFundo="bg-[#e8f3f7]" corIcone="text-[#287999]"  valor={estatisticas.projetosAtivos}     titulo="Projetos ativos"  subtitulo="Publicados"     />
-          <EstatisticaCard icone={FileEdit}    corFundo="bg-blue-50"   corIcone="text-blue-600"   valor={estatisticas.projetosRascunho}   titulo="Rascunhos"        subtitulo="Não publicados" />
-          <EstatisticaCard icone={Flag}        corFundo="bg-purple-50" corIcone="text-purple-600" valor={estatisticas.projetosEncerrados} titulo="Encerrados"       subtitulo="Atualmente"     />
-          <EstatisticaCard icone={PauseCircle} corFundo="bg-amber-50"  corIcone="text-amber-600"  valor={estatisticas.projetosSuspensos}  titulo="Suspensos"        subtitulo="Atualmente"     />
+          <EstatisticaCard icone={Folder}      corFundo="bg-[#e8f3f7]" corIcone="text-[#287999]"  valor={estatisticas.projetosAtivos}                              titulo="Projetos ativos"       subtitulo="Publicados"     />
+          <EstatisticaCard icone={FileEdit}    corFundo="bg-blue-50"   corIcone="text-blue-600"   valor={estatisticas.projetosRascunho}                            titulo="Rascunhos"             subtitulo="Não publicados" />
+          <EstatisticaCard icone={Flag}        corFundo="bg-purple-50" corIcone="text-purple-600" valor={estatisticas.projetosEncerrados}                          titulo="Encerrados"            subtitulo="Atualmente"     />
+          <EstatisticaCard icone={Bell}        corFundo="bg-yellow-50" corIcone="text-yellow-600" valor={notificacoes.filter((n) => !n.lida).length}               titulo="Notificações novas"    subtitulo="Não lidas"      />
         </div>
 
         <section className="bg-white rounded-2xl border border-[#E2E8F0] shadow-[0_4px_20px_rgba(0,0,0,0.03)] overflow-hidden">
@@ -102,6 +102,11 @@ export default function DashboardProfessorPage() {
             <h2 className="text-base font-bold text-[#1E2E4F] flex items-center gap-2">
               <span className="w-1 h-5 bg-[#287999] rounded-full" />
               Notificações recentes
+              {notificacoes.filter((n) => !n.lida).length > 0 && (
+                <span className="ml-1 bg-yellow-400 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                  {notificacoes.filter((n) => !n.lida).length} novas
+                </span>
+              )}
             </h2>
           </div>
 

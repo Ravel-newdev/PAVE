@@ -1,0 +1,4 @@
+.env
+.env.*
+pnpm-lock.yaml
+routeTree.gen.ts

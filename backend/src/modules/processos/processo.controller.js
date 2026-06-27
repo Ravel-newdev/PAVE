@@ -40,6 +40,16 @@ const avaliarInscricao = async (req, res) => {
   res.status(200).json({ message: "Avaliação registrada e status da inscrição atualizado com sucesso." });
 };
 
+const obterProcesso = async (req, res) => {
+  const processo = await processoService.obterProcesso(req.params.id);
+  res.status(200).json(processo);
+};
+
+const listarProcessosDoProjeto = async (req, res) => {
+  const processos = await processoService.listarProcessosDoProjeto(req.params.projetoId);
+  res.status(200).json(processos);
+};
+
 module.exports = {
   criarProcesso,
   atualizarProcesso,
@@ -47,5 +57,7 @@ module.exports = {
   realizarInscricao,
   listarMinhasInscricoes,
   obterDetalhesInscricao,
-  avaliarInscricao
+  avaliarInscricao,
+  obterProcesso,
+  listarProcessosDoProjeto,
 };

@@ -11,7 +11,8 @@ interface Props {
   tituloProjeto: string;
   dadosAluno: DadosAluno;
   campos: CampoFormulario[];
-  onSubmit: (respostas: RespostaCampo[], arquivos: Record<string, File>) => void;
+  urlsPreenchidas?: Record<string, string>;
+  onSubmit: (respostas: RespostaCampo[], arquivos: Record<string, File>, urlsPreenchidasUsadas: Record<string, string>) => void;
   onCancelar: () => void;
   isLoading?: boolean;
 }
@@ -20,6 +21,7 @@ export function FormularioCandidatura({
   tituloProjeto,
   dadosAluno,
   campos,
+  urlsPreenchidas = {},
   onSubmit,
   onCancelar,
   isLoading = false,
@@ -67,9 +69,9 @@ export function FormularioCandidatura({
   function validar() {
     const erros: FormErrors = {};
     for (const campo of campos) {
-      if (!campo.obrigatoriedade) continue;
+      if (!campo.obrigatorio) continue;
       if (campo.tipo === "arquivo") {
-        if (!arquivos[campo.id]) erros[campo.id] = "Este campo é obrigatório.";
+        if (!arquivos[campo.id] && !urlsPreenchidas[campo.id]) erros[campo.id] = "Este campo é obrigatório.";
       } else {
         if (!valores[campo.id]?.trim()) erros[campo.id] = "Este campo é obrigatório.";
       }
@@ -82,8 +84,9 @@ export function FormularioCandidatura({
     if (!validar()) return;
     const respostas: RespostaCampo[] = campos
       .filter((c) => c.tipo !== "arquivo")
-      .map((c) => ({ campo_id: c.id, valor_texto: valores[c.id] ?? "" }));
-    onSubmit(respostas, arquivos);
+      .filter((c) => valores[c.id]?.trim())
+      .map((c) => ({ campo_id: c.id, valor_texto: valores[c.id] }));
+    onSubmit(respostas, arquivos, urlsPreenchidas);
   }
 
   return (
@@ -141,11 +144,23 @@ export function FormularioCandidatura({
               <Field key={campo.id} data-invalid={!!errors[campo.id]}>
                 <FieldLabel className="text-sm font-semibold text-[#334155]">
                   {campo.label}
-                  {campo.obrigatoriedade && <span className="text-red-400 ml-1">*</span>}
+                  {campo.obrigatorio && <span className="text-red-400 ml-1">*</span>}
                 </FieldLabel>
 
                 {campo.tipo === "arquivo" ? (
                   <div className={`border rounded-xl overflow-hidden ${errors[campo.id] ? "border-red-300" : "border-[#E2E8F0]"}`}>
+                    {/* Currículo do perfil pré-preenchido */}
+                    {urlsPreenchidas[campo.id] && !arquivos[campo.id] && (
+                      <div className="mx-3 mt-3 flex items-center gap-3 bg-emerald-50 border border-emerald-200 rounded-lg px-4 py-3">
+                        <FileText className="w-5 h-5 text-emerald-600 shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <span className="text-sm text-[#334155] font-medium">Currículo do perfil</span>
+                          <p className="text-xs text-[#64748B]">Será enviado automaticamente. Anexe outro para substituir.</p>
+                        </div>
+                        <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" />
+                      </div>
+                    )}
+
                     <div
                       onClick={() => inputsArquivo.current[campo.id]?.click()}
                       onDragOver={(e: DragEvent<HTMLDivElement>) => { e.preventDefault(); setArrastando(campo.id); }}
@@ -163,7 +178,9 @@ export function FormularioCandidatura({
                       }`}
                     >
                       <Upload className="w-5 h-5 text-[#287999] mb-2" />
-                      <span className="text-sm text-[#334155] font-medium">Clique para anexar ou arraste o arquivo aqui</span>
+                      <span className="text-sm text-[#334155] font-medium">
+                        {urlsPreenchidas[campo.id] && !arquivos[campo.id] ? "Clique para substituir o arquivo" : "Clique para anexar ou arraste o arquivo aqui"}
+                      </span>
                       <span className="text-xs text-[#64748B] mt-0.5">PDF até 10 MB</span>
                       <input
                         ref={(el) => { inputsArquivo.current[campo.id] = el; }}

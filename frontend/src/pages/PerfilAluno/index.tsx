@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 import { Form } from "@/layout/components/ui/form";
 
@@ -8,14 +9,15 @@ import { PersonalInfoCard } from "@/layout/components/Perfil/personal-info-card"
 import { AcademicInfoCard } from "@/layout/components/Perfil/academic-info-card";
 import { AboutCard } from "@/layout/components/Perfil/about-card";
 import { InterestSelect } from "@/layout/components/Perfil/interest-select";
-import { ExperienceCard } from "@/layout/components/Perfil/experience-card";
+import { CurriculoCard } from "@/layout/components/Perfil/experience-card";
 import { PreferencesCard } from "@/layout/components/Perfil/preferences-card";
 import { SecurityCard } from "@/layout/components/Perfil/security-card";
 
 import { useProfileForm } from "@/hooks/useProfileForm";
 import Navbar from "@/layout/components/Navbar/Navbar";
 
-import { getProfile, updateProfile, uploadAvatar } from "@/services/profile";
+import { getProfile, updateProfile } from "@/services/profile";
+import { paveApi } from "@/services/PaveApiService";
 
 import {
   profileFormToRequest,
@@ -55,29 +57,33 @@ export default function ProfilePage() {
     loadProfile();
   }, [reset]);
 
-  async function handleAvatarChange(file: File) {
-    try {
-      const { data } = await uploadAvatar(file);
+  const [avatarUploading, setAvatarUploading] = useState(false);
 
-      setValue("avatar", data.url, {
-        shouldDirty: true,
-      });
+  async function handleAvatarChange(file: File) {
+    setAvatarUploading(true);
+    try {
+      const { url } = await paveApi.uploadFotoDiscente(file);
+      setValue("avatar", url, { shouldDirty: true });
+      toast.success("Foto atualizada.");
     } catch (error) {
       console.error(error);
+      toast.error("Erro ao enviar a foto.");
+    } finally {
+      setAvatarUploading(false);
     }
+  }
+
+  function onValidationError() {
+    toast.error("Corrija os campos destacados antes de salvar.");
   }
 
   async function onSubmit(data: ProfileFormData) {
     try {
-      await updateProfile(
-        profileFormToRequest(data),
-      );
-
-      alert("Perfil atualizado com sucesso.");
+      await updateProfile(profileFormToRequest(data));
+      toast.success("Perfil atualizado com sucesso.");
     } catch (error) {
       console.error(error);
-
-      alert("Erro ao atualizar perfil.");
+      toast.error("Erro ao atualizar perfil. Tente novamente.");
     }
   }
 
@@ -101,17 +107,18 @@ export default function ProfilePage() {
         <Form {...form}>
 
           <form
-            onSubmit={handleSubmit(onSubmit)}
+            onSubmit={handleSubmit(onSubmit, onValidationError)}
             className="space-y-8"
           >
 
             <ProfileHeader
-              onSave={handleSubmit(onSubmit)}
+              onSave={handleSubmit(onSubmit, onValidationError)}
             />
 
             <PersonalInfoCard
               control={control}
               avatar={avatar ?? ""}
+              avatarUploading={avatarUploading}
               onAvatarChange={handleAvatarChange}
             />
 
@@ -127,7 +134,7 @@ export default function ProfilePage() {
               control={control}
             />
 
-            <ExperienceCard
+            <CurriculoCard
               control={control}
             />
 

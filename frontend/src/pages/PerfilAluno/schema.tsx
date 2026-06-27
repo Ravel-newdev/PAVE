@@ -1,22 +1,6 @@
 import { z } from "zod";
 
-export const experienceSchema = z.object({
-  company: z
-    .string()
-    .min(2, "Informe a empresa."),
-
-  position: z
-    .string()
-    .min(2, "Informe o cargo."),
-
-  startDate: z.string(),
-
-  endDate: z.string(),
-
-  description: z
-    .string()
-    .max(500, "Máximo de 500 caracteres.")
-});
+const anoAtual = new Date().getFullYear();
 
 export const profileSchema = z
   .object({
@@ -32,41 +16,51 @@ export const profileSchema = z
       .string()
       .email("E-mail inválido."),
 
-    phone: z.string(),
-
-    birthDate: z.string(),
-
-    avatar: z
+    phone: z
       .string()
-      .nullable()
-      .optional(),
+      .refine(
+        (v) => !v || /^\(?\d{2}\)?[\s-]?\d{4,5}-?\d{4}$/.test(v),
+        "Telefone inválido."
+      ),
 
-    institution: z
+    birthDate: z
       .string()
-      .min(2),
+      .refine(
+        (v) => !v || !isNaN(Date.parse(v)),
+        "Data inválida."
+      ),
 
-    course: z
+    avatar: z.string().nullable().optional(),
+
+    institution: z.string(),
+
+    course: z.string(),
+
+    semester: z
       .string()
-      .min(2),
+      .refine(
+        (v) => !v || (/^\d{1,2}$/.test(v) && +v >= 1 && +v <= 20),
+        "Semestre inválido (1 a 20)."
+      ),
 
-    semester: z.string(),
-
-    graduationYear: z.string(),
+    graduationYear: z
+      .string()
+      .refine(
+        (v) => !v || (/^\d{4}$/.test(v) && +v >= 2000 && +v <= anoAtual + 10),
+        `Ano inválido (2000 a ${anoAtual + 10}).`
+      ),
 
     about: z
       .string()
-      .max(1000),
+      .max(1000, "Máximo de 1000 caracteres."),
 
     interests: z.array(z.string()),
 
-    experiences: z.array(experienceSchema),
+    curriculo_url: z.string(),
 
-    availability: z.enum([
-      "morning",
-      "afternoon",
-      "night",
-      "fulltime",
-    ]),
+    availability: z
+      .enum(["morning", "afternoon", "night", "fulltime"])
+      .optional(),
 
     remote: z.boolean(),
 
@@ -74,18 +68,24 @@ export const profileSchema = z
 
     currentPassword: z.string(),
 
-    newPassword: z.string(),
+    newPassword: z
+      .string()
+      .refine(
+        (v) => !v || v.length >= 8,
+        "A nova senha deve ter pelo menos 8 caracteres."
+      ),
 
     confirmPassword: z.string(),
   })
   .refine(
-    (data) => {
-      if (!data.newPassword && !data.confirmPassword) {
-        return true;
-      }
-
-      return data.newPassword === data.confirmPassword;
-    },
+    (data) => !data.newPassword || !!data.currentPassword,
+    {
+      path: ["currentPassword"],
+      message: "Informe a senha atual para alterar a senha.",
+    }
+  )
+  .refine(
+    (data) => !data.newPassword || data.newPassword === data.confirmPassword,
     {
       path: ["confirmPassword"],
       message: "As senhas não coincidem.",

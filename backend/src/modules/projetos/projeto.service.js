@@ -4,6 +4,7 @@
  */
 
 const { query, getClient } = require("../../database/connection");
+const { criar: criarNotificacao } = require("../notificacoes/notificacao.service");
 
 const criar = async (docenteId, dados) => {
   const { titulo, descricao, carga_hora, data_inic, data_termino, centro_dep, tags } = dados;
@@ -47,7 +48,17 @@ const criar = async (docenteId, dados) => {
 
 const listar = async (usuario, filtros) => {
   let baseQuery = `
-    SELECT p.id, p.titulo, p.status, p.criado_em, d.nome AS docente_nome
+    SELECT p.id, p.titulo, p.status, p.criado_em, d.nome AS autor_nome,
+      COALESCE(
+        (SELECT json_agg(json_build_object('id', t.id, 'nome', t.nome))
+         FROM projeto_tag pt
+         INNER JOIN tag t ON pt.tag_id = t.id
+         WHERE pt.projeto_id = p.id),
+        '[]'::json
+      ) AS tags,
+      (SELECT ps.n_vagas FROM processo_seletivo ps
+       WHERE ps.projeto_id = p.id AND ps.status = 'aberto'
+       ORDER BY ps.criado_em DESC LIMIT 1) AS n_vagas
     FROM projetos p
     INNER JOIN docentes d ON p.docente_id = d.id
     WHERE 1=1
@@ -73,11 +84,14 @@ const listar = async (usuario, filtros) => {
 
 const obterPorId = async (projetoId, usuario) => {
   const baseQuery = `
-    SELECT p.*, d.nome AS docente_nome,
-      (SELECT json_agg(json_build_object('id', t.id, 'nome', t.nome))
-       FROM projeto_tag pt
-       INNER JOIN tag t ON pt.tag_id = t.id
-       WHERE pt.projeto_id = p.id) AS tags
+    SELECT p.*, d.nome AS autor_nome,
+      COALESCE(
+        (SELECT json_agg(json_build_object('id', t.id, 'nome', t.nome))
+         FROM projeto_tag pt
+         INNER JOIN tag t ON pt.tag_id = t.id
+         WHERE pt.projeto_id = p.id),
+        '[]'::json
+      ) AS tags
     FROM projetos p
     INNER JOIN docentes d ON p.docente_id = d.id
     WHERE p.id = $1
@@ -148,7 +162,26 @@ const alterarStatus = async (projetoId, docenteId, novoStatus) => {
   if (checkOwnership.rows.length === 0) throw new Error("Projeto não encontrado.");
   if (checkOwnership.rows[0].docente_id !== docenteId) throw new Error("Acesso negado.");
 
+  const statusAnterior = checkOwnership.rows[0].status;
   await query(`UPDATE projetos SET status = $1 WHERE id = $2`, [novoStatus, projetoId]);
+
+  if (novoStatus === 'ativo' && statusAnterior !== 'ativo') {
+    const [favoritos, projetoRow] = await Promise.all([
+      query(`SELECT discente_id FROM favoritos WHERE projeto_id = $1`, [projetoId]),
+      query(`SELECT titulo FROM projetos WHERE id = $1`, [projetoId]),
+    ]);
+    const titulo = projetoRow.rows[0]?.titulo ?? 'projeto';
+    await Promise.all(
+      favoritos.rows.map((f) =>
+        criarNotificacao({
+          discente_id: f.discente_id,
+          titulo: 'Projeto favoritado agora está ativo',
+          mensagem: `O projeto "${titulo}" que você favoritou está ativo e com inscrições abertas.`,
+          tipo: 'sistema',
+        })
+      )
+    );
+  }
 };
 
 const alternarFavorito = async (projetoId, discenteId) => {

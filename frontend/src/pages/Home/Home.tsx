@@ -10,6 +10,7 @@ import "./Home.css";
 export default function Home() {
   const [projetos, setProjetos] = useState<Projeto[]>([]);
   const [favoritos, setFavoritos] = useState<Set<string>>(new Set());
+  const [naoLidas, setNaoLidas] = useState(0);
   const [erro, setErro] = useState<string | null>(null);
 
   useEffect(() => {
@@ -19,6 +20,10 @@ export default function Home() {
 
     paveApi.listarFavoritos()
       .then((favs) => setFavoritos(new Set(favs.map((p) => p.id))))
+      .catch(() => {});
+
+    paveApi.listarNotificacoes()
+      .then((ns) => setNaoLidas(ns.filter((n) => !n.lida).length))
       .catch(() => {});
   }, []);
 
@@ -38,7 +43,6 @@ export default function Home() {
   }
 
   const projetosAtivos = projetos.length;
-  const totalVagas = projetos.length;
   const areas = new Set(projetos.map((p) => p.centro_dep).filter(Boolean)).size;
 
   return (
@@ -78,13 +82,13 @@ export default function Home() {
             </div>
             <div className="hero-stat-sep" />
             <div className="hero-stat">
-              <div className="hero-stat-num">{totalVagas}</div>
-              <div className="hero-stat-lbl">Vagas abertas</div>
+              <div className="hero-stat-num">{areas}</div>
+              <div className="hero-stat-lbl">Áreas de atuação</div>
             </div>
             <div className="hero-stat-sep" />
             <div className="hero-stat">
-              <div className="hero-stat-num">{areas}</div>
-              <div className="hero-stat-lbl">Áreas de atuação</div>
+              <div className="hero-stat-num">{naoLidas}</div>
+              <div className="hero-stat-lbl">Notificações novas</div>
             </div>
           </div>
         </div>

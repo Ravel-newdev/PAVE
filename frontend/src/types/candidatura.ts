@@ -23,12 +23,14 @@ export interface ProjetoCandidaturaView {
   processoSeletivoId: string;
 }
 
-/** Campo de formulário retornado pelo backend. */
+/** Campo de formulário retornado por GET /api/formularios/:id/campos. */
 export interface CampoFormulario {
   id: string;
+  chave_unica: string;
   label: string;
-  tipo: "texto" | "textarea" | "arquivo";
-  obrigatoriedade: boolean;
+  tipo: "texto" | "texto_longo" | "arquivo" | "numero" | "selecao" | "data";
+  obrigatorio: boolean;
+  ordem: number;
 }
 
 /** Resposta individual de um campo — alinhada com POST /api/inscricoes. */

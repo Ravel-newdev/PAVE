@@ -31,6 +31,7 @@ export function ProfileHeader({ onSave }: ProfileHeaderProps) {
         </div>
 
         <Button
+          type="button"
           onClick={onSave}
           className="gap-2"
         >

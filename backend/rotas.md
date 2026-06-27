@@ -145,6 +145,45 @@ Este documento detalha os endpoints disponíveis, métodos HTTP, parâmetros esp
 * **Autorização:** Restrito ao Docente autor do projeto original.
 * **Corpo da Requisição (JSON):** Mesmo formato do POST, permitindo envio parcial e aceitando o campo adicional opcional `"status": "string ('aberto' | 'encerrado' | 'cancelado')"`.
 
+**GET /api/processos/:id**
+* **Descrição:** Retorna os dados de um processo seletivo específico.
+* **Autorização:** Autenticado.
+* **Corpo da Requisição:** Nenhum.
+* **Resposta (200):**
+    ```json
+    {
+      "id": "uuid",
+      "projeto_id": "uuid",
+      "formulario_id": "uuid | null",
+      "titulo": "string",
+      "descricao": "string | null",
+      "data_inicio": "string ISO 8601 | null",
+      "data_termino": "string ISO 8601 | null",
+      "status": "'aberto' | 'encerrado' | 'cancelado'",
+      "n_vagas": "number | null",
+      "criado_em": "string ISO 8601"
+    }
+    ```
+
+**GET /api/processos/projeto/:projetoId**
+* **Descrição:** Lista todos os processos seletivos com status `aberto` de um projeto. Ordenados do mais recente ao mais antigo.
+* **Autorização:** Autenticado.
+* **Corpo da Requisição:** Nenhum.
+* **Resposta (200):**
+    ```json
+    [
+      {
+        "id": "uuid",
+        "titulo": "string",
+        "descricao": "string | null",
+        "data_inicio": "string ISO 8601 | null",
+        "data_termino": "string ISO 8601 | null",
+        "status": "'aberto'",
+        "n_vagas": "number | null"
+      }
+    ]
+    ```
+
 **GET /api/processos/:id/candidatos**
 * **Descrição:** Lista todos os candidatos inscritos em um edital específico.
 * **Autorização:** Restrito ao Docente autor do projeto.
@@ -231,6 +270,107 @@ Este documento detalha os endpoints disponíveis, métodos HTTP, parâmetros esp
 * **Descrição:** Retorna a listagem dos tipos de campos permitidos para a construção de formulários.
 * **Autorização:** Autenticado.
 * **Corpo da Requisição:** Nenhum.
+
+**GET /api/formularios/:id/campos**
+* **Descrição:** Lista os campos configurados em um formulário, ordenados pela coluna `ordem`.
+* **Autorização:** Autenticado.
+* **Corpo da Requisição:** Nenhum.
+* **Resposta (200):**
+    ```json
+    [
+      {
+        "id": "uuid",
+        "label": "string",
+        "tipo": "'texto' | 'texto_longo' | 'arquivo' | 'numero' | 'selecao' | 'data'",
+        "obrigatorio": "boolean",
+        "ordem": "number"
+      }
+    ]
+    ```
+
+---
+
+### UPLOADS
+
+**POST /api/uploads/candidatura**
+* **Descrição:** Faz upload de um arquivo (documento PDF) para o armazenamento Cloudflare R2, associado a um campo de formulário de candidatura. Retorna a URL pública do arquivo armazenado.
+* **Autorização:** Restrito a Discente.
+* **Query Params:** `?processoId=uuid&campoId=uuid` (ambos obrigatórios).
+* **Corpo da Requisição:** `multipart/form-data` com o campo `arquivo` contendo o PDF. Limite de 10 MB.
+* **Resposta (201):**
+    ```json
+    {
+      "url": "string (URL pública do arquivo no R2)"
+    }
+    ```
+* **Erros:**
+    * `400` — Arquivo ausente ou tipo não permitido (apenas PDF).
+    * `413` — Arquivo excede 10 MB.
+
+**GET /api/discentes/me**
+* **Descrição:** Retorna o perfil completo do discente autenticado.
+* **Autorização:** Restrito a Discente.
+* **Resposta (200):**
+    ```json
+    {
+      "nome": "string",
+      "matricula": "string",
+      "curso": "string | null",
+      "telefone": "string | null",
+      "email": "string",
+      "foto_url": "string | null",
+      "curriculo_url": "string | null",
+      "bio": "string | null",
+      "data_nascimento": "string (ISO date) | null",
+      "semestre": "number | null",
+      "ano_conclusao": "number | null",
+      "linkedin": "string | null",
+      "disponibilidade": "'manha' | 'tarde' | 'noite' | 'integral' | null",
+      "remoto": "boolean",
+      "notificacoes": "boolean",
+      "interesses": "string[] | null"
+    }
+    ```
+
+**PUT /api/discentes/me**
+* **Descrição:** Atualiza o perfil do discente autenticado. Todos os campos são opcionais; somente os enviados são atualizados.
+* **Autorização:** Restrito a Discente.
+* **Corpo da Requisição (JSON):**
+    ```json
+    {
+      "nome": "string (opcional)",
+      "telefone": "string (opcional)",
+      "curso": "string (opcional)",
+      "bio": "string (opcional)",
+      "data_nascimento": "string ISO date (opcional)",
+      "semestre": "number (opcional)",
+      "ano_conclusao": "number (opcional)",
+      "linkedin": "string (opcional)",
+      "disponibilidade": "'manha'|'tarde'|'noite'|'integral' (opcional)",
+      "remoto": "boolean (opcional)",
+      "notificacoes": "boolean (opcional)",
+      "interesses": "string[] (opcional)"
+    }
+    ```
+* **Resposta (200):** `{ nome, matricula, curso }`
+
+**POST /api/discentes/me/foto**
+* **Descrição:** Faz upload da foto de perfil do discente para o R2 e atualiza `foto_url`.
+* **Autorização:** Restrito a Discente.
+* **Corpo da Requisição:** `multipart/form-data` com campo `arquivo` (JPEG/PNG/WebP, máx. 5 MB).
+* **Resposta (200):** `{ "url": "string" }`
+* **Erros:**
+    * `400` — Arquivo ausente ou tipo não permitido.
+    * `413` — Arquivo excede 5 MB.
+
+**POST /api/discentes/me/curriculo**
+* **Descrição:** Faz upload do currículo (PDF) do discente para o R2 e atualiza `curriculo_url`.
+* **Autorização:** Restrito a Discente.
+* **Corpo da Requisição:** `multipart/form-data` com campo `arquivo` (PDF, máx. 10 MB).
+* **Resposta (200):** `{ "url": "string" }`
+* **Erros:**
+    * `400` — Arquivo ausente ou tipo não permitido (apenas PDF).
+    * `413` — Arquivo excede 10 MB.
 
 **GET /api/discentes/favoritos**
 * **Descrição:** Retorna os dados completos dos projetos que o discente logado favoritou.

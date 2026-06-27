@@ -6,6 +6,14 @@
 
 const { query } = require("../../database/connection");
 
+const criar = async ({ docente_id = null, discente_id = null, titulo, mensagem, tipo }) => {
+  await query(
+    `INSERT INTO notificacao (docente_id, discente_id, titulo, mensagem, tipo)
+     VALUES ($1, $2, $3, $4, $5)`,
+    [docente_id, discente_id, titulo, mensagem, tipo]
+  );
+};
+
 const listar = async (usuarioId, tipoUsuario) => {
   const colunaId = tipoUsuario === 'docente' ? 'docente_id' : 'discente_id';
   const { rows } = await query(`
@@ -38,4 +46,4 @@ const remover = async (notificacaoId, usuarioId, tipoUsuario) => {
   if (rowCount === 0) throw new Error("Notificação não encontrada.");
 };
 
-module.exports = { listar, marcarComoLida, remover };
+module.exports = { criar, listar, marcarComoLida, remover };

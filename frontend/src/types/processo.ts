@@ -98,3 +98,13 @@ export interface AvaliarInscricaoPayload {
   novo_status: StatusInscricao;
   coluna_kanban?: number;
 }
+
+/** Resumo de inscrição retornado por GET /api/inscricoes (lista do discente). */
+export interface InscricaoResumo {
+  id: string;
+  ps_id: string;
+  data_inscricao: string;
+  status: StatusInscricao;
+  processo_titulo: string;
+  projeto_titulo: string;
+}

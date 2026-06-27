@@ -16,18 +16,32 @@ CREATE TABLE docentes (
     nome          VARCHAR(150) NOT NULL,
     telefone      VARCHAR(20),
     departamento  VARCHAR(150),
+    foto_url      TEXT,
+    bio           TEXT,
+    linkedin      VARCHAR(255),
     ativo         BOOLEAN      NOT NULL DEFAULT TRUE,
     criado_em     TIMESTAMP    NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE discentes (
-    id            UUID         PRIMARY KEY REFERENCES usuarios(id) ON DELETE CASCADE,
-    matricula     VARCHAR(20)  UNIQUE NOT NULL,
-    nome          VARCHAR(150) NOT NULL,
-    telefone      VARCHAR(20),
-    curso         VARCHAR(150),
-    ativo         BOOLEAN      NOT NULL DEFAULT TRUE,
-    criado_em     TIMESTAMP    NOT NULL DEFAULT NOW()
+    id              UUID         PRIMARY KEY REFERENCES usuarios(id) ON DELETE CASCADE,
+    matricula       VARCHAR(20)  UNIQUE NOT NULL,
+    nome            VARCHAR(150) NOT NULL,
+    telefone        VARCHAR(20),
+    curso           VARCHAR(150),
+    foto_url        TEXT,
+    curriculo_url   TEXT,
+    bio             TEXT,
+    data_nascimento DATE,
+    semestre        SMALLINT     CHECK (semestre BETWEEN 1 AND 20),
+    ano_conclusao   SMALLINT,
+    linkedin        VARCHAR(255),
+    disponibilidade VARCHAR(20)  CHECK (disponibilidade IN ('manha', 'tarde', 'noite', 'integral')),
+    remoto          BOOLEAN      NOT NULL DEFAULT FALSE,
+    notificacoes    BOOLEAN      NOT NULL DEFAULT TRUE,
+    interesses      TEXT[],
+    ativo           BOOLEAN      NOT NULL DEFAULT TRUE,
+    criado_em       TIMESTAMP    NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE projetos (

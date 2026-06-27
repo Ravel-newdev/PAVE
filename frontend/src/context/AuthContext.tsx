@@ -30,23 +30,18 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
-export function AuthProvider({ children }: { children: ReactNode }) {
-  const [session, setSession] = useState<UserSession | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const navigate = useNavigate();
+function loadSessionFromStorage(): UserSession | null {
+  const token = paveApi.getToken();
+  if (!token) return null;
+  const decoded = decodeJwtPayload(token);
+  if (!decoded) { paveApi.clearToken(); return null; }
+  return decoded;
+}
 
-  useEffect(() => {
-    const token = paveApi.getToken();
-    if (token) {
-      const decoded = decodeJwtPayload(token);
-      if (decoded) {
-        setSession(decoded);
-      } else {
-        paveApi.clearToken();
-      }
-    }
-    setIsLoading(false);
-  }, []);
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const [session, setSession] = useState<UserSession | null>(loadSessionFromStorage);
+  const [isLoading] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     function handleAuthError(event: ErrorEvent) {

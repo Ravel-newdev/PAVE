@@ -13,6 +13,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "../ui/form";
 
 import {
@@ -88,6 +89,8 @@ export function PreferencesCard({
                 </SelectContent>
 
               </Select>
+
+              <FormMessage />
 
             </FormItem>
           )}

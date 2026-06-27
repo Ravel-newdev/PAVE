@@ -10,6 +10,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "../ui/form";
 
 import { Button } from "../ui/button";
@@ -42,10 +43,10 @@ export function ExperienceItem({
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Empresa</FormLabel>
-
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
+                <FormMessage />
               </FormItem>
             )}
           />
@@ -56,10 +57,10 @@ export function ExperienceItem({
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Cargo</FormLabel>
-
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
+                <FormMessage />
               </FormItem>
             )}
           />
@@ -70,13 +71,10 @@ export function ExperienceItem({
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Início</FormLabel>
-
                 <FormControl>
-                  <Input
-                    type="month"
-                    {...field}
-                  />
+                  <Input type="month" {...field} />
                 </FormControl>
+                <FormMessage />
               </FormItem>
             )}
           />
@@ -86,35 +84,32 @@ export function ExperienceItem({
             name={`experiences.${index}.endDate`}
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Fim</FormLabel>
-
+                <FormLabel>Fim <span className="text-muted-foreground font-normal">(opcional)</span></FormLabel>
                 <FormControl>
-                  <Input
-                    type="month"
-                    {...field}
-                  />
+                  <Input type="month" {...field} />
                 </FormControl>
+                <FormMessage />
               </FormItem>
             )}
           />
 
           <FormField
-                control={control}
-                name={`experiences.${index}.description`}
-                render={({ field }) => (
-                    <FormItem className="md:col-span-2">
-                    <FormLabel>Descrição</FormLabel>
-
-                    <FormControl>
-                        <Textarea
-                        rows={4}
-                        placeholder="Descreva suas atividades..."
-                        {...field}
-                        />
-                    </FormControl>
-                    </FormItem>
-                )}
-            />
+            control={control}
+            name={`experiences.${index}.description`}
+            render={({ field }) => (
+              <FormItem className="md:col-span-2">
+                <FormLabel>Descrição <span className="text-muted-foreground font-normal">(opcional)</span></FormLabel>
+                <FormControl>
+                  <Textarea
+                    rows={4}
+                    placeholder="Descreva suas atividades..."
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
         </div>
 

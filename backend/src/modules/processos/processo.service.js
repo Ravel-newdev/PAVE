@@ -4,6 +4,7 @@
  */
 
 const { query, getClient } = require("../../database/connection");
+const { criar: criarNotificacao } = require("../notificacoes/notificacao.service");
 
 const criarProcesso = async (docenteId, dados) => {
   const { projeto_id, formulario_id, titulo, descricao, data_inicio, data_termino, pdf_edital, n_vagas } = dados;
@@ -23,7 +24,28 @@ const criarProcesso = async (docenteId, dados) => {
     [projeto_id, formulario_id, titulo, descricao, data_inicio, data_termino, pdf_edital, n_vagas]
   );
 
-  return { id: rows[0].id, titulo, status: 'aberto' };
+  const processoId = rows[0].id;
+
+  // Notifica discentes que favoritaram o projeto
+  const favoritos = await query(
+    `SELECT f.discente_id FROM favoritos f WHERE f.projeto_id = $1`,
+    [projeto_id]
+  );
+  const projetoRow = await query(`SELECT titulo FROM projetos WHERE id = $1`, [projeto_id]);
+  const projetoTitulo = projetoRow.rows[0]?.titulo ?? 'projeto';
+
+  await Promise.all(
+    favoritos.rows.map((f) =>
+      criarNotificacao({
+        discente_id: f.discente_id,
+        titulo: 'Novo processo seletivo disponível',
+        mensagem: `Um novo processo seletivo foi aberto para o projeto "${projetoTitulo}". Candidate-se agora!`,
+        tipo: 'sistema',
+      })
+    )
+  );
+
+  return { id: processoId, titulo, status: 'aberto' };
 };
 
 const atualizarProcesso = async (processoId, docenteId, dados) => {
@@ -40,17 +62,37 @@ const atualizarProcesso = async (processoId, docenteId, dados) => {
   const { titulo, descricao, data_inicio, data_termino, pdf_edital, n_vagas, status } = dados;
 
   await query(
-    `UPDATE processo_seletivo 
-     SET titulo = COALESCE($1, titulo), 
-         descricao = COALESCE($2, descricao), 
-         data_inicio = COALESCE($3, data_inicio), 
-         data_termino = COALESCE($4, data_termino), 
-         pdf_edital = COALESCE($5, pdf_edital), 
+    `UPDATE processo_seletivo
+     SET titulo = COALESCE($1, titulo),
+         descricao = COALESCE($2, descricao),
+         data_inicio = COALESCE($3, data_inicio),
+         data_termino = COALESCE($4, data_termino),
+         pdf_edital = COALESCE($5, pdf_edital),
          n_vagas = COALESCE($6, n_vagas),
          status = COALESCE($7, status)
      WHERE id = $8`,
     [titulo, descricao, data_inicio, data_termino, pdf_edital, n_vagas, status, processoId]
   );
+
+  if (status === 'encerrado' || status === 'cancelado') {
+    const inscritos = await query(
+      `SELECT i.discente_id, ps.titulo AS processo_titulo
+       FROM inscricao i
+       INNER JOIN processo_seletivo ps ON i.ps_id = ps.id
+       WHERE i.ps_id = $1 AND i.status IN ('pendente', 'em_analise')`,
+      [processoId]
+    );
+    await Promise.all(
+      inscritos.rows.map((r) =>
+        criarNotificacao({
+          discente_id: r.discente_id,
+          titulo: 'Processo seletivo encerrado',
+          mensagem: `O processo seletivo "${r.processo_titulo}" foi encerrado antes de uma decisão sobre sua candidatura.`,
+          tipo: 'sistema',
+        })
+      )
+    );
+  }
 
   return { id: processoId, atualizado: true };
 };
@@ -113,6 +155,26 @@ const realizarInscricao = async (discenteId, dados) => {
     }
 
     await client.query("COMMIT");
+
+    // Notifica o docente do projeto sobre a nova candidatura
+    const infoQuery = await query(`
+      SELECT p.docente_id, p.titulo AS projeto_titulo, d.nome AS discente_nome
+      FROM processo_seletivo ps
+      INNER JOIN projetos p ON ps.projeto_id = p.id
+      INNER JOIN discentes d ON d.id = $1
+      WHERE ps.id = $2
+    `, [discenteId, ps_id]);
+
+    if (infoQuery.rows.length > 0) {
+      const { docente_id, projeto_titulo, discente_nome } = infoQuery.rows[0];
+      await criarNotificacao({
+        docente_id,
+        titulo: 'Nova candidatura recebida',
+        mensagem: `${discente_nome} se inscreveu em um processo seletivo do projeto "${projeto_titulo}".`,
+        tipo: 'inscricao',
+      });
+    }
+
     return { id: inscricaoId, status: 'pendente' };
   } catch (error) {
     await client.query("ROLLBACK");
@@ -124,7 +186,7 @@ const realizarInscricao = async (discenteId, dados) => {
 
 const listarInscricoesDiscente = async (discenteId) => {
   const { rows } = await query(`
-    SELECT i.id, i.data_inscricao, i.status, 
+    SELECT i.id, i.ps_id, i.data_inscricao, i.status,
            ps.titulo AS processo_titulo, p.titulo AS projeto_titulo
     FROM inscricao i
     INNER JOIN processo_seletivo ps ON i.ps_id = ps.id
@@ -205,12 +267,56 @@ const avaliarInscricao = async (inscricaoId, docenteId, dados) => {
     );
 
     await client.query("COMMIT");
+
+    // Notifica o discente se a decisão for definitiva
+    if (novo_status === 'aprovado' || novo_status === 'reprovado') {
+      const infoQuery = await query(`
+        SELECT i.discente_id, p.titulo AS projeto_titulo
+        FROM inscricao i
+        INNER JOIN processo_seletivo ps ON i.ps_id = ps.id
+        INNER JOIN projetos p ON ps.projeto_id = p.id
+        WHERE i.id = $1
+      `, [inscricaoId]);
+
+      if (infoQuery.rows.length > 0) {
+        const { discente_id, projeto_titulo } = infoQuery.rows[0];
+        const aprovado = novo_status === 'aprovado';
+        await criarNotificacao({
+          discente_id,
+          titulo: aprovado ? 'Candidatura aprovada!' : 'Resultado da seleção',
+          mensagem: aprovado
+            ? `Parabéns! Sua candidatura ao projeto "${projeto_titulo}" foi aprovada.`
+            : `Sua candidatura ao projeto "${projeto_titulo}" não foi aprovada nesta rodada.`,
+          tipo: 'selecao',
+        });
+      }
+    }
   } catch (error) {
     await client.query("ROLLBACK");
     throw error;
   } finally {
     client.release();
   }
+};
+
+const obterProcesso = async (processoId) => {
+  const { rows } = await query(
+    `SELECT id, projeto_id, formulario_id, titulo, descricao, data_inicio, data_termino, status, n_vagas, criado_em
+     FROM processo_seletivo WHERE id = $1`,
+    [processoId]
+  );
+  if (!rows[0]) throw new Error("Processo seletivo não encontrado.");
+  return rows[0];
+};
+
+const listarProcessosDoProjeto = async (projetoId) => {
+  const { rows } = await query(
+    `SELECT id, titulo, descricao, data_inicio, data_termino, status, n_vagas
+     FROM processo_seletivo WHERE projeto_id = $1 AND status = 'aberto'
+     ORDER BY criado_em DESC`,
+    [projetoId]
+  );
+  return rows;
 };
 
 module.exports = {
@@ -220,5 +326,7 @@ module.exports = {
   realizarInscricao,
   listarInscricoesDiscente,
   obterDetalhesInscricao,
-  avaliarInscricao
+  avaliarInscricao,
+  obterProcesso,
+  listarProcessosDoProjeto,
 };

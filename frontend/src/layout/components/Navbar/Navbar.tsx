@@ -1,9 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Home, FolderOpen, Bookmark,
-  Bell, Mail, ChevronDown, Menu, X, Search,
+  Bell, ChevronDown, Menu, X, Search,
+  Settings, LogOut,
 } from "lucide-react";
+import { Link, useNavigate } from "@tanstack/react-router";
 import logo from "../../../assets/pave-logo-detalhada-512.png";
+import { useAuth } from "@/context/AuthContext";
+import { paveApi } from "@/services/PaveApiService";
 import "./Navbar.css";
 
 function useWindowWidth() {
@@ -18,9 +22,18 @@ function useWindowWidth() {
   return width;
 }
 
+function deriveNome(email: string): string {
+  const local = email.split("@")[0] ?? email;
+  return local
+    .replace(/[._-]/g, " ")
+    .split(" ")
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
+}
+
 const navItems = [
   { label: "Início",               to: "/",             icon: <Home size={16} />       },
-  { label: "Projetos",             to: "/projetos/",    icon: <FolderOpen size={16} /> },
+  { label: "Projetos",             to: "/projetos",     icon: <FolderOpen size={16} /> },
   { label: "Minhas Oportunidades", to: "/oportunidade", icon: <Bookmark size={16} />   },
 ];
 
@@ -28,16 +41,46 @@ export default function Navbar() {
   const width    = useWindowWidth();
   const isMobile = width < 768;
 
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [query,    setQuery]    = useState("");
+  const { session, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const [menuOpen,     setMenuOpen]     = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [query,        setQuery]        = useState("");
+  const [naoLidas,     setNaoLidas]     = useState(0);
+  const [fotoUrl,      setFotoUrl]      = useState<string | null>(null);
+
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const currentPath = typeof window !== "undefined" ? window.location.pathname : "/";
-  const userName    = "Mariana";
+  const nome        = session ? deriveNome(session.email) : "";
+  const inicial     = nome.charAt(0).toUpperCase();
+
+  useEffect(() => {
+    if (!session) return;
+    paveApi.listarNotificacoes()
+      .then((ns) => setNaoLidas(ns.filter((n) => !n.lida).length))
+      .catch(() => {});
+    if (session.tipo === "discente") {
+      paveApi.obterPerfilDiscente()
+        .then((p) => setFotoUrl(p.foto_url))
+        .catch(() => {});
+    }
+  }, [session]);
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   function buscar(fecharMenu = false) {
     const termo = query.trim();
-    const url = termo ? `/projetos/?q=${encodeURIComponent(termo)}` : "/projetos/";
-    window.location.href = url;
+    void navigate({ to: "/projetos", search: (prev) => ({ ...prev, ...(termo ? { q: termo } : {}) }) });
     if (fecharMenu) setMenuOpen(false);
   }
 
@@ -45,10 +88,10 @@ export default function Navbar() {
     <>
       <nav className="navbar">
         <div className="navbar-left">
-          <a href="/" className="logo">
+          <Link to="/" className="logo">
             <img src={logo} alt="PAVE" className="logo-img" />
             <span className="logo-text">PAVE</span>
-          </a>
+          </Link>
 
           {!isMobile && (
             <div className="nav-links">
@@ -59,14 +102,14 @@ export default function Navbar() {
                     ? currentPath === "/"
                     : currentPath.startsWith(base);
                 return (
-                  <a
+                  <Link
                     key={item.label}
-                    href={item.to}
+                    to={item.to}
                     className={`nav-link${isActive ? " active" : ""}`}
                   >
                     {item.icon}
                     {item.label}
-                  </a>
+                  </Link>
                 );
               })}
             </div>
@@ -92,22 +135,59 @@ export default function Navbar() {
           )}
 
           <div className="nav-actions">
-            <button className="notif-btn" aria-label="Mensagens">
-              <Mail size={20} color="rgba(255,255,255,0.8)" />
-            </button>
-            <button className="notif-btn" aria-label="Notificações">
+            <Link to="/aluno/notificacoes" className="notif-btn" aria-label="Notificações">
               <Bell size={22} color="rgba(255,255,255,0.8)" />
-              <span className="notif-dot" />
-              <span className="notif-badge">2</span>
-            </button>
+              {naoLidas > 0 && (
+                <>
+                  <span className="notif-dot" />
+                  <span className="notif-badge">{naoLidas > 99 ? "99+" : naoLidas}</span>
+                </>
+              )}
+            </Link>
+
             {!isMobile && <div className="divider-v" />}
+
             {!isMobile && (
-              <div className="user-profile">
-                <div className="avatar">M</div>
-                <div className="user-info">
-                  <div className="user-name">Olá, {userName}</div>
-                </div>
-                <ChevronDown size={16} className="chevron" />
+              <div className="user-profile-wrap" ref={dropdownRef}>
+                <button
+                  className="user-profile"
+                  onClick={() => setDropdownOpen((v) => !v)}
+                  aria-expanded={dropdownOpen}
+                  aria-haspopup="true"
+                >
+                  <div className="avatar">
+                    {fotoUrl
+                      ? <img src={fotoUrl} alt={nome} className="w-full h-full object-cover rounded-full" />
+                      : inicial}
+                  </div>
+                  <div className="user-info">
+                    <div className="user-name">Olá, {nome}</div>
+                  </div>
+                  <ChevronDown
+                    size={16}
+                    className={`chevron${dropdownOpen ? " chevron--open" : ""}`}
+                  />
+                </button>
+
+                {dropdownOpen && (
+                  <div className="user-dropdown">
+                    <Link
+                      to="/perfilAluno"
+                      className="user-dropdown-item"
+                      onClick={() => setDropdownOpen(false)}
+                    >
+                      <Settings size={15} />
+                      Configurações
+                    </Link>
+                    <button
+                      className="user-dropdown-item user-dropdown-item--danger"
+                      onClick={() => { setDropdownOpen(false); logout(); }}
+                    >
+                      <LogOut size={15} />
+                      Sair
+                    </button>
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -136,16 +216,24 @@ export default function Navbar() {
             />
           </div>
           {navItems.map((item) => (
-            <a
+            <Link
               key={item.label}
-              href={item.to}
+              to={item.to}
               className="mobile-menu-link"
               onClick={() => setMenuOpen(false)}
             >
               {item.icon}
               {item.label}
-            </a>
+            </Link>
           ))}
+          <Link to="/aluno/notificacoes" className="mobile-menu-link" onClick={() => setMenuOpen(false)}>
+            <Bell size={16} />
+            Notificações {naoLidas > 0 && `(${naoLidas})`}
+          </Link>
+          <button className="mobile-menu-link mobile-logout" onClick={() => { setMenuOpen(false); logout(); }}>
+            <LogOut size={16} />
+            Sair
+          </button>
         </div>
       )}
     </>

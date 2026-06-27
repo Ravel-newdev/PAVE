@@ -75,7 +75,9 @@ export function ProjetoCard({ projeto, index, favoritado = false }: Props) {
         </div>
 
         <span className={`cat-vagas ${vagasClass}`}>
-          Sem vagas informadas
+          {projeto.n_vagas != null
+            ? `${projeto.n_vagas} ${projeto.n_vagas === 1 ? "vaga" : "vagas"}`
+            : "Sem vagas informadas"}
         </span>
       </div>
 

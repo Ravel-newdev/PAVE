@@ -1,7 +1,8 @@
 import { buildApiError } from "../errors/ApiError";
+import type { CampoFormulario } from "../types/candidatura";
 import type { LoginPayload, LoginResponse, RegisterDiscentePayload, RegisterDocentePayload } from "../types/auth";
 import type { Projeto, CriarProjetoPayload, AtualizarProjetoPayload, AlterarStatusProjetoPayload, Tag } from "../types/projeto";
-import type { Processo, CriarProcessoPayload, AtualizarProcessoPayload, Candidato, Inscricao, CriarInscricaoPayload, AvaliarInscricaoPayload } from "../types/processo";
+import type { Processo, CriarProcessoPayload, AtualizarProcessoPayload, Candidato, Inscricao, InscricaoResumo, CriarInscricaoPayload, AvaliarInscricaoPayload } from "../types/processo";
 import type { Notificacao } from "../types/notificacao";
 
 const TOKEN_KEY = "@pave:token";
@@ -118,6 +119,10 @@ class PaveApiService {
     return this.post<void>(`/projetos/${id}/favorito`);
   }
 
+  buscarProcesso(id: string): Promise<Processo> {
+    return this.get<Processo>(`/processos/${id}`);
+  }
+
   criarProcesso(payload: CriarProcessoPayload): Promise<Processo> {
     return this.post<Processo>("/processos", payload);
   }
@@ -134,8 +139,8 @@ class PaveApiService {
     return this.post<Inscricao>("/inscricoes", payload);
   }
 
-  listarMinhasInscricoes(): Promise<Inscricao[]> {
-    return this.get<Inscricao[]>("/inscricoes");
+  listarMinhasInscricoes(): Promise<InscricaoResumo[]> {
+    return this.get<InscricaoResumo[]>("/inscricoes");
   }
 
   buscarInscricao(id: string): Promise<Inscricao> {
@@ -166,8 +171,78 @@ class PaveApiService {
     return this.get<{ id: string; nome: string }[]>("/formularios/tipos-campo");
   }
 
+  obterPerfilDiscente(): Promise<{
+    nome: string; matricula: string; curso: string | null;
+    foto_url: string | null; curriculo_url: string | null;
+    bio: string | null; linkedin: string | null;
+    semestre: number | null; disponibilidade: string | null;
+    interesses: string[] | null; email: string;
+  }> {
+    return this.get("/discentes/me");
+  }
+
+  atualizarPerfilDiscente(payload: Record<string, unknown>): Promise<void> {
+    return this.put("/discentes/me", payload);
+  }
+
+  uploadFotoDiscente(file: File): Promise<{ url: string }> {
+    return this.uploadFile("/discentes/me/foto", file);
+  }
+
+  uploadCurriculoDiscente(file: File): Promise<{ url: string }> {
+    return this.uploadFile("/discentes/me/curriculo", file);
+  }
+
+  private async uploadFile(path: string, file: File): Promise<{ url: string }> {
+    const formData = new FormData();
+    formData.append("arquivo", file);
+    const token = this.getToken();
+    const response = await fetch(`${API_BASE_URL}${path}`, {
+      method: "POST",
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+      body: formData,
+    });
+    const body = await response.json().catch(() => null);
+    if (!response.ok) {
+      const message = body?.message ?? `Erro ${response.status}`;
+      throw buildApiError(response.status, message, body);
+    }
+    return body as { url: string };
+  }
+
   listarFavoritos(): Promise<Projeto[]> {
     return this.get<Projeto[]>("/discentes/favoritos");
+  }
+
+  listarProcessosProjeto(projetoId: string): Promise<Processo[]> {
+    return this.get<Processo[]>(`/processos/projeto/${projetoId}`);
+  }
+
+  listarCamposFormulario(formularioId: string): Promise<CampoFormulario[]> {
+    return this.get<CampoFormulario[]>(`/formularios/${formularioId}/campos`);
+  }
+
+  async uploadArquivo(file: File, processoId: string, campoId: string): Promise<{ url: string }> {
+    const formData = new FormData();
+    formData.append("arquivo", file);
+
+    const token = this.getToken();
+    const response = await fetch(
+      `${API_BASE_URL}/uploads/candidatura?processoId=${processoId}&campoId=${campoId}`,
+      {
+        method: "POST",
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+        body: formData,
+      }
+    );
+
+    const body = await response.json().catch(() => null);
+    if (!response.ok) {
+      const message = body?.message ?? `Erro ${response.status}`;
+      throw buildApiError(response.status, message, body);
+    }
+
+    return body as { url: string };
   }
 }
 
