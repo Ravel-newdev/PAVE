@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { SlidersHorizontal, LayoutGrid, List, ChevronLeft, ChevronRight } from "lucide-react";
 
-import Navbar from "../../lib/layout/components/Navbar/Navbar";
-import { SelectDropdown } from "../../lib/layout/components/CatalogoProjeto/SelectDropdown";
-import { ProjetoCard }    from "../../lib/layout/components/CatalogoProjeto/ProjetoCard";
+import Navbar from "../../layout/components/Navbar/Navbar";
+import { SelectDropdown } from "../../layout/components/CatalogoProjeto/SelectDropdown";
+import { ProjetoCard }    from "../../layout/components/CatalogoProjeto/ProjetoCard";
 
-import { projetos } from "../../data/projetos";
+import { paveApi } from "../../services/PaveApiService";
+import type { Projeto } from "../../types/projeto";
 import "./CatalogoProjeto.css";
 
 const normalizar = (s: string) =>
@@ -20,14 +21,12 @@ const ORDENS      = ["Mais recentes", "Mais vagas", "A–Z"]                    
 
 const POR_PAGINA = 6;
 
-/*  todos os projetos vêm de projetos.tsx  */
-const TODOS = projetos;
-
 /*  Página  */
 export default function CatalogoProjeto() {
   const q = typeof window !== "undefined" ? (new URLSearchParams(window.location.search).get("q") ?? undefined) : undefined;
 
-  const [busca,       setBusca]       = useState(q ?? ""); 
+  const [projetos,    setProjetos]    = useState<Projeto[]>([]);
+  const [busca,       setBusca]       = useState(q ?? "");
   const [tipo,        setTipo]        = useState<string>("Todos");
   const [area,        setArea]        = useState<string>("Todas");
   const [turno,       setTurno]       = useState<string>("Todos");
@@ -37,6 +36,10 @@ export default function CatalogoProjeto() {
   const [pagina,      setPagina]      = useState(1);
 
   useEffect(() => {
+    paveApi.listarProjetos("ativo").then(setProjetos).catch(() => {});
+  }, []);
+
+  useEffect(() => {
     setBusca(q ?? "");
     setPagina(1);
   }, [q]);
@@ -44,21 +47,20 @@ export default function CatalogoProjeto() {
   const filtrados = useMemo(() => {
     const termo = normalizar(busca.trim());
 
-    return TODOS.filter((p) => {
+    return projetos.filter((p) => {
       const bateBusca =
         termo === "" ||
         normalizar(p.titulo).includes(termo) ||
-        normalizar(p.area).includes(termo) ||
-        normalizar(p.resumo).includes(termo) ||
-        normalizar(p.professor.nome).includes(termo);
+        normalizar(p.centro_dep ?? "").includes(termo) ||
+        normalizar(p.descricao ?? "").includes(termo) ||
+        normalizar(p.autor_nome).includes(termo);
 
-      const bateTipo  = tipo === "Todos" || p.tipo.includes(tipo);
-      const bateArea  = area === "Todas" || normalizar(p.area).includes(normalizar(area));
-      const bateModal = modalidade === "Todas" || p.modalidade === modalidade;
+      const bateTipo  = tipo === "Todos" || p.tags.some((t) => t.nome === tipo);
+      const bateArea  = area === "Todas" || normalizar(p.centro_dep ?? "").includes(normalizar(area));
 
-      return bateBusca && bateTipo && bateArea && bateModal;
+      return bateBusca && bateTipo && bateArea;
     });
-  }, [busca, tipo, area, modalidade]); 
+  }, [projetos, busca, tipo, area]);
 
   const totalPaginas = Math.ceil(filtrados.length / POR_PAGINA);
   const paginados    = filtrados.slice((pagina - 1) * POR_PAGINA, pagina * POR_PAGINA);

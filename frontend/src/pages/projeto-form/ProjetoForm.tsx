@@ -9,9 +9,10 @@ import {
   Trash2,
   Users,
 } from "lucide-react";
-import { ProfessorNavbar } from "@/lib/layout/componente-professor/ProfessorNavbar";
+import { ProfessorNavbar } from "@/layout/componente-professor/ProfessorNavbar";
 import "./ProjetoForm.css";
-import { extractId, getIdFromUrl, paveApi } from "../../services/paveApi";
+import { paveApi } from "@/services/PaveApiService";
+import { useSearch } from "@tanstack/react-router";
 import { FieldLabel, Section, SelectField } from "./components/FormFields";
 import {
   areaOptions,
@@ -43,7 +44,8 @@ export default function ProjetoForm({ mode = "create" }: { mode?: ProjetoFormMod
   const [perguntas, setPerguntas] = useState<Pergunta[]>(isEdit ? perguntasEdit : []);
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(isEdit);
-  const projetoId = getIdFromUrl("1");
+  const { projetoId: searchProjetoId } = useSearch({ strict: false }) as { projetoId?: string };
+  const projetoId = searchProjetoId ?? "";
   const navigate = useNavigate();
 
   const totalCaracteresDescricao = formData.descricao.length;
@@ -185,7 +187,7 @@ export default function ProjetoForm({ mode = "create" }: { mode?: ProjetoFormMod
         ? await paveApi.atualizarProjeto(projetoId, projetoPayload)
         : await paveApi.criarProjeto(projetoPayload);
 
-      const idCriado = extractId(response) ?? projetoId;
+      const idCriado = response.id ?? projetoId;
       const processoPayload = buildProcessoPayload(idCriado, formData, documentos, perguntas);
 
       const temProcesso = Boolean(formData.inscricaoInicio && formData.inscricaoFim);

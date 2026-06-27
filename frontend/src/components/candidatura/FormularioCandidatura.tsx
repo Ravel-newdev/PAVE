@@ -1,10 +1,11 @@
 import { useState, useRef } from "react";
 import type { DragEvent, ChangeEvent } from "react";
 import { Upload, FileText, Trash2, CheckCircle2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Field, FieldLabel, FieldError } from "@/components/ui/field";
+import { Button } from "@/layout/components/ui/button";
+import { Input } from "@/layout/components/ui/input";
+import { Field, FieldLabel, FieldError } from "@/layout/components/ui/field";
 import type { CampoFormulario, DadosAluno, RespostaCampo, FormErrors } from "@/types/candidatura";
+
 
 interface Props {
   tituloProjeto: string;

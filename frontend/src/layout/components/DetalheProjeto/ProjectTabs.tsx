@@ -8,7 +8,7 @@ import {
   Mail,
   ChevronRight,
 } from "lucide-react";
-import type { Project } from "../../../../data/projetos";
+import type { Project } from "../../../data/projetos";
 
 export function TabSobre({ projeto }: { projeto: Project }) {
   return (

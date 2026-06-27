@@ -5,8 +5,6 @@ import {
   Filter, ChevronDown, Zap, Search, ChevronRight, Bookmark,
 } from "lucide-react";
 import Navbar from "@/layout/components/Navbar/Navbar";
-import { useFavoritos } from "@/context/FavoritosContext";
-import { useInscricoes } from "../../context/InscricoesContext"; // Contexto de Inscrições importado
 import { projetos } from "../../data/projetos";
 import "./Oportunidade.css";
 
@@ -40,8 +38,13 @@ const TABS = [
 ];
 
 export default function MinhasOportunidades() {
-  const { salvos, toggleSalvo, isSalvo } = useFavoritos();
-  const { inscricoes, inscrever, isInscrito } = useInscricoes(); // Hooks de inscrição
+  const [salvosSet, setSalvosSet] = useState<Set<number>>(new Set());
+  const salvos = salvosSet;
+  const toggleSalvo = (id: number) => setSalvosSet((prev) => { const n = new Set(prev); n.has(id) ? n.delete(id) : n.add(id); return n; });
+  const isSalvo = (id: number) => salvosSet.has(id);
+  const [inscricoes, setInscricoes] = useState<Set<number>>(new Set());
+  const inscrever = (id: number) => setInscricoes((prev) => new Set([...prev, id]));
+  const isInscrito = (id: number) => inscricoes.has(id);
 
   const [tipoFilter,      setTipoFilter]      = useState<string>("Todos");
   const [modalidadeFilter,setModalidadeFilter] = useState<string>("Todos");

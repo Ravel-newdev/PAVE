@@ -44,3 +44,9 @@ export interface FormularioCandidaturaData {
 }
 
 export type FormErrors = Record<string, string | undefined>;
+
+export interface DadosAluno {
+  nomeCompleto: string;
+  curso: string;
+  matricula: string;
+}

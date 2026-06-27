@@ -1,18 +1,11 @@
 import { FolderOpen, GraduationCap, Heart, Calendar, ShieldCheck } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
-import type { Projeto } from "@/types/candidatura";
+import { Separator } from "@/layout/components/ui/separator";
+import type { ProjetoCandidaturaView } from "@/types/candidatura";
 
-export function ProjetoInfoSidebar({ projeto }: { projeto: Projeto }) {
+export function ProjetoInfoSidebar({ projeto }: { projeto: ProjetoCandidaturaView }) {
   return (
     <div className="space-y-4">
-      {projeto.imagemUrl && (
-        <div className="rounded-2xl overflow-hidden">
-          <img src={projeto.imagemUrl} alt={projeto.titulo} className="w-full h-44 object-cover" />
-        </div>
-      )}
-
       <div className="bg-white rounded-2xl border border-[#E2E8F0] shadow-[0_4px_20px_rgba(0,0,0,0.04)] overflow-hidden">
-
         <div className="bg-linear-to-r from-[#1E2E4F] to-[#2a4070] p-5">
           <div className="flex items-start gap-3">
             <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center shrink-0">
@@ -27,8 +20,8 @@ export function ProjetoInfoSidebar({ projeto }: { projeto: Projeto }) {
           {projeto.tags.length > 0 && (
             <div className="flex items-center gap-1.5 flex-wrap mt-3 pl-13">
               {projeto.tags.map((tag) => (
-                <span key={tag} className="inline-flex items-center rounded-full bg-white/20 px-2.5 py-0.5 text-xs text-white font-medium">
-                  {tag}
+                <span key={tag.id} className="inline-flex items-center rounded-full bg-white/20 px-2.5 py-0.5 text-xs text-white font-medium">
+                  {tag.nome}
                 </span>
               ))}
             </div>
@@ -42,7 +35,7 @@ export function ProjetoInfoSidebar({ projeto }: { projeto: Projeto }) {
             </div>
             <div>
               <p className="text-[#64748B] text-xs mb-0.5">Coordenação</p>
-              <p className="text-[#1E2E4F] font-semibold text-sm">{projeto.coordenador}</p>
+              <p className="text-[#1E2E4F] font-semibold text-sm">{projeto.autor_nome}</p>
             </div>
           </div>
 
@@ -55,7 +48,7 @@ export function ProjetoInfoSidebar({ projeto }: { projeto: Projeto }) {
             <div>
               <p className="text-[#64748B] text-xs mb-2">Vagas disponíveis</p>
               <span className="inline-flex items-center rounded-full bg-emerald-50 border border-emerald-200 px-3 py-1 text-xs font-bold text-emerald-700">
-                {projeto.vagas} {projeto.vagas === 1 ? "vaga" : "vagas"}
+                {projeto.n_vagas ?? "—"} {projeto.n_vagas === 1 ? "vaga" : "vagas"}
               </span>
             </div>
           </div>
@@ -68,7 +61,7 @@ export function ProjetoInfoSidebar({ projeto }: { projeto: Projeto }) {
             </div>
             <div>
               <p className="text-[#64748B] text-xs mb-0.5">Inscrições abertas até</p>
-              <p className="text-[#1E2E4F] font-semibold text-sm">{projeto.inscricoesAte}</p>
+              <p className="text-[#1E2E4F] font-semibold text-sm">{projeto.data_termino ?? "—"}</p>
             </div>
           </div>
 

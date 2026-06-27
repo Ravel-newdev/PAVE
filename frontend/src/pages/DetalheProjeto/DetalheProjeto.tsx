@@ -1,17 +1,16 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { User, Users, Clock, Calendar, ChevronRight } from "lucide-react";
-import Navbar from "../../lib/layout/components/Navbar/Navbar";
+import Navbar from "../../layout/components/Navbar/Navbar";
 import {
   TabSobre,
   TabAtividades,
   TabRequisitos,
   TabBeneficios,
   TabProfessor,
-} from "../../lib/layout/components/DetalheProjeto/ProjectTabs";
-import { Sidebar } from "../../lib/layout/components/DetalheProjeto/Sidebar";
+} from "../../layout/components/DetalheProjeto/ProjectTabs";
+import { Sidebar } from "../../layout/components/DetalheProjeto/Sidebar";
 import type { Project } from "../../data/projetos";
-import { useInscricoes } from "../../context/InscricoesContext";
 import "./DetalheProjeto.css";
 
 type TabId = "sobre" | "atividades" | "requisitos" | "beneficios" | "professor";
@@ -38,8 +37,10 @@ interface DetalheProjetoProps {
 export default function DetalheProjeto({ projeto, onApply }: DetalheProjetoProps) {
   const [tab, setTab] = useState<TabId>("sobre");
   
-  const { inscrever, isInscrito } = useInscricoes();
-  const applied = isInscrito(projeto.id); // Verifica se já está inscrito globalmente
+  const [inscricoes, setInscricoes] = useState<Set<number>>(new Set());
+  const isInscrito = (id: number) => inscricoes.has(id);
+  const inscrever = (id: number) => setInscricoes((prev) => new Set([...prev, id]));
+  const applied = isInscrito(projeto.id);
 
   const vagasDisp = projeto.vagasTotal - projeto.vagasPreenchidas;
 

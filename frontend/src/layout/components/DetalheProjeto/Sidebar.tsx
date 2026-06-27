@@ -1,5 +1,5 @@
 import { Users, Mail, ChevronRight } from "lucide-react";
-import type { Project } from "../../../../data/projetos";
+import type { Project } from "../../../data/projetos";
 
 interface SidebarProps {
   projeto: Project;

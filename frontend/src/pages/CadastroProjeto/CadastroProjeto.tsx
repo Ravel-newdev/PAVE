@@ -4,11 +4,11 @@ import {
   PartyPopper,
 } from "lucide-react";
 
-import Navbar from "../../lib/layout/components/Navbar/Navbar";
-import { COLORS, steps }                                                     from "../../lib/layout/components/CadastroProjeto/constants";
-import { StepIndicator, ProgressBar, TipsPanel, PreviewCard, TemplatesPanel } from "../../lib/layout/components/CadastroProjeto/LayoutElements";
-import { Step1, Step2, Step3, Step4, Step5 }                                 from "../../lib/layout/components/CadastroProjeto/ProjectSteps";
-import type { FormData }                                                      from "../../lib/layout/components/CadastroProjeto/ProjectSteps";
+import Navbar from "../../layout/components/Navbar/Navbar";
+import { COLORS, steps }                                                     from "../../layout/components/CadastroProjeto/constants";
+import { StepIndicator, ProgressBar, TipsPanel, PreviewCard, TemplatesPanel } from "../../layout/components/CadastroProjeto/LayoutElements";
+import { Step1, Step2, Step3, Step4, Step5 }                                 from "../../layout/components/CadastroProjeto/ProjectSteps";
+import type { FormData }                                                      from "../../layout/components/CadastroProjeto/ProjectSteps";
 
 /* Estado inicial  */
 const INITIAL_DATA: FormData = {

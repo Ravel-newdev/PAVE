@@ -1,4 +1,4 @@
-import { Briefcase, Users, Calendar, Clock, CheckCircle2, ChevronRight } from "lucide-react";
+import { Briefcase, Calendar, Clock, CheckCircle2, ChevronRight } from "lucide-react";
 import type { Projeto } from "@/types/projeto";
 
 interface Props {
@@ -33,7 +33,7 @@ export function ProjetoResumoItem({ projeto, onClick }: Props) {
       <div className="flex items-center gap-1.5 w-24 shrink-0">
         <Calendar className="w-4 h-4 text-[#287999]" />
         <div className="leading-tight">
-          <p className="text-sm font-bold text-[#1E2E4F]">{projeto.n_vagas ?? "—"}</p>
+          <p className="text-sm font-bold text-[#1E2E4F]">—</p>
           <p className="text-xs text-[#64748B]">vagas</p>
         </div>
       </div>

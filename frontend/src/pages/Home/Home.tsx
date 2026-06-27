@@ -38,7 +38,7 @@ export default function Home() {
   }
 
   const projetosAtivos = projetos.length;
-  const totalVagas = projetos.reduce((acc, p) => acc + (p.n_vagas ?? 0), 0);
+  const totalVagas = projetos.length;
   const areas = new Set(projetos.map((p) => p.centro_dep).filter(Boolean)).size;
 
   return (
@@ -140,7 +140,7 @@ export default function Home() {
                 </div>
                 <div className="card-meta">
                   <Briefcase size={16} className="meta-icon" style={{ marginRight: "4px" }} />
-                  {p.n_vagas ?? 0} {(p.n_vagas ?? 0) === 1 ? "vaga" : "vagas"}
+                  vagas em aberto
                 </div>
               </div>
             </div>

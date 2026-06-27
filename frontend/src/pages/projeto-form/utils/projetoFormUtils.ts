@@ -1,5 +1,6 @@
 import { initialEditData } from "../constants/projetoFormConstants";
 import type { DocumentoSolicitado, FormData, Pergunta, TipoPergunta } from "../types/projetoFormTypes";
+import type { CriarProcessoPayload } from "@/types/processo";
 
 export function createPergunta(tipo: TipoPergunta = "resposta-curta"): Pergunta {
   return {
@@ -60,27 +61,17 @@ export function buildProjetoPayload(formData: FormData, status: "rascunho" | "at
 }
 
 export function buildProcessoPayload(
-  projetoId: string | number,
+  projetoId: string,
   formData: FormData,
-  documentos: DocumentoSolicitado[],
-  perguntas: Pergunta[],
-) {
+  _documentos: DocumentoSolicitado[],
+  _perguntas: Pergunta[],
+): CriarProcessoPayload {
   return {
-    projetoId,
-    idProjeto: projetoId,
-    dataInicioInscricao: formData.inscricaoInicio,
-    dataFimInscricao: formData.inscricaoFim,
-    dataResultado: formData.divulgacaoResultado,
-    mensagemCandidatos: formData.mensagemCandidatos,
-    documentosSolicitados: documentos
-      .filter((documento) => documento.selecionado)
-      .map((documento) => documento.id),
-    formulario: perguntas.map((pergunta) => ({
-      texto: pergunta.texto,
-      tipo: pergunta.tipo,
-      opcoes: pergunta.opcoes.filter(Boolean),
-      obrigatoria: pergunta.obrigatoria,
-    })),
+    projeto_id: projetoId,
+    titulo: formData.titulo,
+    descricao: formData.mensagemCandidatos || undefined,
+    data_inicio: formData.inscricaoInicio || undefined,
+    data_termino: formData.inscricaoFim || undefined,
   };
 }
 

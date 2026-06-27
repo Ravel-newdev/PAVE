@@ -1,5 +1,5 @@
 
-import type { EstatisticasDashboard } from "@/types/dashboard";
+import type { EstatisticasProjetos } from "@/types/projeto";
 
 export interface ProjetoBruto {
   id: string;
@@ -10,7 +10,7 @@ export interface ProjetoBruto {
 export function calcularEstatisticas(
   meuId: string,
   projetos: ProjetoBruto[]
-): EstatisticasDashboard {
+): EstatisticasProjetos {
   const meusProjetos = projetos.filter((p) => p.docente_id === meuId);
 
   return {

@@ -1,4 +1,4 @@
-import { ProfessorNavbar } from "@/lib/layout/componente-professor/ProfessorNavbar";
+import { ProfessorNavbar } from "@/layout/componente-professor/ProfessorNavbar";
 
 export function ProfessorTopbar() {
   return <ProfessorNavbar />;
