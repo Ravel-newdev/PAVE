@@ -4,25 +4,21 @@ import { toast } from "sonner";
 import { Form } from "@/layout/components/ui/form";
 
 
-import { ProfileHeader } from "@/layout/components/Perfil/profile-header";
-import { PersonalInfoCard } from "@/layout/components/Perfil/personal-info-card";
-import { AcademicInfoCard } from "@/layout/components/Perfil/academic-info-card";
-import { AboutCard } from "@/layout/components/Perfil/about-card";
-import { InterestSelect } from "@/layout/components/Perfil/interest-select";
-import { CurriculoCard } from "@/layout/components/Perfil/experience-card";
-import { PreferencesCard } from "@/layout/components/Perfil/preferences-card";
-import { SecurityCard } from "@/layout/components/Perfil/security-card";
+import { ProfileHeader } from "@/layout/components/Perfil/ProfileHeader";
+import { PersonalInfoCard } from "@/layout/components/Perfil/PersonalInfoCard";
+import { AcademicInfoCard } from "@/layout/components/Perfil/AcademicInfoCard";
+import { AboutCard } from "@/layout/components/Perfil/AboutCard";
+import { InterestSelect } from "@/layout/components/Perfil/InterestSelect";
+import { CurriculoCard } from "@/layout/components/Perfil/ExperienceCard";
+import { PreferencesCard } from "@/layout/components/Perfil/PreferencesCard";
+import { SecurityCard } from "@/layout/components/Perfil/SecurityCard";
 
 import { useProfileForm } from "@/hooks/useProfileForm";
 import Navbar from "@/layout/components/Navbar/Navbar";
 
-import { getProfile, updateProfile } from "@/services/profile";
 import { paveApi } from "@/services/PaveApiService";
 
-import {
-  profileFormToRequest,
-  profileResponseToForm,
-} from "./maper";
+import { backendToForm, formToBackend } from "./mapper";
 
 import type { ProfileFormData } from "@/types/perfilAluno";
 
@@ -44,9 +40,8 @@ export default function ProfilePage() {
   useEffect(() => {
     async function loadProfile() {
       try {
-        const { data } = await getProfile();
-
-        reset(profileResponseToForm(data));
+        const perfil = await paveApi.obterPerfilDiscente();
+        reset(backendToForm(perfil));
       } catch (error) {
         console.error(error);
       } finally {
@@ -79,7 +74,7 @@ export default function ProfilePage() {
 
   async function onSubmit(data: ProfileFormData) {
     try {
-      await updateProfile(profileFormToRequest(data));
+      await paveApi.atualizarPerfilDiscente(formToBackend(data));
       toast.success("Perfil atualizado com sucesso.");
     } catch (error) {
       console.error(error);

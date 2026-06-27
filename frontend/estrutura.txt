@@ -1,6 +1,8 @@
 frontend/
+    .claudeignore
     .cta.json
     .gitignore
+    CLAUDE.md
     README.md
     biome.json
     code.py
@@ -12,14 +14,9 @@ frontend/
     package.json
     pnpm-lock.yaml
     pnpm-workspace.yaml
+    rename-structure.py
     tsconfig.json
     vite.config.ts
-    .tanstack/
-        tmp/
-            01c94553-9404614005ae4229933181c80833b620
-            01c94553-f0faf32dfdd662703c02d490fc324ff4
-            e8e5c47e-9a96fe4f6e6b3108a19c64483f84cdbd
-            fa7d50cd-9404614005ae4229933181c80833b620
     public/
         favicon.svg
         hero.png
@@ -61,14 +58,12 @@ frontend/
             ApiError.ts
         hooks/
             useCandidates.ts
+            useProfileForm.ts
         layout/
             index.tsx
-            componente-professor/
-                ProfessorNavbar.tsx
-                navbar.css
             components/
                 footer.tsx
-                heaader.tsx
+                header.tsx
                 CadastroProjeto/
                     FormElements.tsx
                     LayoutElements.tsx
@@ -86,42 +81,49 @@ frontend/
                 Navbar/
                     Navbar.css
                     Navbar.tsx
+                Perfil/
+                    AboutCard.tsx
+                    AcademicInfoCard.tsx
+                    AvatarUpload.tsx
+                    ExperienceCard.tsx
+                    ExperienceItem.tsx
+                    InterestSelect.tsx
+                    PersonalInfoCard.tsx
+                    PreferencesCard.tsx
+                    ProfileHeader.tsx
+                    SecurityCard.tsx
+                professor/
+                    ProfessorNavbar.css
+                    ProfessorNavbar.tsx
                 ui/
+                    avatar.tsx
+                    badge.tsx
                     button.tsx
                     card.tsx
+                    checkbox.tsx
                     field.tsx
+                    form.tsx
                     input.tsx
                     label.tsx
                     select.tsx
                     separator.tsx
+                    textarea.tsx
         lib/
             calcularEstatisticas.ts
             utils.ts
         pages/
             CadastroProjeto/
                 CadastroProjeto.tsx
-            CatalagoProjeto/
+            CatalogoProjeto/
                 CatalogoProjeto.css
                 CatalogoProjeto.tsx
+            DashboardAluno/
+                DashboardAluno.css
+                DashboardAluno.tsx
             DetalheProjeto/
                 DetalheProjeto.css
                 DetalheProjeto.tsx
-            Home/
-                Home.css
-                Home.tsx
-            Login/
-                Login.css
-                Login.tsx
-            Oportunidade/
-                Oportunidade.css
-                Oportunidade.tsx
-            aluno/
-                CandidaturaPage.tsx
-                NotificacoesPage.tsx
-            cadastro/
-                index.tsx
-                schema.tsx
-            kanban-candidatos/
+            KanbanCandidatos/
                 KanbanCandidatos.css
                 KanbanCandidatos.tsx
                 components/
@@ -138,9 +140,18 @@ frontend/
                 utils/
                     candidateMapper.ts
                     status.ts
-            professor/
-                DashboardProfessorPage.tsx
-            projeto-form/
+            Login/
+                Login.css
+                Login.tsx
+            Oportunidade/
+                Oportunidade.css
+                Oportunidade.tsx
+            PerfilAluno/
+                default-values.tsx
+                index.tsx
+                mapper.tsx
+                schema.tsx
+            ProjetoForm/
                 CriarProjeto.tsx
                 EditarProjeto.tsx
                 ProjetoForm.css
@@ -153,7 +164,7 @@ frontend/
                     projetoFormTypes.ts
                 utils/
                     projetoFormUtils.ts
-            projeto-visao-geral/
+            ProjetoVisaoGeral/
                 ProjetoVisaoGeral.css
                 ProjetoVisaoGeral.tsx
                 components/
@@ -165,20 +176,31 @@ frontend/
                     projetoVisaoTypes.ts
                 utils/
                     projetoMapper.ts
+            aluno/
+                CandidaturaPage.tsx
+                NotificacoesPage.tsx
+            cadastro/
+                index.tsx
+                schema.tsx
+            professor/
+                DashboardProfessorPage.tsx
         routes/
             __root.tsx
+            aluno.tsx
             cadastro.tsx
-            cadastroProjeto.tsx
-            candidatura.tsx
-            detalheProjeto.tsx
             index.tsx
             login.tsx
-            notificacoes.tsx
-            oportunidade.tsx
             projetos.$id.tsx
             projetos.index.tsx
             projetos.tsx
+            aluno/
+                candidatura.tsx
+                index.tsx
+                notificacoes.tsx
+                oportunidades.tsx
+                perfil.tsx
             professor/
+                cadastrar-projeto.tsx
                 criar-projeto.tsx
                 editar-projeto.tsx
                 index.tsx
@@ -187,14 +209,14 @@ frontend/
         services/
             PaveApiService.ts
             constants.ts
-            paveApi.ts
+            profile.ts
         types/
             api.ts
             auth.ts
             candidatura.ts
-            dashboard.ts
             notificacao.ts
+            perfilAluno.ts
             processo.ts
             projeto.ts
 
-total arquivos: 54
+total arquivos: 57

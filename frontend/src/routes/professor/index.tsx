@@ -1,6 +1,7 @@
-import { createFileRoute, redirect, Outlet } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { paveApi } from "../../services/PaveApiService";
 import { AuthError } from "../../errors/ApiError";
+import DashboardProfessorPage from "../../pages/professor/DashboardProfessorPage";
 
 function decodeTokenTipo(token: string): string | null {
   try {
@@ -30,5 +31,5 @@ export const Route = createFileRoute("/professor/")({
 
     if (tipo !== "docente") throw new AuthError("Acesso restrito a docentes.");
   },
-  component: () => <Outlet />,
+  component: DashboardProfessorPage,
 });

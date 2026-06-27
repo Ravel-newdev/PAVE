@@ -10,11 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ProjetosRouteImport } from './routes/projetos'
-import { Route as PerfilAlunoRouteImport } from './routes/perfilAluno'
-import { Route as OportunidadeRouteImport } from './routes/oportunidade'
 import { Route as LoginRouteImport } from './routes/login'
-import { Route as DetalheProjetoRouteImport } from './routes/detalheProjeto'
-import { Route as CadastroProjetoRouteImport } from './routes/cadastroProjeto'
 import { Route as CadastroRouteImport } from './routes/cadastro'
 import { Route as AlunoRouteImport } from './routes/aluno'
 import { Route as IndexRouteImport } from './routes/index'
@@ -26,6 +22,9 @@ import { Route as ProfessorProjetoVisaoGeralRouteImport } from './routes/profess
 import { Route as ProfessorKanbanCandidatosRouteImport } from './routes/professor/kanban-candidatos'
 import { Route as ProfessorEditarProjetoRouteImport } from './routes/professor/editar-projeto'
 import { Route as ProfessorCriarProjetoRouteImport } from './routes/professor/criar-projeto'
+import { Route as ProfessorCadastrarProjetoRouteImport } from './routes/professor/cadastrar-projeto'
+import { Route as AlunoPerfilRouteImport } from './routes/aluno/perfil'
+import { Route as AlunoOportunidadesRouteImport } from './routes/aluno/oportunidades'
 import { Route as AlunoNotificacoesRouteImport } from './routes/aluno/notificacoes'
 import { Route as AlunoCandidaturaRouteImport } from './routes/aluno/candidatura'
 
@@ -34,29 +33,9 @@ const ProjetosRoute = ProjetosRouteImport.update({
   path: '/projetos',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PerfilAlunoRoute = PerfilAlunoRouteImport.update({
-  id: '/perfilAluno',
-  path: '/perfilAluno',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const OportunidadeRoute = OportunidadeRouteImport.update({
-  id: '/oportunidade',
-  path: '/oportunidade',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DetalheProjetoRoute = DetalheProjetoRouteImport.update({
-  id: '/detalheProjeto',
-  path: '/detalheProjeto',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CadastroProjetoRoute = CadastroProjetoRouteImport.update({
-  id: '/cadastroProjeto',
-  path: '/cadastroProjeto',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CadastroRoute = CadastroRouteImport.update({
@@ -116,6 +95,22 @@ const ProfessorCriarProjetoRoute = ProfessorCriarProjetoRouteImport.update({
   path: '/professor/criar-projeto',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProfessorCadastrarProjetoRoute =
+  ProfessorCadastrarProjetoRouteImport.update({
+    id: '/professor/cadastrar-projeto',
+    path: '/professor/cadastrar-projeto',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const AlunoPerfilRoute = AlunoPerfilRouteImport.update({
+  id: '/perfil',
+  path: '/perfil',
+  getParentRoute: () => AlunoRoute,
+} as any)
+const AlunoOportunidadesRoute = AlunoOportunidadesRouteImport.update({
+  id: '/oportunidades',
+  path: '/oportunidades',
+  getParentRoute: () => AlunoRoute,
+} as any)
 const AlunoNotificacoesRoute = AlunoNotificacoesRouteImport.update({
   id: '/notificacoes',
   path: '/notificacoes',
@@ -131,14 +126,13 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/aluno': typeof AlunoRouteWithChildren
   '/cadastro': typeof CadastroRoute
-  '/cadastroProjeto': typeof CadastroProjetoRoute
-  '/detalheProjeto': typeof DetalheProjetoRoute
   '/login': typeof LoginRoute
-  '/oportunidade': typeof OportunidadeRoute
-  '/perfilAluno': typeof PerfilAlunoRoute
   '/projetos': typeof ProjetosRouteWithChildren
   '/aluno/candidatura': typeof AlunoCandidaturaRoute
   '/aluno/notificacoes': typeof AlunoNotificacoesRoute
+  '/aluno/oportunidades': typeof AlunoOportunidadesRoute
+  '/aluno/perfil': typeof AlunoPerfilRoute
+  '/professor/cadastrar-projeto': typeof ProfessorCadastrarProjetoRoute
   '/professor/criar-projeto': typeof ProfessorCriarProjetoRoute
   '/professor/editar-projeto': typeof ProfessorEditarProjetoRoute
   '/professor/kanban-candidatos': typeof ProfessorKanbanCandidatosRoute
@@ -151,13 +145,12 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/cadastro': typeof CadastroRoute
-  '/cadastroProjeto': typeof CadastroProjetoRoute
-  '/detalheProjeto': typeof DetalheProjetoRoute
   '/login': typeof LoginRoute
-  '/oportunidade': typeof OportunidadeRoute
-  '/perfilAluno': typeof PerfilAlunoRoute
   '/aluno/candidatura': typeof AlunoCandidaturaRoute
   '/aluno/notificacoes': typeof AlunoNotificacoesRoute
+  '/aluno/oportunidades': typeof AlunoOportunidadesRoute
+  '/aluno/perfil': typeof AlunoPerfilRoute
+  '/professor/cadastrar-projeto': typeof ProfessorCadastrarProjetoRoute
   '/professor/criar-projeto': typeof ProfessorCriarProjetoRoute
   '/professor/editar-projeto': typeof ProfessorEditarProjetoRoute
   '/professor/kanban-candidatos': typeof ProfessorKanbanCandidatosRoute
@@ -172,14 +165,13 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/aluno': typeof AlunoRouteWithChildren
   '/cadastro': typeof CadastroRoute
-  '/cadastroProjeto': typeof CadastroProjetoRoute
-  '/detalheProjeto': typeof DetalheProjetoRoute
   '/login': typeof LoginRoute
-  '/oportunidade': typeof OportunidadeRoute
-  '/perfilAluno': typeof PerfilAlunoRoute
   '/projetos': typeof ProjetosRouteWithChildren
   '/aluno/candidatura': typeof AlunoCandidaturaRoute
   '/aluno/notificacoes': typeof AlunoNotificacoesRoute
+  '/aluno/oportunidades': typeof AlunoOportunidadesRoute
+  '/aluno/perfil': typeof AlunoPerfilRoute
+  '/professor/cadastrar-projeto': typeof ProfessorCadastrarProjetoRoute
   '/professor/criar-projeto': typeof ProfessorCriarProjetoRoute
   '/professor/editar-projeto': typeof ProfessorEditarProjetoRoute
   '/professor/kanban-candidatos': typeof ProfessorKanbanCandidatosRoute
@@ -195,14 +187,13 @@ export interface FileRouteTypes {
     | '/'
     | '/aluno'
     | '/cadastro'
-    | '/cadastroProjeto'
-    | '/detalheProjeto'
     | '/login'
-    | '/oportunidade'
-    | '/perfilAluno'
     | '/projetos'
     | '/aluno/candidatura'
     | '/aluno/notificacoes'
+    | '/aluno/oportunidades'
+    | '/aluno/perfil'
+    | '/professor/cadastrar-projeto'
     | '/professor/criar-projeto'
     | '/professor/editar-projeto'
     | '/professor/kanban-candidatos'
@@ -215,13 +206,12 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/cadastro'
-    | '/cadastroProjeto'
-    | '/detalheProjeto'
     | '/login'
-    | '/oportunidade'
-    | '/perfilAluno'
     | '/aluno/candidatura'
     | '/aluno/notificacoes'
+    | '/aluno/oportunidades'
+    | '/aluno/perfil'
+    | '/professor/cadastrar-projeto'
     | '/professor/criar-projeto'
     | '/professor/editar-projeto'
     | '/professor/kanban-candidatos'
@@ -235,14 +225,13 @@ export interface FileRouteTypes {
     | '/'
     | '/aluno'
     | '/cadastro'
-    | '/cadastroProjeto'
-    | '/detalheProjeto'
     | '/login'
-    | '/oportunidade'
-    | '/perfilAluno'
     | '/projetos'
     | '/aluno/candidatura'
     | '/aluno/notificacoes'
+    | '/aluno/oportunidades'
+    | '/aluno/perfil'
+    | '/professor/cadastrar-projeto'
     | '/professor/criar-projeto'
     | '/professor/editar-projeto'
     | '/professor/kanban-candidatos'
@@ -257,12 +246,9 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AlunoRoute: typeof AlunoRouteWithChildren
   CadastroRoute: typeof CadastroRoute
-  CadastroProjetoRoute: typeof CadastroProjetoRoute
-  DetalheProjetoRoute: typeof DetalheProjetoRoute
   LoginRoute: typeof LoginRoute
-  OportunidadeRoute: typeof OportunidadeRoute
-  PerfilAlunoRoute: typeof PerfilAlunoRoute
   ProjetosRoute: typeof ProjetosRouteWithChildren
+  ProfessorCadastrarProjetoRoute: typeof ProfessorCadastrarProjetoRoute
   ProfessorCriarProjetoRoute: typeof ProfessorCriarProjetoRoute
   ProfessorEditarProjetoRoute: typeof ProfessorEditarProjetoRoute
   ProfessorKanbanCandidatosRoute: typeof ProfessorKanbanCandidatosRoute
@@ -279,39 +265,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProjetosRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/perfilAluno': {
-      id: '/perfilAluno'
-      path: '/perfilAluno'
-      fullPath: '/perfilAluno'
-      preLoaderRoute: typeof PerfilAlunoRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/oportunidade': {
-      id: '/oportunidade'
-      path: '/oportunidade'
-      fullPath: '/oportunidade'
-      preLoaderRoute: typeof OportunidadeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/login': {
       id: '/login'
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/detalheProjeto': {
-      id: '/detalheProjeto'
-      path: '/detalheProjeto'
-      fullPath: '/detalheProjeto'
-      preLoaderRoute: typeof DetalheProjetoRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/cadastroProjeto': {
-      id: '/cadastroProjeto'
-      path: '/cadastroProjeto'
-      fullPath: '/cadastroProjeto'
-      preLoaderRoute: typeof CadastroProjetoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/cadastro': {
@@ -391,6 +349,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfessorCriarProjetoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/professor/cadastrar-projeto': {
+      id: '/professor/cadastrar-projeto'
+      path: '/professor/cadastrar-projeto'
+      fullPath: '/professor/cadastrar-projeto'
+      preLoaderRoute: typeof ProfessorCadastrarProjetoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/aluno/perfil': {
+      id: '/aluno/perfil'
+      path: '/perfil'
+      fullPath: '/aluno/perfil'
+      preLoaderRoute: typeof AlunoPerfilRouteImport
+      parentRoute: typeof AlunoRoute
+    }
+    '/aluno/oportunidades': {
+      id: '/aluno/oportunidades'
+      path: '/oportunidades'
+      fullPath: '/aluno/oportunidades'
+      preLoaderRoute: typeof AlunoOportunidadesRouteImport
+      parentRoute: typeof AlunoRoute
+    }
     '/aluno/notificacoes': {
       id: '/aluno/notificacoes'
       path: '/notificacoes'
@@ -411,12 +390,16 @@ declare module '@tanstack/react-router' {
 interface AlunoRouteChildren {
   AlunoCandidaturaRoute: typeof AlunoCandidaturaRoute
   AlunoNotificacoesRoute: typeof AlunoNotificacoesRoute
+  AlunoOportunidadesRoute: typeof AlunoOportunidadesRoute
+  AlunoPerfilRoute: typeof AlunoPerfilRoute
   AlunoIndexRoute: typeof AlunoIndexRoute
 }
 
 const AlunoRouteChildren: AlunoRouteChildren = {
   AlunoCandidaturaRoute: AlunoCandidaturaRoute,
   AlunoNotificacoesRoute: AlunoNotificacoesRoute,
+  AlunoOportunidadesRoute: AlunoOportunidadesRoute,
+  AlunoPerfilRoute: AlunoPerfilRoute,
   AlunoIndexRoute: AlunoIndexRoute,
 }
 
@@ -440,12 +423,9 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AlunoRoute: AlunoRouteWithChildren,
   CadastroRoute: CadastroRoute,
-  CadastroProjetoRoute: CadastroProjetoRoute,
-  DetalheProjetoRoute: DetalheProjetoRoute,
   LoginRoute: LoginRoute,
-  OportunidadeRoute: OportunidadeRoute,
-  PerfilAlunoRoute: PerfilAlunoRoute,
   ProjetosRoute: ProjetosRouteWithChildren,
+  ProfessorCadastrarProjetoRoute: ProfessorCadastrarProjetoRoute,
   ProfessorCriarProjetoRoute: ProfessorCriarProjetoRoute,
   ProfessorEditarProjetoRoute: ProfessorEditarProjetoRoute,
   ProfessorKanbanCandidatosRoute: ProfessorKanbanCandidatosRoute,

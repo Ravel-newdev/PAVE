@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { DragEvent } from "react";
 import { Search } from "lucide-react";
-import { ProfessorNavbar } from "@/layout/componente-professor/ProfessorNavbar";
+import { ProfessorNavbar } from "@/layout/components/professor/ProfessorNavbar";
 import "./KanbanCandidatos.css";
 import { useSearch } from "@tanstack/react-router";
 

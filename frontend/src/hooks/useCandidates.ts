@@ -1,11 +1,11 @@
 import { useState, useMemo, useEffect } from "react";
 import type { DragEvent } from "react";
 import { paveApi } from "../services/PaveApiService";
-import { initialCandidates } from "../pages/kanban-candidatos/data/candidates";
-import { columns } from "../pages/kanban-candidatos/data/columns";
-import { cardDateLabel, transitionHistoryLabel, normalizeStatus } from "../pages/kanban-candidatos/utils/status";
-import { mapCandidate } from "../pages/kanban-candidatos/utils/candidateMapper";
-import type { Candidate, CandidateStatus } from "../pages/kanban-candidatos/types/candidate";
+import { initialCandidates } from "../pages/KanbanCandidatos/data/candidates";
+import { columns } from "../pages/KanbanCandidatos/data/columns";
+import { cardDateLabel, transitionHistoryLabel, normalizeStatus } from "../pages/KanbanCandidatos/utils/status";
+import { mapCandidate } from "../pages/KanbanCandidatos/utils/candidateMapper";
+import type { Candidate, CandidateStatus } from "../pages/KanbanCandidatos/types/candidate";
 import type { AvaliarInscricaoPayload } from "../types/processo";
 
 function toBackendStatus(status: CandidateStatus): AvaliarInscricaoPayload["novo_status"] {

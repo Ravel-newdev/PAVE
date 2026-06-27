@@ -34,7 +34,7 @@ function deriveNome(email: string): string {
 const navItems = [
   { label: "Início",               to: "/",             icon: <Home size={16} />       },
   { label: "Projetos",             to: "/projetos",     icon: <FolderOpen size={16} /> },
-  { label: "Minhas Oportunidades", to: "/oportunidade", icon: <Bookmark size={16} />   },
+  { label: "Minhas Oportunidades", to: "/aluno/oportunidades", icon: <Bookmark size={16} />   },
 ];
 
 export default function Navbar() {
@@ -172,7 +172,7 @@ export default function Navbar() {
                 {dropdownOpen && (
                   <div className="user-dropdown">
                     <Link
-                      to="/perfilAluno"
+                      to="/aluno/perfil"
                       className="user-dropdown-item"
                       onClick={() => setDropdownOpen(false)}
                     >

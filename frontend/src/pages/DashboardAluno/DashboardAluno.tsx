@@ -5,7 +5,7 @@ import Navbar from "../../layout/components/Navbar/Navbar";
 import { paveApi } from "../../services/PaveApiService";
 import { ApiError } from "../../errors/ApiError";
 import type { Projeto } from "../../types/projeto";
-import "./Home.css";
+import "./DashboardAluno.css";
 
 export default function Home() {
   const [projetos, setProjetos] = useState<Projeto[]>([]);

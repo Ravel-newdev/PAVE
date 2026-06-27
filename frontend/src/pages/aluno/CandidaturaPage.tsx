@@ -176,7 +176,7 @@ export default function CandidaturaPage() {
                   Sua candidatura já foi registrada. Acompanhe o andamento em{" "}
                   <button
                     className="text-[#287999] font-semibold underline underline-offset-2"
-                    onClick={() => navigate({ to: "/oportunidade" })}
+                    onClick={() => navigate({ to: "/aluno/oportunidades" })}
                   >
                     Minhas Oportunidades
                   </button>.

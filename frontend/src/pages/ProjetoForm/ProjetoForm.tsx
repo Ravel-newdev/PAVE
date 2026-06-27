@@ -9,7 +9,7 @@ import {
   Trash2,
   Users,
 } from "lucide-react";
-import { ProfessorNavbar } from "@/layout/componente-professor/ProfessorNavbar";
+import { ProfessorNavbar } from "@/layout/components/professor/ProfessorNavbar";
 import "./ProjetoForm.css";
 import { paveApi } from "@/services/PaveApiService";
 import { useSearch } from "@tanstack/react-router";

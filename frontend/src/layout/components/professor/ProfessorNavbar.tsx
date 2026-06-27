@@ -1,9 +1,12 @@
-import { Link, useLocation } from "@tanstack/react-router";
-import { Bell, Briefcase, Home } from "lucide-react";
-import "./navbar.css";
+import { Link, useLocation, useNavigate } from "@tanstack/react-router";
+import { Bell, Briefcase, Home, LogOut } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
+import "./ProfessorNavbar.css";
 
 export function ProfessorNavbar() {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { logout } = useAuth();
 
   const isInicio = location.pathname === "/professor";
   
@@ -48,17 +51,16 @@ export function ProfessorNavbar() {
           <span className="notif-badge">3</span>
         </button>
 
-        <div className="user-profile">
-          <img
-            className="avatar-img"
-            src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=80&q=80"
-            alt="Prof. Carlos"
-          />
-
-          <div className="user-info">
-            <div className="user-name">Prof. Carlos</div>
-          </div>
-        </div>
+        <button
+          type="button"
+          className="nav-link"
+          style={{ background: "none", border: "none", cursor: "pointer" }}
+          onClick={() => { logout(); void navigate({ to: "/login" }); }}
+          aria-label="Sair"
+        >
+          <LogOut size={18} />
+          <span>Sair</span>
+        </button>
       </div>
     </nav>
   );

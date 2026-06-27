@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Plus, Folder, FileEdit, Flag, FolderX, BellOff, Bell } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
-import { ProfessorNavbar } from "@/layout/componente-professor/ProfessorNavbar";
+import { ProfessorNavbar } from "@/layout/components/professor/ProfessorNavbar";
 import { Footer } from "@/components/shared/Footer";
 import { EstatisticaCard } from "@/components/dashboard/EstatisticaCard";
 import { ProjetoResumoItem } from "@/components/dashboard/ProjetoResumoItem";
