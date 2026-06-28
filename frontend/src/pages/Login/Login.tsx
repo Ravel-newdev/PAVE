@@ -32,7 +32,7 @@ export default function Login() {
       await login({ email, senha: password });
       // login() atualiza session no AuthContext; o if acima redireciona no próximo render
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Erro ao realizar login.");
+      setError("Usuário ou senha incorretos.");
     } finally {
       setIsSubmitting(false);
     }

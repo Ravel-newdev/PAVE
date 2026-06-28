@@ -19,16 +19,21 @@ import { columns } from "./data/columns";
 export default function KanbanCandidatos() {
   const [query, setQuery] = useState<string>("");
   const { processoId = "" } = useSearch({ strict: false }) as { processoId?: string };
-  const [selectedCandidate, setSelectedCandidate] = useState<Candidate | null>(null);
+  const [selectedCandidateId, setSelectedCandidateId] = useState<string | null>(null);
   const [project, setProject] = useState<Project | null>(null);
 
   const {
+    candidates,
     candidatesByStatus,
     loadingCandidates,
     moveCandidate,
     startDragging,
     handleDrop,
   } = useCandidates(processoId, query);
+
+  const selectedCandidate = selectedCandidateId
+    ? (candidates.find((c) => c.id === selectedCandidateId) ?? null)
+    : null;
 
   useEffect(() => {
     if (!processoId) return;
@@ -38,6 +43,7 @@ export default function KanbanCandidatos() {
         const projeto = await paveApi.buscarProjeto(processo.projeto_id);
         setProject({
           id: processo.id,
+          projetoId: projeto.id,
           title: projeto.titulo,
           descricao: projeto.descricao ?? null,
           n_vagas: processo.n_vagas ?? null,
@@ -59,9 +65,10 @@ export default function KanbanCandidatos() {
     <div className={`kc-page ${selectedCandidate ? "drawer-open" : ""}`}>
       <ProfessorNavbar />
 
-      <main className="kc-main">
+      <main>
         {project && <ProjectSummary project={project} />}
 
+        <div className="kc-main">
           <section className="kc-candidates-section">
             {loadingCandidates && <p className="kc-loading-message">Carregando candidatos do backend...</p>}
             <label className="kc-search">
@@ -96,7 +103,7 @@ export default function KanbanCandidatos() {
                         candidate={candidate}
                         key={candidate.id}
                         isSelected={selectedCandidate?.id === candidate.id}
-                        onClick={setSelectedCandidate}
+                        onClick={(c) => setSelectedCandidateId(c.id)}
                         onDragStart={startDragging}
                       />
                     ))}
@@ -105,11 +112,12 @@ export default function KanbanCandidatos() {
               ))}
             </div>
           </section>
+        </div>
       </main>
 
       <CandidateDrawer
         candidate={selectedCandidate}
-        onClose={() => setSelectedCandidate(null)}
+        onClose={() => setSelectedCandidateId(null)}
         onMove={moveCandidate}
       />
     </div>

@@ -1,7 +1,6 @@
 import { useState, useMemo, useEffect } from "react";
 import type { DragEvent } from "react";
 import { paveApi } from "../services/PaveApiService";
-import { initialCandidates } from "../pages/KanbanCandidatos/data/candidates";
 import { columns } from "../pages/KanbanCandidatos/data/columns";
 import { cardDateLabel, transitionHistoryLabel, normalizeStatus } from "../pages/KanbanCandidatos/utils/status";
 import { mapCandidate } from "../pages/KanbanCandidatos/utils/candidateMapper";
@@ -29,20 +28,21 @@ function toKanbanIndex(status: CandidateStatus): number {
 }
 
 export function useCandidates(processoId: string, query: string) {
-  const [candidates, setCandidates] = useState<Candidate[]>(initialCandidates);
+  const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [loadingCandidates, setLoadingCandidates] = useState(false);
-  const [draggedCandidateId, setDraggedCandidateId] = useState<number | null>(null);
+  const [draggedCandidateId, setDraggedCandidateId] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!processoId) return;
     let cancelled = false;
 
     async function loadCandidates(): Promise<void> {
       try {
         setLoadingCandidates(true);
         const list = await paveApi.listarCandidatos(processoId);
-        if (!cancelled && list.length > 0) setCandidates(list.map(mapCandidate));
+        if (!cancelled) setCandidates(list.map(mapCandidate));
       } catch (error) {
-        console.warn("Não foi possível buscar candidatos. Exibindo dados de exemplo.", error);
+        console.error("Erro ao buscar candidatos:", error);
       } finally {
         if (!cancelled) setLoadingCandidates(false);
       }
@@ -73,7 +73,7 @@ export function useCandidates(processoId: string, query: string) {
     );
   }, [filteredCandidates]);
 
-  function moveCandidate(candidateId: number, nextStatus: CandidateStatus): void {
+  function moveCandidate(candidateId: string, nextStatus: CandidateStatus): void {
     setCandidates((current) =>
       current.map((candidate) => {
         if (candidate.id !== candidateId || candidate.status === nextStatus) return candidate;
@@ -91,18 +91,18 @@ export function useCandidates(processoId: string, query: string) {
       coluna_kanban: toKanbanIndex(nextStatus),
     };
 
-    paveApi.avaliarInscricao(String(candidateId), payload).catch((error) => {
+    paveApi.avaliarInscricao(candidateId, payload).catch((error) => {
       console.error("Erro ao persistir movimentação do candidato:", error);
     });
   }
 
-  function startDragging(candidateId: number): void {
+  function startDragging(candidateId: string): void {
     setDraggedCandidateId(candidateId);
   }
 
   function handleDrop(event: DragEvent<HTMLDivElement>, nextStatus: CandidateStatus): void {
     event.preventDefault();
-    const idFromTransfer = Number(event.dataTransfer.getData("text/plain"));
+    const idFromTransfer = event.dataTransfer.getData("text/plain");
     const candidateId = draggedCandidateId ?? idFromTransfer;
     if (!candidateId) return;
     moveCandidate(candidateId, nextStatus);

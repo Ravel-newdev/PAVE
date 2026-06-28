@@ -1,5 +1,6 @@
 export type Project = {
-  id: string;
+  id: string;       // ID do processo seletivo
+  projetoId: string; // ID do projeto
   title: string;
   descricao: string | null;
   n_vagas: number | null;

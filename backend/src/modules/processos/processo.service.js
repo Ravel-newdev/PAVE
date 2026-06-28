@@ -7,24 +7,56 @@ const { query, getClient } = require("../../database/connection");
 const { criar: criarNotificacao } = require("../notificacoes/notificacao.service");
 
 const criarProcesso = async (docenteId, dados) => {
-  const { projeto_id, formulario_id, titulo, descricao, data_inicio, data_termino, pdf_edital, n_vagas } = dados;
+  const { projeto_id, campos_chaves, titulo, descricao, data_inicio, data_termino, pdf_edital, n_vagas } = dados;
 
   const projetoQuery = await query("SELECT docente_id, status FROM projetos WHERE id = $1", [projeto_id]);
   if (projetoQuery.rows.length === 0) throw new Error("Projeto não encontrado.");
-  
+
   const projeto = projetoQuery.rows[0];
   if (projeto.docente_id !== docenteId) throw new Error("Acesso negado.");
   if (projeto.status === 'rascunho' || projeto.status === 'suspenso') {
     throw new Error("Não é possível abrir um processo seletivo para um projeto rascunho ou suspenso.");
   }
 
-  const { rows } = await query(
-    `INSERT INTO processo_seletivo (projeto_id, formulario_id, titulo, descricao, data_inicio, data_termino, pdf_edital, n_vagas)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id`,
-    [projeto_id, formulario_id, titulo, descricao, data_inicio, data_termino, pdf_edital, n_vagas]
-  );
+  const client = await getClient();
+  let processoId;
+  let formulario_id = null;
+  try {
+    await client.query("BEGIN");
+    if (Array.isArray(campos_chaves) && campos_chaves.length > 0) {
+      const fRes = await client.query(
+        `INSERT INTO formulario (titulo) VALUES ($1) RETURNING id`,
+        [titulo ?? 'Formulário de candidatura']
+      );
+      formulario_id = fRes.rows[0].id;
 
-  const processoId = rows[0].id;
+      for (let i = 0; i < campos_chaves.length; i++) {
+        const tcRes = await client.query(
+          `SELECT id FROM tipo_campo WHERE chave_unica = $1`, [campos_chaves[i]]
+        );
+        if (tcRes.rows.length > 0) {
+          await client.query(
+            `INSERT INTO campo_formulario (formulario_id, tipo_id, obrigatorio, ordem) VALUES ($1, $2, true, $3)`,
+            [formulario_id, tcRes.rows[0].id, i + 1]
+          );
+        }
+      }
+    }
+
+    const res = await client.query(
+      `INSERT INTO processo_seletivo (projeto_id, formulario_id, titulo, descricao, data_inicio, data_termino, pdf_edital, n_vagas)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id`,
+      [projeto_id, formulario_id, titulo, descricao, data_inicio, data_termino, pdf_edital, n_vagas]
+    );
+    processoId = res.rows[0].id;
+
+    await client.query("COMMIT");
+  } catch (err) {
+    await client.query("ROLLBACK");
+    throw err;
+  } finally {
+    client.release();
+  }
 
   // Notifica discentes que favoritaram o projeto
   const favoritos = await query(
@@ -45,7 +77,7 @@ const criarProcesso = async (docenteId, dados) => {
     )
   );
 
-  return { id: processoId, titulo, status: 'aberto' };
+  return { id: processoId, formulario_id, titulo, status: 'aberto' };
 };
 
 const atualizarProcesso = async (processoId, docenteId, dados) => {
@@ -110,7 +142,7 @@ const listarCandidatos = async (processoId, docenteId) => {
 
   const { rows } = await query(`
     SELECT i.id AS inscricao_id, i.data_inscricao, i.status, i.coluna_kanban,
-           d.nome AS candidato_nome, d.matricula, d.curso
+           d.nome AS candidato_nome, d.matricula, d.curso, d.foto_url
     FROM inscricao i
     INNER JOIN discentes d ON i.discente_id = d.id
     WHERE i.ps_id = $1
@@ -253,11 +285,12 @@ const avaliarInscricao = async (inscricaoId, docenteId, dados) => {
   try {
     await client.query("BEGIN");
 
-    await client.query(
-      `INSERT INTO avaliacao (id_inscricao, matr_docente, nota, comentario) 
-       VALUES ($1, $2, $3, $4)`,
-      [inscricaoId, docenteId, nota, comentario]
-    );
+    if (nota !== undefined || comentario !== undefined) {
+      await client.query(
+        `INSERT INTO avaliacao (id_inscricao, matr_docente, nota, comentario) VALUES ($1, $2, $3, $4)`,
+        [inscricaoId, docenteId, nota ?? null, comentario ?? null]
+      );
+    }
 
     const updateColuna = coluna_kanban !== undefined ? coluna_kanban : 1;
 

@@ -10,7 +10,7 @@ import { statusLabel } from "../utils/status";
 type CandidateDrawerProps = {
   candidate: Candidate | null;
   onClose: () => void;
-  onMove: (candidateId: number, nextStatus: CandidateStatus) => void;
+  onMove: (candidateId: string, nextStatus: CandidateStatus) => void;
 };
 
 export function CandidateDrawer({ candidate, onClose, onMove }: CandidateDrawerProps) {
@@ -31,7 +31,10 @@ export function CandidateDrawer({ candidate, onClose, onMove }: CandidateDrawerP
       </button>
 
       <div className="kc-drawer-profile">
-        <img src={candidate.avatar} alt={`Foto de ${candidate.name}`} />
+        {candidate.avatar
+          ? <img src={candidate.avatar} alt={`Foto de ${candidate.name}`} />
+          : <span className="kc-avatar-initials kc-avatar-initials--lg">{candidate.name.charAt(0).toUpperCase()}</span>
+        }
         <div>
           <h2>{candidate.name}</h2>
           <p>{candidate.course}</p>

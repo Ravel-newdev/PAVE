@@ -7,7 +7,16 @@ const { query } = require("../../database/connection");
 
 const listarFavoritos = async (discenteId) => {
   const { rows } = await query(`
-    SELECT p.id, p.titulo, p.status, d.nome AS docente_nome, f.criado_em AS favoritado_em
+    SELECT p.id, p.titulo, p.status, p.descricao, p.centro_dep, p.carga_hora,
+           p.data_inic, p.data_termino, p.docente_id AS autor_id,
+           d.nome AS autor_nome, f.criado_em AS favoritado_em,
+           COALESCE(
+             (SELECT json_agg(json_build_object('id', t.id, 'nome', t.nome))
+              FROM projeto_tag pt
+              INNER JOIN tag t ON pt.tag_id = t.id
+              WHERE pt.projeto_id = p.id),
+             '[]'::json
+           ) AS tags
     FROM favoritos f
     INNER JOIN projetos p ON f.projeto_id = p.id
     INNER JOIN docentes d ON p.docente_id = d.id

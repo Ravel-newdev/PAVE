@@ -31,6 +31,15 @@ export interface CampoFormulario {
   tipo: "texto" | "texto_longo" | "arquivo" | "numero" | "selecao" | "data";
   obrigatorio: boolean;
   ordem: number;
+  opcoes?: string[] | null;
+}
+
+export interface CriarCampoFormularioPayload {
+  tipo_chave: string;
+  label_override?: string;
+  opcoes?: string[];
+  obrigatorio?: boolean;
+  ordem?: number;
 }
 
 /** Resposta individual de um campo — alinhada com POST /api/inscricoes. */

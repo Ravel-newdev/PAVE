@@ -1,5 +1,5 @@
 import { buildApiError } from "../errors/ApiError";
-import type { CampoFormulario } from "../types/candidatura";
+import type { CampoFormulario, CriarCampoFormularioPayload } from "../types/candidatura";
 import type { LoginPayload, LoginResponse, RegisterDiscentePayload, RegisterDocentePayload } from "../types/auth";
 import type { Projeto, CriarProjetoPayload, AtualizarProjetoPayload, AlterarStatusProjetoPayload, Tag } from "../types/projeto";
 import type { Processo, CriarProcessoPayload, AtualizarProcessoPayload, Candidato, Inscricao, InscricaoResumo, CriarInscricaoPayload, AvaliarInscricaoPayload } from "../types/processo";
@@ -224,6 +224,14 @@ class PaveApiService {
 
   listarCamposFormulario(formularioId: string): Promise<CampoFormulario[]> {
     return this.get<CampoFormulario[]>(`/formularios/${formularioId}/campos`);
+  }
+
+  criarCampoFormulario(formularioId: string, payload: CriarCampoFormularioPayload): Promise<{ id: string }> {
+    return this.post<{ id: string }>(`/formularios/${formularioId}/campos`, payload);
+  }
+
+  limparCamposPersonalizados(formularioId: string): Promise<void> {
+    return this.delete<void>(`/formularios/${formularioId}/campos/personalizados`);
   }
 
   async uploadArquivo(file: File, processoId: string, campoId: string): Promise<{ url: string }> {

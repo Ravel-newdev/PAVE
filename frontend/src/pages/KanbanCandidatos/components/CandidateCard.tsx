@@ -4,7 +4,7 @@ type CandidateCardProps = {
   candidate: Candidate;
   isSelected: boolean;
   onClick: (candidate: Candidate) => void;
-  onDragStart: (candidateId: number) => void;
+  onDragStart: (candidateId: string) => void;
 };
 
 export function CandidateCard({ candidate, isSelected, onClick, onDragStart }: CandidateCardProps) {
@@ -13,10 +13,13 @@ export function CandidateCard({ candidate, isSelected, onClick, onDragStart }: C
       className={`kc-candidate-card ${isSelected ? "selected" : ""}`}
       onClick={() => onClick(candidate)}
       draggable
-      onDragStart={() => onDragStart(candidate.id)}
+      onDragStart={(e) => { e.dataTransfer.setData("text/plain", candidate.id); onDragStart(candidate.id); }}
       type="button"
     >
-      <img src={candidate.avatar} alt={`Foto de ${candidate.name}`} />
+      {candidate.avatar
+        ? <img src={candidate.avatar} alt={`Foto de ${candidate.name}`} />
+        : <span className="kc-avatar-initials">{candidate.name.charAt(0).toUpperCase()}</span>
+      }
       <div>
         <strong>{candidate.name}</strong>
         <span>{candidate.shortCourse}</span>

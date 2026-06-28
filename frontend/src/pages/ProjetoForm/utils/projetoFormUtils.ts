@@ -20,6 +20,11 @@ function readText(data: Record<string, unknown>, keys: string[], fallback = ""):
   return fallback;
 }
 
+function toDateInput(value: unknown): string {
+  if (!value || typeof value !== "string") return "";
+  return value.slice(0, 10);
+}
+
 export function mapProjetoToFormData(raw: unknown): Partial<FormData> {
   const data = (raw && typeof raw === "object" ? raw : {}) as Record<string, unknown>;
   const nested = typeof data.data === "object" && data.data ? (data.data as Record<string, unknown>) : data;
@@ -32,8 +37,8 @@ export function mapProjetoToFormData(raw: unknown): Partial<FormData> {
     descricao:    readText(nested, ["descricao"], initialEditData.descricao),
     unidade:      readText(nested, ["centro_dep", "unidade"], initialEditData.unidade),
     cargaHoraria: isNaN(cargaNum) ? "" : String(cargaNum),
-    dataInic:     readText(nested, ["data_inic"], initialEditData.dataInic),
-    dataTermino:  readText(nested, ["data_termino"], initialEditData.dataTermino),
+    dataInic:     toDateInput(nested["data_inic"]),
+    dataTermino:  toDateInput(nested["data_termino"]),
   };
 }
 
@@ -49,19 +54,31 @@ export function buildProjetoPayload(formData: FormData) {
   };
 }
 
+const docToChave: Record<string, string> = {
+  historico:            "historico_acad",
+  curriculo:            "curriculo",
+  cartaMotivacao:       "carta_motivacao",
+  comprovanteMatricula: "declaracao_matricula",
+};
+
 export function buildProcessoPayload(
   projetoId: string,
   formData: FormData,
-  _documentos: DocumentoSolicitado[],
+  documentos: DocumentoSolicitado[],
   _perguntas: Pergunta[],
 ): CriarProcessoPayload {
   const vagas = parseInt(formData.vagas, 10);
+  const campos_chaves = documentos
+    .filter((d) => d.selecionado && docToChave[d.id])
+    .map((d) => docToChave[d.id]);
+
   return {
     projeto_id:   projetoId,
     titulo:       formData.titulo,
     data_inicio:  formData.inscricaoInicio || undefined,
     data_termino: formData.inscricaoFim    || undefined,
     n_vagas:      isNaN(vagas) ? undefined : vagas,
+    campos_chaves: campos_chaves.length > 0 ? campos_chaves : undefined,
   };
 }
 

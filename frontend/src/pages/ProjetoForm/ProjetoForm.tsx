@@ -80,9 +80,41 @@ export default function ProjetoForm({ mode = "create" }: { mode?: ProjetoFormMod
     async function loadProjeto() {
       try {
         setLoading(true);
-        const projeto = await paveApi.buscarProjeto(projetoId);
+        const [projeto, processos] = await Promise.all([
+          paveApi.buscarProjeto(projetoId),
+          paveApi.listarProcessosProjeto(projetoId).catch(() => []),
+        ]);
         if (cancelled) return;
-        setFormData((current) => ({ ...current, ...mapProjetoToFormData(projeto) }));
+        const processo = processos[0] ?? null;
+
+        if (processo?.formulario_id) {
+          const campos = await paveApi.listarCamposFormulario(processo.formulario_id).catch(() => []);
+          if (!cancelled) {
+            const tipoChaveParaTipo: Record<string, string> = {
+              campo_texto:       "resposta-curta",
+              campo_texto_longo: "paragrafo",
+              campo_selecao:     "multipla-escolha",
+            };
+            const perguntasExistentes = campos
+              .filter((c) => c.chave_unica in tipoChaveParaTipo)
+              .map((c, i) => ({
+                id: i + Date.now(),
+                texto: c.label,
+                tipo: tipoChaveParaTipo[c.chave_unica] as import("./types/projetoFormTypes").TipoPergunta,
+                opcoes: Array.isArray(c.opcoes) ? c.opcoes : [],
+                obrigatoria: c.obrigatorio,
+              }));
+            if (perguntasExistentes.length > 0) setPerguntas(perguntasExistentes);
+          }
+        }
+
+        setFormData((current) => ({
+          ...current,
+          ...mapProjetoToFormData(projeto),
+          inscricaoInicio: processo?.data_inicio?.slice(0, 10) ?? "",
+          inscricaoFim:    processo?.data_termino?.slice(0, 10) ?? "",
+          vagas:           processo?.n_vagas != null ? String(processo.n_vagas) : "",
+        }));
       } catch (error) {
         console.error("Erro ao carregar projeto:", error);
       } finally {
@@ -157,10 +189,44 @@ export default function ProjetoForm({ mode = "create" }: { mode?: ProjetoFormMod
       const temProcesso = status === "ativo" && Boolean(formData.inscricaoInicio && formData.inscricaoFim);
       if (temProcesso) {
         const processoPayload = buildProcessoPayload(idCriado, formData, documentos, perguntas);
+        let formularioId: string | null | undefined = null;
+
         if (isEdit) {
-          await paveApi.atualizarProcesso(idCriado, processoPayload).catch((e) => console.error("Processo não atualizado:", e));
+          const processos = await paveApi.listarProcessosProjeto(idCriado).catch(() => []);
+          if (processos.length > 0) {
+            await paveApi.atualizarProcesso(processos[0].id, processoPayload).catch((e) => console.error("Processo não atualizado:", e));
+            formularioId = processos[0].formulario_id;
+          } else {
+            const novo = await paveApi.criarProcesso(processoPayload).catch((e) => { console.error("Processo não criado:", e); return null; });
+            formularioId = novo?.formulario_id;
+          }
         } else {
-          await paveApi.criarProcesso(processoPayload).catch((e) => console.error("Processo não criado:", e));
+          const novo = await paveApi.criarProcesso(processoPayload).catch((e) => { console.error("Processo não criado:", e); return null; });
+          formularioId = novo?.formulario_id;
+        }
+
+        if (formularioId) {
+          await paveApi.limparCamposPersonalizados(formularioId).catch(() => {});
+        }
+
+        if (formularioId && perguntas.length > 0) {
+          const tipoChaveMap: Record<string, string> = {
+            "resposta-curta":   "campo_texto",
+            "paragrafo":        "campo_texto_longo",
+            "multipla-escolha": "campo_selecao",
+            "sim-nao":          "campo_texto",
+          };
+          await Promise.all(
+            perguntas.map((p, i) =>
+              paveApi.criarCampoFormulario(formularioId!, {
+                tipo_chave:     tipoChaveMap[p.tipo] ?? "campo_texto",
+                label_override: p.texto || undefined,
+                opcoes:         p.opcoes.length > 0 ? p.opcoes : undefined,
+                obrigatorio:    p.obrigatoria,
+                ordem:          i + 1,
+              }).catch((e) => console.error("Campo não criado:", e))
+            )
+          );
         }
       }
 

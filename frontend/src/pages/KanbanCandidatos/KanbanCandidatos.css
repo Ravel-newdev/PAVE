@@ -324,6 +324,18 @@ select {
   grid-template-columns: repeat(4, minmax(215px, 1fr));
 }
 
+.kc-candidates-wrapper {
+  position: relative;
+}
+
+.kc-candidates-wrapper.drawer-open .kc-candidates-section {
+  padding-right: 455px;
+}
+
+.kc-candidates-wrapper.drawer-open .kc-kanban {
+  grid-template-columns: repeat(4, minmax(215px, 1fr));
+}
+
 .kc-column {
   min-height: 540px;
   background: rgba(255, 255, 255, 0.72);
@@ -415,16 +427,34 @@ select {
   box-shadow: 0 14px 32px rgba(0, 111, 186, 0.10);
 }
 
-.kc-candidate-card img {
+.kc-candidate-card img,
+.kc-candidate-card .kc-avatar-initials {
   width: 48px;
   height: 48px;
   border-radius: 999px;
   object-fit: cover;
+  flex-shrink: 0;
+}
+
+.kc-avatar-initials {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #1E2E4F;
+  color: #fff;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.kc-avatar-initials--lg {
+  width: 88px;
+  height: 88px;
+  font-size: 32px;
 }
 
 .kc-candidate-card strong,
 .kc-candidate-card b,
-.kc-candidate-card span,
+.kc-candidate-card span:not(.kc-avatar-initials),
 .kc-candidate-card small {
   display: block;
 }
@@ -434,7 +464,7 @@ select {
   margin-bottom: 5px;
 }
 
-.kc-candidate-card span {
+.kc-candidate-card span:not(.kc-avatar-initials) {
   font-size: 13px;
   color: #53627a;
   margin-bottom: 5px;
@@ -490,11 +520,13 @@ select {
   padding-right: 32px;
 }
 
-.kc-drawer-profile img {
+.kc-drawer-profile img,
+.kc-drawer-profile .kc-avatar-initials {
   width: 88px;
   height: 88px;
   border-radius: 999px;
   object-fit: cover;
+  flex-shrink: 0;
 }
 
 .kc-drawer-profile h2 {

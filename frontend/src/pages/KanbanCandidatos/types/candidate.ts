@@ -3,7 +3,7 @@ import type { DotColor } from "./project";
 export type CandidateStatus = "inscritos" | "avaliacao" | "aprovados" | "rejeitados";
 
 export type Candidate = {
-  id: number;
+  id: string;
   name: string;
   course: string;
   shortCourse: string;

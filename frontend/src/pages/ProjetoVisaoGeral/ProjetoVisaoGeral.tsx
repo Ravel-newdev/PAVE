@@ -1,31 +1,44 @@
 import { Link, useNavigate, useSearch } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { BarChart3, Briefcase, Calendar, CheckCircle2, Download, Edit3, FileText, GraduationCap, Info, Tag, Timer, Trash2, Users, XCircle } from "lucide-react";
+import { Briefcase, Calendar, Download, Edit3, GraduationCap, Trash2 } from "lucide-react";
 import "./ProjetoVisaoGeral.css";
 import { paveApi } from "../../services/PaveApiService";
 import { ProfessorTopbar } from "./components/ProfessorTopbar";
-import { StatCard } from "./components/StatCard";
+import { VisaoGeralTab } from "./tabs/VisaoGeralTab";
+import { CandidatosTab } from "./tabs/CandidatosTab";
 import type { Projeto } from "../../types/projeto";
 
+type Aba = "visao-geral" | "candidatos";
+
 export default function ProjetoVisaoGeral() {
-  const { id } = useSearch({ strict: false }) as { id?: string };
+  const { id, aba = "visao-geral" } = useSearch({ strict: false }) as { id?: string; aba?: Aba };
   const projetoId = id ?? "";
-  const [projeto, setProjeto] = useState<Projeto | null>(null);
-  const [erro, setErro] = useState<string | null>(null);
-  const [confirmDelete, setConfirmDelete] = useState(false);
   const navigate = useNavigate();
 
+  const [projeto, setProjeto] = useState<Projeto | null>(null);
+  const [processoId, setProcessoId] = useState<string | null>(null);
+  const [erro, setErro] = useState<string | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+
   useEffect(() => {
-    if (!projetoId) {
-      void navigate({ to: "/professor" });
-      return;
-    }
+    if (!projetoId) { void navigate({ to: "/professor" }); return; }
     let cancelled = false;
 
-    paveApi.buscarProjeto(projetoId)
-      .then((res) => { if (!cancelled) setProjeto(res); })
-      .catch((e) => { if (!cancelled) setErro(e instanceof Error ? e.message : "Erro ao carregar projeto."); });
+    async function carregar() {
+      try {
+        const [proj, processos] = await Promise.all([
+          paveApi.buscarProjeto(projetoId),
+          paveApi.listarProcessosProjeto(projetoId),
+        ]);
+        if (cancelled) return;
+        setProjeto(proj);
+        if (processos.length > 0) setProcessoId(processos[0].id);
+      } catch (e) {
+        if (!cancelled) setErro(e instanceof Error ? e.message : "Erro ao carregar projeto.");
+      }
+    }
 
+    void carregar();
     return () => { cancelled = true; };
   }, [projetoId, navigate]);
 
@@ -34,7 +47,7 @@ export default function ProjetoVisaoGeral() {
     try {
       await paveApi.alterarStatusProjeto(projeto.id, { status: "encerrado" });
       setProjeto((p) => p ? { ...p, status: "encerrado" } : p);
-    } catch (e: unknown) {
+    } catch (e) {
       setErro(e instanceof Error ? e.message : "Erro ao finalizar.");
     }
   }
@@ -44,7 +57,7 @@ export default function ProjetoVisaoGeral() {
     try {
       await paveApi.excluirProjeto(projeto.id);
       void navigate({ to: "/professor" });
-    } catch (e: unknown) {
+    } catch (e) {
       setErro(e instanceof Error ? e.message : "Erro ao excluir.");
       setConfirmDelete(false);
     }
@@ -96,13 +109,11 @@ export default function ProjetoVisaoGeral() {
               <h1>{projeto.titulo}</h1>
               <span className="po-status">{projeto.status}</span>
             </div>
-
             <div className="po-meta-row">
               <span><GraduationCap size={18} /> {projeto.autor_nome}</span>
               <span><Briefcase size={18} /> {projeto.centro_dep ?? "—"}</span>
               <span><Calendar size={18} /> {projeto.data_termino ?? "—"}</span>
             </div>
-
             <p className="po-description">{projeto.descricao}</p>
           </div>
 
@@ -126,57 +137,30 @@ export default function ProjetoVisaoGeral() {
         </section>
 
         <div className="po-tabs" role="tablist">
-          <Link className="po-tab po-tab-active" to="/professor/projeto-visao-geral" search={{ id: projetoId } as never}>Visão geral</Link>
-          <Link className="po-tab" to="/professor/kanban-candidatos" search={{ processoId: projetoId } as never}>Candidatos</Link>
+          <Link
+            className={`po-tab ${aba === "visao-geral" ? "po-tab-active" : ""}`}
+            to="/professor/projeto-visao-geral"
+            search={{ id: projetoId, aba: "visao-geral" } as never}
+          >
+            Visão geral
+          </Link>
+          {processoId ? (
+            <Link
+              className={`po-tab ${aba === "candidatos" ? "po-tab-active" : ""}`}
+              to="/professor/projeto-visao-geral"
+              search={{ id: projetoId, aba: "candidatos" } as never}
+            >
+              Candidatos
+            </Link>
+          ) : (
+            <span className="po-tab" style={{ opacity: 0.4, cursor: "not-allowed" }} title="Nenhum processo seletivo aberto">
+              Candidatos
+            </span>
+          )}
         </div>
 
-        <section className="po-grid-main">
-          <div className="po-card po-about-card">
-            <h2><span><FileText size={20} /></span> Sobre o projeto</h2>
-            <p>{projeto.descricao ?? "Sem descrição."}</p>
-
-            <h3><span><Tag size={20} /></span> Tags</h3>
-            <div className="po-tags">
-              {projeto.tags.length > 0
-                ? projeto.tags.map((t) => <span key={t.id}>{t.nome}</span>)
-                : <span>Nenhuma tag cadastrada.</span>}
-            </div>
-          </div>
-
-          <div className="po-side-stack">
-            <div className="po-card">
-              <h2><span><BarChart3 size={20} /></span> Resumo da seleção</h2>
-              <div className="po-stats-grid">
-                <StatCard icon={<Users size={22} />} value={0} label="Inscritos" variant="blue" />
-                <StatCard icon={<Timer size={22} />} value={0} label="Em avaliação" variant="amber" />
-                <StatCard icon={<CheckCircle2 size={22} />} value={0} label="Aprovados" variant="green" />
-                <StatCard icon={<XCircle size={22} />} value={0} label="Rejeitados" variant="red" />
-              </div>
-            </div>
-
-            <div className="po-card">
-              <h2><span><Info size={20} /></span> Informações gerais</h2>
-              <div className="po-info-grid">
-                <div className="po-info-item">
-                  <span><Calendar size={18} /></span>
-                  <div><small>Início</small><strong>{projeto.data_inic ?? "—"}</strong></div>
-                </div>
-                <div className="po-info-item">
-                  <span><Calendar size={18} /></span>
-                  <div><small>Término</small><strong>{projeto.data_termino ?? "—"}</strong></div>
-                </div>
-                <div className="po-info-item">
-                  <span><Briefcase size={18} /></span>
-                  <div><small>Carga horária</small><strong>{projeto.carga_hora ? `${projeto.carga_hora}h` : "—"}</strong></div>
-                </div>
-                <div className="po-info-item">
-                  <span><GraduationCap size={18} /></span>
-                  <div><small>Departamento</small><strong>{projeto.centro_dep ?? "—"}</strong></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+        {aba === "visao-geral" && <VisaoGeralTab projeto={projeto} />}
+        {aba === "candidatos" && processoId && <CandidatosTab processoId={processoId} />}
       </div>
     </main>
   );

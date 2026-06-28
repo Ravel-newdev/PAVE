@@ -98,14 +98,20 @@ CREATE TABLE formulario (
 );
 
 CREATE TABLE campo_formulario (
-    id            UUID    PRIMARY KEY DEFAULT gen_random_uuid(),
-    formulario_id UUID    NOT NULL REFERENCES formulario(id) ON DELETE CASCADE,
-    tipo_id       UUID    NOT NULL REFERENCES tipo_campo(id) ON DELETE RESTRICT,
-    obrigatorio   BOOLEAN NOT NULL DEFAULT FALSE,
-    ordem         INTEGER NOT NULL DEFAULT 1,
-
-    UNIQUE (formulario_id, tipo_id)
+    id             UUID         PRIMARY KEY DEFAULT gen_random_uuid(),
+    formulario_id  UUID         NOT NULL REFERENCES formulario(id) ON DELETE CASCADE,
+    tipo_id        UUID         NOT NULL REFERENCES tipo_campo(id) ON DELETE RESTRICT,
+    label_override VARCHAR(200),
+    opcoes         JSONB,
+    obrigatorio    BOOLEAN      NOT NULL DEFAULT FALSE,
+    ordem          INTEGER      NOT NULL DEFAULT 1
 );
+
+-- Campos padrão (sem label_override) continuam únicos por formulário;
+-- perguntas personalizadas podem reutilizar o mesmo tipo_id.
+CREATE UNIQUE INDEX campo_formulario_std_unique
+    ON campo_formulario (formulario_id, tipo_id)
+    WHERE label_override IS NULL;
 
 CREATE TABLE processo_seletivo (
     id            UUID         PRIMARY KEY DEFAULT gen_random_uuid(),

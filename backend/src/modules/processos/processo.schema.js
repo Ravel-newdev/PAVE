@@ -13,7 +13,8 @@ const baseProcessoSchema = z.object({
   data_inicio: z.string().date({ error: "Data de início em formato inválido." }).optional(),
   data_termino: z.string().date({ error: "Data de término em formato inválido." }).optional(),
   pdf_edital: z.string().url({ error: "O link do edital deve ser uma URL válida." }).max(500).optional(),
-  n_vagas: z.number().int().positive({ error: "O número de vagas deve ser maior que zero." }).optional()
+  n_vagas: z.number().int().positive({ error: "O número de vagas deve ser maior que zero." }).optional(),
+  campos_chaves: z.array(z.string()).optional()
 });
 
 const validarDatasProcesso = (data) => {

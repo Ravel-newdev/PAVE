@@ -1,11 +1,6 @@
 import { Link, useNavigate, useLocation } from "@tanstack/react-router";
-import {
-  Briefcase,
-  Calendar,
-  Edit3,
-  GraduationCap,
-} from "lucide-react";
-
+import { Briefcase, Calendar, Edit3, GraduationCap } from "lucide-react";
+import "../../ProjetoVisaoGeral/ProjetoVisaoGeral.css";
 import type { Project } from "../types/project";
 
 type ProjectSummaryProps = {
@@ -19,72 +14,65 @@ export function ProjectSummary({ project }: ProjectSummaryProps) {
   const isOverview = location.pathname === "/professor/projeto-visao-geral";
   const isCandidates = location.pathname === "/professor/kanban-candidatos";
 
-  function handleEditProject() {
-    navigate({ to: "/professor/editar-projeto", search: { id: project.id } as never });
-  }
-
   return (
-    <section className="kc-project-section">
-      <div className="kc-breadcrumb">
-        <Link to="/professor/projeto-visao-geral">Projetos</Link>
+    <div className="po-container" style={{ paddingBottom: 0 }}>
+      <div className="po-breadcrumb">
+        <Link to="/professor/projeto-visao-geral" search={{ id: project.projetoId } as never}>Projetos</Link>
         <span>›</span>
         <span>{project.title}</span>
       </div>
 
-      <div className="kc-project-topline">
+      <div className="po-project-header">
         <div>
-          <h1>
-            {project.title}
-            <span className="kc-status-pill">Ativo</span>
-          </h1>
+          <div className="po-title-row">
+            <h1>{project.title}</h1>
+            <span className="po-status">Ativo</span>
+          </div>
 
-          <div className="kc-meta-row">
+          <div className="po-meta-row">
             {project.centro_dep && (
-              <span>
-                <GraduationCap size={17} /> {project.centro_dep}
-              </span>
+              <span><GraduationCap size={17} /> {project.centro_dep}</span>
             )}
             {project.n_vagas != null && (
-              <span>
-                <Briefcase size={17} /> {project.n_vagas} vagas
-              </span>
+              <span><Briefcase size={17} /> {project.n_vagas} vagas</span>
             )}
             {project.data_termino && (
-              <span>
-                <Calendar size={17} /> Até {project.data_termino}
-              </span>
+              <span><Calendar size={17} /> Até {project.data_termino}</span>
             )}
           </div>
 
           {project.descricao && (
-            <p className="kc-project-description">{project.descricao}</p>
+            <p className="po-description">{project.descricao}</p>
           )}
         </div>
 
-        <div className="kc-actions">
-          <button className="kc-btn kc-btn-light" onClick={handleEditProject} type="button">
+        <div className="po-actions">
+          <button
+            className="po-button po-button-secondary"
+            onClick={() => navigate({ to: "/professor/editar-projeto", search: { id: project.projetoId } as never })}
+            type="button"
+          >
             <Edit3 size={18} /> Editar projeto
           </button>
         </div>
       </div>
 
-      <div className="kc-tabs" role="tablist" aria-label="Abas do projeto">
+      <div className="po-tabs">
         <Link
           to="/professor/projeto-visao-geral"
-          search={{ id: project.id } as never}
-          className={`kc-tab ${isOverview ? "active" : ""}`}
+          search={{ id: project.projetoId } as never}
+          className={`po-tab ${isOverview ? "po-tab-active" : ""}`}
         >
           Visão geral
         </Link>
-
         <Link
           to="/professor/kanban-candidatos"
           search={{ processoId: project.id } as never}
-          className={`kc-tab ${isCandidates ? "active" : ""}`}
+          className={`po-tab ${isCandidates ? "po-tab-active" : ""}`}
         >
           Candidatos
         </Link>
       </div>
-    </section>
+    </div>
   );
 }

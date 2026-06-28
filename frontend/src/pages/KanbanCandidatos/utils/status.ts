@@ -1,11 +1,11 @@
 import type { CandidateStatus } from "../types/candidate";
 
 export function normalizeStatus(raw: unknown): CandidateStatus {
-  const value = String(raw ?? "").toLowerCase();
+  const value = String(raw ?? "").toLowerCase().replace(/_/g, "");
 
-  if (value.includes("avali")) return "avaliacao";
+  if (value === "emanalise" || value.includes("avali")) return "avaliacao";
   if (value.includes("aprov")) return "aprovados";
-  if (value.includes("rejeit")) return "rejeitados";
+  if (value.includes("rejeit") || value.includes("reprov") || value.includes("desist")) return "rejeitados";
   return "inscritos";
 }
 

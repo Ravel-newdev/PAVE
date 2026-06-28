@@ -25,13 +25,13 @@ export interface Processo {
 /** Corpo de criação de processo — POST /api/processos. */
 export interface CriarProcessoPayload {
   projeto_id: string;
-  formulario_id?: string;
   titulo: string;
   descricao?: string;
   data_inicio?: string;
   data_termino?: string;
   pdf_edital?: string;
   n_vagas?: number;
+  campos_chaves?: string[];
 }
 
 /** Corpo de atualização de processo — PUT /api/processos/:id. */
