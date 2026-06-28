@@ -305,17 +305,68 @@ pnpm check     # Lint + format juntos
 - [x] Modelagem do banco de dados (DER + MER)
 - [x] Script DDL PostgreSQL
 - [x] Configuração da pool de conexões
-- [ ] Rotas de autenticação (cadastro, login, JWT)
-- [ ] Rotas de projetos
-- [ ] Rotas de processo seletivo e Kanban
-- [ ] Rotas de inscrições e formulários
-- [ ] Rotas de notificações
-- [ ] Emissão automática de certificados
-- [ ] Telas do front-end (Figma → React)
+- [x] Rotas de autenticação (cadastro, login, JWT)
+- [x] Rotas de projetos
+- [x] Rotas de processo seletivo e Kanban
+- [x] Rotas de inscrições e formulários
+- [x] Rotas de notificações
+- [x] Telas do front-end — Iteração 1 concluída
+- [x] Integração front-end ↔ back-end — Iteração 1
 - [ ] Testes de rotas no Postman
+- [ ] Emissão automática de certificados
 - [ ] Controle de requisições com Redis
 - [ ] Tabelas de estatísticas
+- [ ] Responsividade (mobile)
 - [ ] Deploy
+
+---
+
+##  Kanban — Iteração 2
+
+### 🔲 A fazer
+
+| Tarefa | Área | Responsável |
+|---|---|---|
+| Responsividade geral (mobile / tablets) | Front-end | |
+| Alterar senha na página de perfil | Front-end | |
+| Badge de notificações do professor com dado real da API | Front-end | |
+| Integração da página de Notificações do aluno com backend | Front-end | |
+| Integração da página de Candidatura do aluno com backend | Front-end | |
+| Verificar integração do wizard de criação/edição de projeto (CadastroProjeto / ProjetoForm) | Front-end | |
+| Testar filtro de departamento no catálogo com projetos reais cadastrados | Front-end | |
+| Validação de e-mail institucional no cadastro (pós-MVP) | Front-end | |
+| Testes de rotas no Postman | Back-end | |
+| Emissão automática de certificados | Back-end | |
+
+### 🔄 Em progresso
+
+| Tarefa | Área | Responsável |
+|---|---|---|
+| | | |
+
+### ✅ Concluído — Iteração 1
+
+| Tarefa | Área |
+|---|---|
+| Telas de login e cadastro unificadas visualmente | Front-end |
+| Fluxo de cadastro com seleção de papel (aluno / professor) | Front-end |
+| Guards de rota para discente e docente (`beforeLoad`) | Front-end |
+| Integração do dashboard do professor com backend (projetos próprios) | Front-end |
+| Integração do KanbanCandidatos com backend (sem mocks) | Front-end |
+| Correção do ProjetoVisaoGeral (redirect sem projetoId) | Front-end |
+| Filtros do catálogo derivados dinamicamente do backend | Front-end |
+| Busca reativa no catálogo via `useSearch` | Front-end |
+| Navbar unificada em todas as páginas do aluno | Front-end |
+| Favicon e título da aba corrigidos | Front-end |
+| Logo correta no navbar do professor | Front-end |
+| Campos sem mapeamento no backend removidos do perfil de aluno | Front-end |
+| Arquivos mortos removidos (mocks, stubs, scripts) | Front-end |
+| Rotas de autenticação (registro discente / docente, login, JWT) | Back-end |
+| Rotas de projetos (CRUD, status, favoritos, tags) | Back-end |
+| Rotas de processo seletivo e Kanban de candidatos | Back-end |
+| Rotas de inscrições e formulários | Back-end |
+| Rotas de notificações | Back-end |
+| Modelagem do banco de dados e script DDL | Back-end |
 
 ---
 
