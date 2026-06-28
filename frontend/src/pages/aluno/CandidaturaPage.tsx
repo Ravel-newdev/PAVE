@@ -2,8 +2,7 @@ import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { ArrowLeft, ChevronRight, CheckCircle2 } from "lucide-react";
 import { useSearch, useNavigate } from "@tanstack/react-router";
-import { Header } from "@/components/shared/Header";
-import { Footer } from "@/components/shared/Footer";
+import Navbar from "@/layout/components/Navbar/Navbar";
 import { Button } from "@/layout/components/ui/button";
 import { FormularioCandidatura } from "@/components/candidatura/FormularioCandidatura";
 import { ProjetoInfoSidebar } from "@/components/candidatura/ProjetoInfoSidebar";
@@ -111,21 +110,19 @@ export default function CandidaturaPage() {
 
   if (erro) return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col">
-      <Header paginaAtiva="Projetos" />
+      <Navbar />
       <main className="max-w-7xl mx-auto px-8 py-16 w-full flex-1">
         <p className="text-red-600">{erro}</p>
       </main>
-      <Footer />
     </div>
   );
 
   if (!projeto) return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col">
-      <Header paginaAtiva="Projetos" />
+      <Navbar />
       <main className="max-w-7xl mx-auto px-8 py-16 w-full flex-1">
         <p className="text-[#64748B]">Carregando...</p>
       </main>
-      <Footer />
     </div>
   );
 
@@ -144,7 +141,7 @@ export default function CandidaturaPage() {
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col">
-      <Header paginaAtiva="Projetos" />
+      <Navbar />
 
       <div className="max-w-7xl mx-auto px-8 py-4 w-full">
         <div className="flex items-center gap-2 text-sm text-[#64748B]">
@@ -207,7 +204,6 @@ export default function CandidaturaPage() {
         </div>
       </main>
 
-      <Footer />
     </div>
   );
 }

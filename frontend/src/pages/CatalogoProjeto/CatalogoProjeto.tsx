@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useSearch } from "@tanstack/react-router";
 import { SlidersHorizontal, LayoutGrid, List, ChevronLeft, ChevronRight } from "lucide-react";
 
 import Navbar from "../../layout/components/Navbar/Navbar";
@@ -10,30 +11,21 @@ import type { Projeto } from "../../types/projeto";
 import "./CatalogoProjeto.css";
 
 const normalizar = (s: string) =>
-  s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+  s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
 
-/*  Opções de filtro  */
-const TIPOS       = ["Todos", "Extensão", "Voluntariado", "Bolsa"]                              as const;
-const AREAS       = ["Todas", "Tecnologia e Educação", "Meio Ambiente", "Saúde"]                as const;
-const TURNOS      = ["Todos", "Manhã", "Tarde", "Noite"]                                        as const;
-const MODALIDADES = ["Todas", "Presencial", "Remoto", "Híbrido"]                               as const;
-const ORDENS      = ["Mais recentes", "Mais vagas", "A–Z"]                                     as const;
-
+const ORDENS = ["Mais recentes", "Mais antigos", "A–Z"] as const;
 const POR_PAGINA = 6;
 
-/*  Página  */
 export default function CatalogoProjeto() {
-  const q = typeof window !== "undefined" ? (new URLSearchParams(window.location.search).get("q") ?? undefined) : undefined;
+  const { q } = useSearch({ strict: false }) as { q?: string };
 
-  const [projetos,    setProjetos]    = useState<Projeto[]>([]);
-  const [busca,       setBusca]       = useState(q ?? "");
-  const [tipo,        setTipo]        = useState<string>("Todos");
-  const [area,        setArea]        = useState<string>("Todas");
-  const [turno,       setTurno]       = useState<string>("Todos");
-  const [modalidade,  setModalidade]  = useState<string>("Todas");
-  const [ordem,       setOrdem]       = useState<string>("Mais recentes");
-  const [visao,       setVisao]       = useState<"grid" | "lista">("grid");
-  const [pagina,      setPagina]      = useState(1);
+  const [projetos,   setProjetos]   = useState<Projeto[]>([]);
+  const [busca,      setBusca]      = useState(q ?? "");
+  const [tipo,       setTipo]       = useState("Todos");
+  const [area,       setArea]       = useState("Todas");
+  const [ordem,      setOrdem]      = useState("Mais recentes");
+  const [visao,      setVisao]      = useState<"grid" | "lista">("grid");
+  const [pagina,     setPagina]     = useState(1);
 
   useEffect(() => {
     paveApi.listarProjetos("ativo").then(setProjetos).catch(() => {});
@@ -44,10 +36,22 @@ export default function CatalogoProjeto() {
     setPagina(1);
   }, [q]);
 
+  const opcoesArea = useMemo(() => {
+    const deps = projetos
+      .map((p) => p.centro_dep)
+      .filter((d): d is string => !!d && d.trim() !== "");
+    return ["Todas", ...Array.from(new Set(deps)).sort()];
+  }, [projetos]);
+
+  const opcoesTipo = useMemo(() => {
+    const tags = projetos.flatMap((p) => p.tags.map((t) => t.nome));
+    return ["Todos", ...Array.from(new Set(tags)).sort()];
+  }, [projetos]);
+
   const filtrados = useMemo(() => {
     const termo = normalizar(busca.trim());
 
-    return projetos.filter((p) => {
+    let resultado = projetos.filter((p) => {
       const bateBusca =
         termo === "" ||
         normalizar(p.titulo).includes(termo) ||
@@ -55,12 +59,22 @@ export default function CatalogoProjeto() {
         normalizar(p.descricao ?? "").includes(termo) ||
         normalizar(p.autor_nome).includes(termo);
 
-      const bateTipo  = tipo === "Todos" || p.tags.some((t) => t.nome === tipo);
-      const bateArea  = area === "Todas" || normalizar(p.centro_dep ?? "").includes(normalizar(area));
+      const bateTipo = tipo === "Todos" || p.tags.some((t) => t.nome === tipo);
+      const bateArea = area === "Todas" || p.centro_dep === area;
 
       return bateBusca && bateTipo && bateArea;
     });
-  }, [projetos, busca, tipo, area]);
+
+    if (ordem === "Mais recentes") {
+      resultado = [...resultado].sort((a, b) => b.criado_em.localeCompare(a.criado_em));
+    } else if (ordem === "Mais antigos") {
+      resultado = [...resultado].sort((a, b) => a.criado_em.localeCompare(b.criado_em));
+    } else if (ordem === "A–Z") {
+      resultado = [...resultado].sort((a, b) => a.titulo.localeCompare(b.titulo, "pt-BR"));
+    }
+
+    return resultado;
+  }, [projetos, busca, tipo, area, ordem]);
 
   const totalPaginas = Math.ceil(filtrados.length / POR_PAGINA);
   const paginados    = filtrados.slice((pagina - 1) * POR_PAGINA, pagina * POR_PAGINA);
@@ -74,7 +88,6 @@ export default function CatalogoProjeto() {
     <div className="cat-page">
       <Navbar />
 
-      {/*  Hero  */}
       <header className="cat-hero">
         <div className="cat-hero-text">
           <h1>Catálogo de Projetos</h1>
@@ -102,23 +115,19 @@ export default function CatalogoProjeto() {
         </div>
       )}
 
-      {/*  Filtros  */}
       <section className="cat-filters-bar">
         <button className="cat-filtros-btn">
           <SlidersHorizontal size={15} /> Filtros
         </button>
 
-        <SelectDropdown label="Tipo de oportunidade" options={TIPOS}       value={tipo}      onChange={mudarFiltro(setTipo)} />
-        <SelectDropdown label="Área de conhecimento"  options={AREAS}       value={area}      onChange={mudarFiltro(setArea)} />
-        <SelectDropdown label="Turno"                 options={TURNOS}      value={turno}     onChange={setTurno} />
-        <SelectDropdown label="Modalidade"            options={MODALIDADES} value={modalidade}onChange={mudarFiltro(setModalidade)} />
+        <SelectDropdown label="Tipo de oportunidade" options={opcoesTipo} value={tipo} onChange={mudarFiltro(setTipo)} />
+        <SelectDropdown label="Departamento"         options={opcoesArea} value={area} onChange={mudarFiltro(setArea)} />
 
         <div className="cat-filters-spacer" />
 
-        <SelectDropdown label="Ordenar por" options={ORDENS} value={ordem} onChange={setOrdem} />
+        <SelectDropdown label="Ordenar por" options={ORDENS} value={ordem} onChange={mudarFiltro(setOrdem)} />
       </section>
 
-      {/*  Resultado  */}
       <section className="cat-resultado">
         <div className="cat-resultado-header">
           <span className="cat-contagem">
@@ -137,7 +146,7 @@ export default function CatalogoProjeto() {
             <button
               type="button"
               className="cat-limpar"
-              onClick={() => { setBusca(""); setTipo("Todos"); setArea("Todas"); setModalidade("Todas"); setPagina(1); }}
+              onClick={() => { setBusca(""); setTipo("Todos"); setArea("Todas"); setPagina(1); }}
             >
               Limpar filtros
             </button>
@@ -150,7 +159,6 @@ export default function CatalogoProjeto() {
           </div>
         )}
 
-        {/*  Paginação  */}
         {totalPaginas > 1 && (
           <div className="cat-paginacao">
             <button className="cat-page-btn" onClick={() => setPagina((n) => Math.max(1, n - 1))} disabled={pagina === 1} aria-label="Anterior">

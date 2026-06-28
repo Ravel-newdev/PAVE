@@ -52,6 +52,27 @@
 
 .cat-hero-illustration svg { width: 100%; height: auto; }
 
+.cat-busca-ativa {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 12px 32px;
+  font-size: 0.9rem;
+  color: var(--op-text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cat-busca-ativa button {
+  font-size: 0.85rem;
+  color: var(--green-accent);
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+}
+
 /*  Barra de filtros  */
 .cat-filters-bar {
   display: flex;

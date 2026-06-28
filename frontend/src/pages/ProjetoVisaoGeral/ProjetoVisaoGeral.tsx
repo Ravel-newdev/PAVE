@@ -5,7 +5,6 @@ import "./ProjetoVisaoGeral.css";
 import { paveApi } from "../../services/PaveApiService";
 import { ProfessorTopbar } from "./components/ProfessorTopbar";
 import { StatCard } from "./components/StatCard";
-import { mapProjeto } from "./utils/projetoMapper";
 import type { Projeto } from "../../types/projeto";
 
 export default function ProjetoVisaoGeral() {
@@ -16,15 +15,18 @@ export default function ProjetoVisaoGeral() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!projetoId) return;
+    if (!projetoId) {
+      void navigate({ to: "/professor" });
+      return;
+    }
     let cancelled = false;
 
     paveApi.buscarProjeto(projetoId)
-      .then((res) => { if (!cancelled) setProjeto(mapProjeto(res)); })
-      .catch((e) => { if (!cancelled) setErro(e.message); });
+      .then((res) => { if (!cancelled) setProjeto(res); })
+      .catch((e) => { if (!cancelled) setErro(e instanceof Error ? e.message : "Erro ao carregar projeto."); });
 
     return () => { cancelled = true; };
-  }, [projetoId]);
+  }, [projetoId, navigate]);
 
   async function handleFinish() {
     if (!projeto || !window.confirm("Deseja finalizar a seleção deste projeto?")) return;

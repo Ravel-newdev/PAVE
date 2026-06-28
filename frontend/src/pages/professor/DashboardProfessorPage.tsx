@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Plus, Folder, FileEdit, Flag, FolderX, BellOff, Bell } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
 import { ProfessorNavbar } from "@/layout/components/professor/ProfessorNavbar";
-import { Footer } from "@/components/shared/Footer";
 import { EstatisticaCard } from "@/components/dashboard/EstatisticaCard";
 import { ProjetoResumoItem } from "@/components/dashboard/ProjetoResumoItem";
 import { NotificacaoResumoItem } from "@/components/dashboard/NotificacaoResumoItem";
@@ -22,12 +21,13 @@ export default function DashboardProfessorPage() {
 
   useEffect(() => {
     paveApi.listarProjetos().then((lista) => {
-      setProjetos(lista);
+      const meus = lista.filter((p) => p.autor_id === session?.id);
+      setProjetos(meus);
       setEstatisticas({
-        projetosAtivos:     lista.filter((p) => p.status === "ativo").length,
-        projetosRascunho:   lista.filter((p) => p.status === "rascunho").length,
-        projetosEncerrados: lista.filter((p) => p.status === "encerrado").length,
-        projetosSuspensos:  lista.filter((p) => p.status === "suspenso").length,
+        projetosAtivos:     meus.filter((p) => p.status === "ativo").length,
+        projetosRascunho:   meus.filter((p) => p.status === "rascunho").length,
+        projetosEncerrados: meus.filter((p) => p.status === "encerrado").length,
+        projetosSuspensos:  meus.filter((p) => p.status === "suspenso").length,
       });
     }).catch(console.error);
 
@@ -127,8 +127,6 @@ export default function DashboardProfessorPage() {
           )}
         </section>
       </main>
-
-      <Footer />
     </div>
   );
 }

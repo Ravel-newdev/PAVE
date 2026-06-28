@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { DragEvent } from "react";
 import { Search } from "lucide-react";
 import { ProfessorNavbar } from "@/layout/components/professor/ProfessorNavbar";
@@ -6,18 +6,21 @@ import "./KanbanCandidatos.css";
 import { useSearch } from "@tanstack/react-router";
 
 import type { Candidate } from "./types/candidate";
+import type { Project } from "./types/project";
 import { useCandidates } from "@/hooks/useCandidates";
 import { ProjectSummary } from "./components/ProjectSummary";
 import { CandidateCard } from "./components/CandidateCard";
 import { CandidateDrawer } from "./components/CandidateDrawer";
+import { paveApi } from "@/services/PaveApiService";
+import { ApiError } from "@/errors/ApiError";
 
 import { columns } from "./data/columns";
-import { project } from "./data/project";
 
 export default function KanbanCandidatos() {
   const [query, setQuery] = useState<string>("");
   const { processoId = "" } = useSearch({ strict: false }) as { processoId?: string };
   const [selectedCandidate, setSelectedCandidate] = useState<Candidate | null>(null);
+  const [project, setProject] = useState<Project | null>(null);
 
   const {
     candidatesByStatus,
@@ -26,6 +29,27 @@ export default function KanbanCandidatos() {
     startDragging,
     handleDrop,
   } = useCandidates(processoId, query);
+
+  useEffect(() => {
+    if (!processoId) return;
+    async function carregarProjeto() {
+      try {
+        const processo = await paveApi.buscarProcesso(processoId);
+        const projeto = await paveApi.buscarProjeto(processo.projeto_id);
+        setProject({
+          id: processo.id,
+          title: projeto.titulo,
+          descricao: projeto.descricao ?? null,
+          n_vagas: processo.n_vagas ?? null,
+          data_termino: processo.data_termino ?? null,
+          centro_dep: projeto.centro_dep ?? null,
+        });
+      } catch (e) {
+        if (e instanceof ApiError) console.error(e.message);
+      }
+    }
+    carregarProjeto();
+  }, [processoId]);
 
   function handleDragOver(event: DragEvent<HTMLDivElement>) {
     event.preventDefault();
@@ -36,7 +60,7 @@ export default function KanbanCandidatos() {
       <ProfessorNavbar />
 
       <main className="kc-main">
-        <ProjectSummary project={project}/>
+        {project && <ProjectSummary project={project} />}
 
           <section className="kc-candidates-section">
             {loadingCandidates && <p className="kc-loading-message">Carregando candidatos do backend...</p>}

@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Check, BellOff } from "lucide-react";
-import { Header } from "@/components/shared/Header";
-import { Footer } from "@/components/shared/Footer";
+import Navbar from "@/layout/components/Navbar/Navbar";
 import { NotificacaoItem } from "@/components/notificacoes/NotificacaoItem";
 import { paveApi } from "@/services/PaveApiService";
 import { ApiError } from "@/errors/ApiError";
@@ -36,7 +35,7 @@ export default function NotificacoesPage() {
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col">
-      <Header paginaAtiva="Notificações" notificacoesPendentes={naoLidas} />
+      <Navbar />
 
       <main className="max-w-4xl mx-auto px-8 py-10 flex-1 w-full">
         <div className="flex items-start justify-between mb-8">
@@ -84,7 +83,6 @@ export default function NotificacoesPage() {
         </div>
       </main>
 
-      <Footer />
     </div>
   );
 }

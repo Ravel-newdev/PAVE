@@ -2,53 +2,66 @@ import { useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { User, Mail, Lock, GraduationCap, Phone, Eye, EyeOff } from "lucide-react";
-import { Button } from "../../layout/components/ui/button";
-import { Input } from "../../layout/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../../layout/components/ui/card";
-import { Field, FieldLabel } from "../../layout/components/ui/field";
+import {
+  User, Mail, Lock, GraduationCap, BookOpen, Eye, EyeOff,
+  Search, Heart, Award, ChevronLeft,
+} from "lucide-react";
 import { RegisterValidationSchema, type RegisterFormData } from "./schema";
 import { paveApi } from "../../services/PaveApiService";
 import { ApiError } from "../../errors/ApiError";
+import "../Login/Login.css";
 
-function maskTelefone(value: string): string {
-  const digits = value.replace(/\D/g, "").slice(0, 11);
-  if (digits.length <= 10) {
-    return digits
-      .replace(/^(\d{2})(\d)/, "($1) $2")
-      .replace(/(\d{4})(\d)/, "$1-$2");
-  }
-  return digits
-    .replace(/^(\d{2})(\d)/, "($1) $2")
-    .replace(/(\d{5})(\d)/, "$1-$2");
-}
+type Papel = "discente" | "docente";
 
 function maskMatricula(value: string): string {
   return value.replace(/\D/g, "").slice(0, 6);
 }
 
-const Cadastro = () => {
+const features = [
+  { icon: <Search size={18} />, label: "Encontre\noportunidades" },
+  { icon: <Heart size={18} />,  label: "Conecte-se e\nfaça a diferença" },
+  { icon: <Award size={18} />,  label: "Desenvolva\nsuas habilidades" },
+];
+
+export default function Cadastro() {
   const navigate = useNavigate();
+  const [papel, setPapel] = useState<Papel | null>(null);
   const [showSenha, setShowSenha] = useState(false);
   const [showConfirmar, setShowConfirmar] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
 
-  const { register, handleSubmit, setValue, formState: { errors, isSubmitting } } = useForm<RegisterFormData>({
+  const { register, handleSubmit, setValue, reset, formState: { errors, isSubmitting } } = useForm<RegisterFormData>({
     resolver: zodResolver(RegisterValidationSchema),
     mode: "onChange",
   });
 
+  function selecionarPapel(p: Papel) {
+    reset();
+    setServerError(null);
+    setPapel(p);
+  }
+
   async function onSubmit(data: RegisterFormData) {
+    if (!papel) return;
     setServerError(null);
     try {
-      await paveApi.registrarDiscente({
-        nome: data.nome,
-        matricula: data.matricula,
-        email: data.email,
-        senha: data.senha,
-        curso: data.curso,
-        telefone: data.telefone || undefined,
-      });
+      if (papel === "discente") {
+        await paveApi.registrarDiscente({
+          nome: data.nome,
+          matricula: data.matricula,
+          email: data.email,
+          senha: data.senha,
+          curso: data.curso || undefined,
+        });
+      } else {
+        await paveApi.registrarDocente({
+          nome: data.nome,
+          matricula: data.matricula,
+          email: data.email,
+          senha: data.senha,
+          departamento: data.departamento || undefined,
+        });
+      }
       navigate({ to: "/login" });
     } catch (error) {
       setServerError(error instanceof ApiError ? error.message : "Erro ao realizar cadastro.");
@@ -56,132 +69,173 @@ const Cadastro = () => {
   }
 
   return (
-    <div className="min-h-screen flex">
-      <div className="hidden lg:flex lg:w-1/2 flex-col justify-between bg-slate-50 p-12 bg-[url('/login2.jpeg')] bg-cover bg-center bg-no-repeat">
-        <div>
-          <img src="/logo.png" alt="PAVE" className="h-16" />
-          <h1 className="mt-16 text-5xl font-bold text-slate-800">
-            Faça parte de projetos <br />
-            <span className="text-cyan-600">que transformam <br />vidas</span> e comunidades.
-          </h1>
-          <p className="mt-6 text-2xl text-slate-500">
-            Conecte-se, encontre oportunidades <br /> e gere impacto positivo na sociedade.
-          </p>
+    <div className="login-page">
+      <div className="login-card" style={{ maxWidth: papel ? 960 : 700 , transition: "max-width 0.3s ease" }}>
+
+        <div className="login-left">
+          <div className="login-blob login-blob-1" />
+          <div className="login-blob login-blob-2" />
+          <div className="login-brand">
+            <div className="brand-title">PAVE</div>
+            <p className="brand-subtitle">
+              Conectando pessoas a oportunidades que{" "}
+              <strong className="brand-highlight">transformam</strong> o mundo.
+            </p>
+          </div>
+          <div className="login-features">
+            {features.map((f, i) => (
+              <div key={i} className="feature-item">
+                <div className="feature-icon">{f.icon}</div>
+                <span className="feature-label">{f.label}</span>
+              </div>
+            ))}
+          </div>
+          <div className="login-pill">
+            <span className="pill-dot" />
+            +200 projetos disponíveis
+          </div>
         </div>
-      </div>
 
-      <div className="flex flex-1 items-center justify-center bg-white px-6 py-10 lg:px-12">
-        <Card className="w-full h-full border-0 ring-0 shadow-xl">
-          <CardHeader className="mx-auto w-full max-w-5xl pb-8 text-center">
-            <CardTitle className="text-4xl font-bold text-blue-950">Crie sua Conta</CardTitle>
-            <CardDescription className="text-base">Preencha os dados abaixo para se cadastrar</CardDescription>
-          </CardHeader>
+        <div className="login-right" style={{ alignItems: papel ? "flex-start" : "center", paddingTop: papel ? 40 : undefined, transition: "padding 0.3s ease" }}>
+          <div className="login-form-wrapper" style={{ maxWidth: papel ? 520 : 400 }}>
 
-          <CardContent>
-            {serverError && (
-              <p className="mb-4 text-center text-sm text-red-600">{serverError}</p>
+            {!papel ? (
+              <div key="selector">
+                <div className="form-header">
+                  <h1 className="form-title">Crie sua conta</h1>
+                  <p className="form-description">Como você vai usar a plataforma?</p>
+                </div>
+
+                <div className="reg-tipo-cards">
+                  <button type="button" className="reg-tipo-card" onClick={() => selecionarPapel("discente")}>
+                    <div className="reg-tipo-icon"><GraduationCap size={24} /></div>
+                    Sou Aluno
+                  </button>
+                  <button type="button" className="reg-tipo-card" onClick={() => selecionarPapel("docente")}>
+                    <div className="reg-tipo-icon"><BookOpen size={24} /></div>
+                    Sou Professor
+                  </button>
+                </div>
+
+                <p className="register-text" style={{ marginTop: 28 }}>
+                  Já tem uma conta?{" "}
+                  <Link to="/login" className="text-link">Entrar</Link>
+                </p>
+              </div>
+            ) : (
+              <div key="form" className="reg-fade-in">
+                <button type="button" className="reg-back-btn" onClick={() => setPapel(null)}>
+                  <ChevronLeft size={15} /> Voltar
+                </button>
+
+                <div className="form-header">
+                  <h1 className="form-title">
+                    {papel === "discente" ? "Cadastro de Aluno" : "Cadastro de Professor"}
+                  </h1>
+                  <p className="form-description">Preencha os dados abaixo para se cadastrar.</p>
+                </div>
+
+                {serverError && (
+                  <p style={{ fontSize: 13, color: "#dc2626", textAlign: "center", marginBottom: 16 }}>{serverError}</p>
+                )}
+
+                <form onSubmit={handleSubmit(onSubmit)}>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 20px" }}>
+
+                    <div className="input-group">
+                      <label className="input-label">Nome completo</label>
+                      <div className="input-box">
+                        <User size={18} className="input-icon" />
+                        <input className="input-field" placeholder="Digite seu nome completo" {...register("nome")} />
+                      </div>
+                      {errors.nome && <p style={{ fontSize: 12, color: "#dc2626", marginTop: 4 }}>{errors.nome.message}</p>}
+                    </div>
+
+                    <div className="input-group">
+                      <label className="input-label">Matrícula</label>
+                      <div className="input-box">
+                        <User size={18} className="input-icon" />
+                        <input
+                          className="input-field"
+                          placeholder="000000"
+                          {...register("matricula")}
+                          onChange={(e) => setValue("matricula", maskMatricula(e.target.value), { shouldValidate: true })}
+                        />
+                      </div>
+                      {errors.matricula && <p style={{ fontSize: 12, color: "#dc2626", marginTop: 4 }}>{errors.matricula.message}</p>}
+                    </div>
+
+                    <div className="input-group" style={{ gridColumn: "1 / -1" }}>
+                      <label className="input-label">E-mail</label>
+                      <div className="input-box">
+                        <Mail size={18} className="input-icon" />
+                        <input className="input-field" type="email" placeholder="seu.email@exemplo.com" {...register("email")} />
+                      </div>
+                      {errors.email && <p style={{ fontSize: 12, color: "#dc2626", marginTop: 4 }}>{errors.email.message}</p>}
+                    </div>
+
+                    {papel === "discente" ? (
+                      <div className="input-group" style={{ gridColumn: "1 / -1" }}>
+                        <label className="input-label">Curso <span style={{ fontWeight: 400, color: "#9ca3af" }}>(opcional)</span></label>
+                        <div className="input-box">
+                          <GraduationCap size={18} className="input-icon" />
+                          <input className="input-field" placeholder="Ex: Ciência da Computação" {...register("curso")} />
+                        </div>
+                        {errors.curso && <p style={{ fontSize: 12, color: "#dc2626", marginTop: 4 }}>{errors.curso.message}</p>}
+                      </div>
+                    ) : (
+                      <div className="input-group" style={{ gridColumn: "1 / -1" }}>
+                        <label className="input-label">Departamento <span style={{ fontWeight: 400, color: "#9ca3af" }}>(opcional)</span></label>
+                        <div className="input-box">
+                          <BookOpen size={18} className="input-icon" />
+                          <input className="input-field" placeholder="Ex: Departamento de Computação" {...register("departamento")} />
+                        </div>
+                        {errors.departamento && <p style={{ fontSize: 12, color: "#dc2626", marginTop: 4 }}>{errors.departamento.message}</p>}
+                      </div>
+                    )}
+
+                    <div className="input-group">
+                      <label className="input-label">Senha</label>
+                      <div className="input-box">
+                        <Lock size={18} className="input-icon" />
+                        <input className="input-field" type={showSenha ? "text" : "password"} {...register("senha")} />
+                        <button type="button" className="toggle-pwd-btn" onClick={() => setShowSenha((v) => !v)} aria-label={showSenha ? "Esconder" : "Mostrar"}>
+                          {showSenha ? <EyeOff size={18} /> : <Eye size={18} />}
+                        </button>
+                      </div>
+                      {errors.senha && <p style={{ fontSize: 12, color: "#dc2626", marginTop: 4 }}>{errors.senha.message}</p>}
+                    </div>
+
+                    <div className="input-group">
+                      <label className="input-label">Confirme a senha</label>
+                      <div className="input-box">
+                        <Lock size={18} className="input-icon" />
+                        <input className="input-field" type={showConfirmar ? "text" : "password"} {...register("confirmarSenha")} />
+                        <button type="button" className="toggle-pwd-btn" onClick={() => setShowConfirmar((v) => !v)} aria-label={showConfirmar ? "Esconder" : "Mostrar"}>
+                          {showConfirmar ? <EyeOff size={18} /> : <Eye size={18} />}
+                        </button>
+                      </div>
+                      {errors.confirmarSenha && <p style={{ fontSize: 12, color: "#dc2626", marginTop: 4 }}>{errors.confirmarSenha.message}</p>}
+                    </div>
+
+                  </div>
+
+                  <button type="submit" className="submit-btn" disabled={isSubmitting} style={{ marginTop: 8 }}>
+                    {isSubmitting ? "Cadastrando..." : "Cadastrar"}
+                  </button>
+                </form>
+
+                <p className="register-text" style={{ marginTop: 20 }}>
+                  Já tem uma conta?{" "}
+                  <Link to="/login" className="text-link">Entrar</Link>
+                </p>
+              </div>
             )}
 
-            <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 gap-x-8 gap-y-6 md:grid-cols-2">
-              <Field>
-                <FieldLabel htmlFor="form-nome" className="mb-2 text-2xl font-bold text-slate-700">Nome completo</FieldLabel>
-                <div className="relative">
-                  <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
-                  <Input id="form-nome" placeholder="Digite seu nome completo" className="pl-10 h-15 font-semibold font-sans" {...register("nome")} />
-                </div>
-                {errors.nome && <p className="text-sm text-red-500 mt-1">{errors.nome.message}</p>}
-              </Field>
+          </div>
+        </div>
 
-              <Field>
-                <FieldLabel htmlFor="form-matricula" className="mb-2 text-2xl font-bold text-slate-700">Matrícula</FieldLabel>
-                <div className="relative">
-                  <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
-                  <Input
-                    id="form-matricula"
-                    placeholder="000000"
-                    className="pl-10 h-15 font-semibold font-sans"
-                    {...register("matricula")}
-                    onChange={(e) => setValue("matricula", maskMatricula(e.target.value), { shouldValidate: true })}
-                  />
-                </div>
-                {errors.matricula && <p className="text-sm text-red-500 mt-1">{errors.matricula.message}</p>}
-              </Field>
-
-              <Field>
-                <FieldLabel htmlFor="form-email" className="mb-2 text-2xl font-bold text-slate-700">E-mail institucional</FieldLabel>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
-                  <Input id="form-email" type="email" placeholder="seu.email@instituicao.edu.br" className="pl-10 h-15 font-semibold font-sans" {...register("email")} />
-                </div>
-                {errors.email && <p className="text-sm text-red-500 mt-1">{errors.email.message}</p>}
-              </Field>
-
-              <Field>
-                <FieldLabel htmlFor="form-curso" className="mb-2 text-2xl font-bold text-slate-700">Curso</FieldLabel>
-                <div className="relative">
-                  <GraduationCap className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
-                  <Input id="form-curso" placeholder="Ex: Ciência da Computação" className="pl-10 h-15 font-semibold font-sans" {...register("curso")} />
-                </div>
-                {errors.curso && <p className="text-sm text-red-500 mt-1">{errors.curso.message}</p>}
-              </Field>
-
-              <Field>
-                <FieldLabel htmlFor="form-telefone" className="mb-2 text-2xl font-bold text-slate-700">
-                  Telefone <span className="text-slate-400 font-normal text-lg">(opcional)</span>
-                </FieldLabel>
-                <div className="relative">
-                  <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
-                  <Input
-                    id="form-telefone"
-                    placeholder="(00) 00000-0000"
-                    className="pl-10 h-15 font-semibold font-sans"
-                    {...register("telefone")}
-                    onChange={(e) => setValue("telefone", maskTelefone(e.target.value), { shouldValidate: true })}
-                  />
-                </div>
-                {errors.telefone && <p className="text-sm text-red-500 mt-1">{errors.telefone.message}</p>}
-              </Field>
-
-              <Field>
-                <FieldLabel htmlFor="form-senha" className="mb-2 text-2xl font-bold text-slate-700">Senha</FieldLabel>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
-                  <Input id="form-senha" type={showSenha ? "text" : "password"} className="pl-10 h-15 font-semibold font-sans" {...register("senha")} />
-                  <button type="button" onClick={() => setShowSenha((v) => !v)} className="absolute right-3 top-1/2 -translate-y-1/2">
-                    {showSenha ? <EyeOff className="h-5 w-5 text-gray-500" /> : <Eye className="h-5 w-5 text-gray-500" />}
-                  </button>
-                </div>
-                {errors.senha && <p className="text-sm text-red-500 mt-1">{errors.senha.message}</p>}
-              </Field>
-
-              <Field>
-                <FieldLabel htmlFor="form-confirmar" className="mb-2 text-2xl font-bold text-slate-700">Confirme a senha</FieldLabel>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
-                  <Input id="form-confirmar" type={showConfirmar ? "text" : "password"} className="pl-10 h-15 font-semibold font-sans" {...register("confirmarSenha")} />
-                  <button type="button" onClick={() => setShowConfirmar((v) => !v)} className="absolute right-3 top-1/2 -translate-y-1/2">
-                    {showConfirmar ? <EyeOff className="h-5 w-5 text-gray-500" /> : <Eye className="h-5 w-5 text-gray-500" />}
-                  </button>
-                </div>
-                {errors.confirmarSenha && <p className="text-sm text-red-500 mt-1">{errors.confirmarSenha.message}</p>}
-              </Field>
-
-              <div className="md:col-span-2 pt-2">
-                <Button type="submit" disabled={isSubmitting} className="h-12 w-full text-white text-2xl font-semibold bg-cyan-900">
-                  {isSubmitting ? "Cadastrando..." : "Cadastrar"}
-                </Button>
-              </div>
-            </form>
-
-            <p className="mt-6 text-2xl text-slate-500 text-center">
-              Já tem uma conta?{"\u00A0"}
-              <Link to="/login" className="text-blue-600">Entrar</Link>
-            </p>
-          </CardContent>
-        </Card>
       </div>
     </div>
   );
-};
-
-export default Cadastro;
+}

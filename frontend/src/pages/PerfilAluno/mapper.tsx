@@ -20,33 +20,29 @@ const disponibilidadeToForm: Record<string, ProfileFormData["availability"]> = {
 };
 
 const formToDisponibilidade: Record<string, string> = {
-  morning:  "manha",
+  morning:   "manha",
   afternoon: "tarde",
-  night:    "noite",
-  fulltime: "integral",
+  night:     "noite",
+  fulltime:  "integral",
 };
 
 export function backendToForm(perfil: BackendPerfil): ProfileFormData {
   const partes = (perfil.nome ?? "").split(" ");
   return {
-    firstName:      partes[0] ?? "",
-    lastName:       partes.slice(1).join(" "),
-    email:          perfil.email ?? "",
-    phone:          "",
-    birthDate:      "",
-    avatar:         perfil.foto_url ?? "",
-    institution:    "",
-    course:         perfil.curso ?? "",
-    semester:       perfil.semestre ? String(perfil.semestre) : "",
-    graduationYear: "",
-    about:          perfil.bio ?? "",
-    interests:      perfil.interesses ?? [],
-    curriculo_url:  perfil.curriculo_url ?? "",
-    availability:   disponibilidadeToForm[perfil.disponibilidade ?? ""] ?? undefined,
-    remote:         false,
-    notifications:  true,
+    firstName:       partes[0] ?? "",
+    lastName:        partes.slice(1).join(" "),
+    email:           perfil.email ?? "",
+    avatar:          perfil.foto_url ?? "",
+    course:          perfil.curso ?? "",
+    semester:        perfil.semestre ? String(perfil.semestre) : "",
+    about:           perfil.bio ?? "",
+    interests:       perfil.interesses ?? [],
+    curriculo_url:   perfil.curriculo_url ?? "",
+    availability:    disponibilidadeToForm[perfil.disponibilidade ?? ""] ?? undefined,
+    remote:          false,
+    notifications:   true,
     currentPassword: "",
-    newPassword:    "",
+    newPassword:     "",
     confirmPassword: "",
   };
 }

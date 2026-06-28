@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ProjetosRouteImport } from './routes/projetos'
+import { Route as ProfessorRouteImport } from './routes/professor'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as CadastroRouteImport } from './routes/cadastro'
 import { Route as AlunoRouteImport } from './routes/aluno'
@@ -31,6 +32,11 @@ import { Route as AlunoCandidaturaRouteImport } from './routes/aluno/candidatura
 const ProjetosRoute = ProjetosRouteImport.update({
   id: '/projetos',
   path: '/projetos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfessorRoute = ProfessorRouteImport.update({
+  id: '/professor',
+  path: '/professor',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -59,9 +65,9 @@ const ProjetosIndexRoute = ProjetosIndexRouteImport.update({
   getParentRoute: () => ProjetosRoute,
 } as any)
 const ProfessorIndexRoute = ProfessorIndexRouteImport.update({
-  id: '/professor/',
-  path: '/professor/',
-  getParentRoute: () => rootRouteImport,
+  id: '/',
+  path: '/',
+  getParentRoute: () => ProfessorRoute,
 } as any)
 const AlunoIndexRoute = AlunoIndexRouteImport.update({
   id: '/',
@@ -75,31 +81,31 @@ const ProjetosIdRoute = ProjetosIdRouteImport.update({
 } as any)
 const ProfessorProjetoVisaoGeralRoute =
   ProfessorProjetoVisaoGeralRouteImport.update({
-    id: '/professor/projeto-visao-geral',
-    path: '/professor/projeto-visao-geral',
-    getParentRoute: () => rootRouteImport,
+    id: '/projeto-visao-geral',
+    path: '/projeto-visao-geral',
+    getParentRoute: () => ProfessorRoute,
   } as any)
 const ProfessorKanbanCandidatosRoute =
   ProfessorKanbanCandidatosRouteImport.update({
-    id: '/professor/kanban-candidatos',
-    path: '/professor/kanban-candidatos',
-    getParentRoute: () => rootRouteImport,
+    id: '/kanban-candidatos',
+    path: '/kanban-candidatos',
+    getParentRoute: () => ProfessorRoute,
   } as any)
 const ProfessorEditarProjetoRoute = ProfessorEditarProjetoRouteImport.update({
-  id: '/professor/editar-projeto',
-  path: '/professor/editar-projeto',
-  getParentRoute: () => rootRouteImport,
+  id: '/editar-projeto',
+  path: '/editar-projeto',
+  getParentRoute: () => ProfessorRoute,
 } as any)
 const ProfessorCriarProjetoRoute = ProfessorCriarProjetoRouteImport.update({
-  id: '/professor/criar-projeto',
-  path: '/professor/criar-projeto',
-  getParentRoute: () => rootRouteImport,
+  id: '/criar-projeto',
+  path: '/criar-projeto',
+  getParentRoute: () => ProfessorRoute,
 } as any)
 const ProfessorCadastrarProjetoRoute =
   ProfessorCadastrarProjetoRouteImport.update({
-    id: '/professor/cadastrar-projeto',
-    path: '/professor/cadastrar-projeto',
-    getParentRoute: () => rootRouteImport,
+    id: '/cadastrar-projeto',
+    path: '/cadastrar-projeto',
+    getParentRoute: () => ProfessorRoute,
   } as any)
 const AlunoPerfilRoute = AlunoPerfilRouteImport.update({
   id: '/perfil',
@@ -127,6 +133,7 @@ export interface FileRoutesByFullPath {
   '/aluno': typeof AlunoRouteWithChildren
   '/cadastro': typeof CadastroRoute
   '/login': typeof LoginRoute
+  '/professor': typeof ProfessorRouteWithChildren
   '/projetos': typeof ProjetosRouteWithChildren
   '/aluno/candidatura': typeof AlunoCandidaturaRoute
   '/aluno/notificacoes': typeof AlunoNotificacoesRoute
@@ -166,6 +173,7 @@ export interface FileRoutesById {
   '/aluno': typeof AlunoRouteWithChildren
   '/cadastro': typeof CadastroRoute
   '/login': typeof LoginRoute
+  '/professor': typeof ProfessorRouteWithChildren
   '/projetos': typeof ProjetosRouteWithChildren
   '/aluno/candidatura': typeof AlunoCandidaturaRoute
   '/aluno/notificacoes': typeof AlunoNotificacoesRoute
@@ -188,6 +196,7 @@ export interface FileRouteTypes {
     | '/aluno'
     | '/cadastro'
     | '/login'
+    | '/professor'
     | '/projetos'
     | '/aluno/candidatura'
     | '/aluno/notificacoes'
@@ -226,6 +235,7 @@ export interface FileRouteTypes {
     | '/aluno'
     | '/cadastro'
     | '/login'
+    | '/professor'
     | '/projetos'
     | '/aluno/candidatura'
     | '/aluno/notificacoes'
@@ -247,13 +257,8 @@ export interface RootRouteChildren {
   AlunoRoute: typeof AlunoRouteWithChildren
   CadastroRoute: typeof CadastroRoute
   LoginRoute: typeof LoginRoute
+  ProfessorRoute: typeof ProfessorRouteWithChildren
   ProjetosRoute: typeof ProjetosRouteWithChildren
-  ProfessorCadastrarProjetoRoute: typeof ProfessorCadastrarProjetoRoute
-  ProfessorCriarProjetoRoute: typeof ProfessorCriarProjetoRoute
-  ProfessorEditarProjetoRoute: typeof ProfessorEditarProjetoRoute
-  ProfessorKanbanCandidatosRoute: typeof ProfessorKanbanCandidatosRoute
-  ProfessorProjetoVisaoGeralRoute: typeof ProfessorProjetoVisaoGeralRoute
-  ProfessorIndexRoute: typeof ProfessorIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -263,6 +268,13 @@ declare module '@tanstack/react-router' {
       path: '/projetos'
       fullPath: '/projetos'
       preLoaderRoute: typeof ProjetosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/professor': {
+      id: '/professor'
+      path: '/professor'
+      fullPath: '/professor'
+      preLoaderRoute: typeof ProfessorRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -302,10 +314,10 @@ declare module '@tanstack/react-router' {
     }
     '/professor/': {
       id: '/professor/'
-      path: '/professor'
+      path: '/'
       fullPath: '/professor/'
       preLoaderRoute: typeof ProfessorIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof ProfessorRoute
     }
     '/aluno/': {
       id: '/aluno/'
@@ -323,38 +335,38 @@ declare module '@tanstack/react-router' {
     }
     '/professor/projeto-visao-geral': {
       id: '/professor/projeto-visao-geral'
-      path: '/professor/projeto-visao-geral'
+      path: '/projeto-visao-geral'
       fullPath: '/professor/projeto-visao-geral'
       preLoaderRoute: typeof ProfessorProjetoVisaoGeralRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof ProfessorRoute
     }
     '/professor/kanban-candidatos': {
       id: '/professor/kanban-candidatos'
-      path: '/professor/kanban-candidatos'
+      path: '/kanban-candidatos'
       fullPath: '/professor/kanban-candidatos'
       preLoaderRoute: typeof ProfessorKanbanCandidatosRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof ProfessorRoute
     }
     '/professor/editar-projeto': {
       id: '/professor/editar-projeto'
-      path: '/professor/editar-projeto'
+      path: '/editar-projeto'
       fullPath: '/professor/editar-projeto'
       preLoaderRoute: typeof ProfessorEditarProjetoRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof ProfessorRoute
     }
     '/professor/criar-projeto': {
       id: '/professor/criar-projeto'
-      path: '/professor/criar-projeto'
+      path: '/criar-projeto'
       fullPath: '/professor/criar-projeto'
       preLoaderRoute: typeof ProfessorCriarProjetoRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof ProfessorRoute
     }
     '/professor/cadastrar-projeto': {
       id: '/professor/cadastrar-projeto'
-      path: '/professor/cadastrar-projeto'
+      path: '/cadastrar-projeto'
       fullPath: '/professor/cadastrar-projeto'
       preLoaderRoute: typeof ProfessorCadastrarProjetoRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof ProfessorRoute
     }
     '/aluno/perfil': {
       id: '/aluno/perfil'
@@ -405,6 +417,28 @@ const AlunoRouteChildren: AlunoRouteChildren = {
 
 const AlunoRouteWithChildren = AlunoRoute._addFileChildren(AlunoRouteChildren)
 
+interface ProfessorRouteChildren {
+  ProfessorCadastrarProjetoRoute: typeof ProfessorCadastrarProjetoRoute
+  ProfessorCriarProjetoRoute: typeof ProfessorCriarProjetoRoute
+  ProfessorEditarProjetoRoute: typeof ProfessorEditarProjetoRoute
+  ProfessorKanbanCandidatosRoute: typeof ProfessorKanbanCandidatosRoute
+  ProfessorProjetoVisaoGeralRoute: typeof ProfessorProjetoVisaoGeralRoute
+  ProfessorIndexRoute: typeof ProfessorIndexRoute
+}
+
+const ProfessorRouteChildren: ProfessorRouteChildren = {
+  ProfessorCadastrarProjetoRoute: ProfessorCadastrarProjetoRoute,
+  ProfessorCriarProjetoRoute: ProfessorCriarProjetoRoute,
+  ProfessorEditarProjetoRoute: ProfessorEditarProjetoRoute,
+  ProfessorKanbanCandidatosRoute: ProfessorKanbanCandidatosRoute,
+  ProfessorProjetoVisaoGeralRoute: ProfessorProjetoVisaoGeralRoute,
+  ProfessorIndexRoute: ProfessorIndexRoute,
+}
+
+const ProfessorRouteWithChildren = ProfessorRoute._addFileChildren(
+  ProfessorRouteChildren,
+)
+
 interface ProjetosRouteChildren {
   ProjetosIdRoute: typeof ProjetosIdRoute
   ProjetosIndexRoute: typeof ProjetosIndexRoute
@@ -424,13 +458,8 @@ const rootRouteChildren: RootRouteChildren = {
   AlunoRoute: AlunoRouteWithChildren,
   CadastroRoute: CadastroRoute,
   LoginRoute: LoginRoute,
+  ProfessorRoute: ProfessorRouteWithChildren,
   ProjetosRoute: ProjetosRouteWithChildren,
-  ProfessorCadastrarProjetoRoute: ProfessorCadastrarProjetoRoute,
-  ProfessorCriarProjetoRoute: ProfessorCriarProjetoRoute,
-  ProfessorEditarProjetoRoute: ProfessorEditarProjetoRoute,
-  ProfessorKanbanCandidatosRoute: ProfessorKanbanCandidatosRoute,
-  ProfessorProjetoVisaoGeralRoute: ProfessorProjetoVisaoGeralRoute,
-  ProfessorIndexRoute: ProfessorIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

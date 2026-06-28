@@ -1,6 +1,6 @@
 .login-page {
   min-height: 100vh;
-  background: #f0f4f2;
+  background: #c8cdd4;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -296,6 +296,88 @@
   font-size: 13px;
   color: #9ca3af;
 }
+
+/*  Seleção de papel (cadastro)  */
+.reg-tipo-cards {
+  display: flex;
+  gap: 14px;
+  margin-top: 8px;
+}
+
+.reg-tipo-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 28px 16px;
+  background: #fff;
+  border: 2px solid #e5e7eb;
+  border-radius: 14px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  color: #1E2E4F;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+.reg-tipo-card:hover {
+  border-color: #287999;
+  box-shadow: 0 0 0 3px rgba(40,121,153,0.1);
+}
+
+.reg-tipo-card.selecionado {
+  border-color: #1E2E4F;
+  background: #f4f7fb;
+}
+
+.reg-tipo-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: #f0f4f8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1E2E4F;
+  transition: background 0.2s;
+}
+
+.reg-tipo-card:hover .reg-tipo-icon,
+.reg-tipo-card.selecionado .reg-tipo-icon {
+  background: #1E2E4F;
+  color: #fff;
+}
+
+/*  Fade-in do formulário  */
+@keyframes regFadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.reg-fade-in {
+  animation: regFadeIn 0.3s ease forwards;
+}
+
+.reg-back-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  color: #287999;
+  padding: 0;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: opacity 0.2s;
+}
+
+.reg-back-btn:hover { opacity: 0.7; }
 
 /*  Responsivo  */
 @media (min-width: 768px) {

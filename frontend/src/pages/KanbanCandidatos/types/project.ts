@@ -1,11 +1,10 @@
 export type Project = {
-  id: number;
+  id: string;
   title: string;
-  area: string;
-  candidatesCount: number;
-  vacancies: string;
-  deadline: string;
-  description: string;
+  descricao: string | null;
+  n_vagas: number | null;
+  data_termino: string | null;
+  centro_dep: string | null;
 };
 
 export type ActiveTab = "overview" | "candidates";
