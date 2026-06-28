@@ -154,7 +154,7 @@ export default function ProjetoForm({ mode = "create" }: { mode?: ProjetoFormMod
         await paveApi.alterarStatusProjeto(idCriado, { status: "ativo" });
       }
 
-      const temProcesso = Boolean(formData.inscricaoInicio && formData.inscricaoFim);
+      const temProcesso = status === "ativo" && Boolean(formData.inscricaoInicio && formData.inscricaoFim);
       if (temProcesso) {
         const processoPayload = buildProcessoPayload(idCriado, formData, documentos, perguntas);
         if (isEdit) {

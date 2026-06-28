@@ -48,7 +48,7 @@ const criar = async (docenteId, dados) => {
 
 const listar = async (usuario, filtros) => {
   let baseQuery = `
-    SELECT p.id, p.titulo, p.status, p.criado_em, d.nome AS autor_nome,
+    SELECT p.id, p.titulo, p.status, p.criado_em, p.docente_id AS autor_id, d.nome AS autor_nome,
       COALESCE(
         (SELECT json_agg(json_build_object('id', t.id, 'nome', t.nome))
          FROM projeto_tag pt
@@ -205,11 +205,20 @@ const alternarFavorito = async (projetoId, discenteId) => {
   }
 };
 
+const excluir = async (projetoId, docenteId) => {
+  const check = await query("SELECT docente_id, status FROM projetos WHERE id = $1", [projetoId]);
+  if (check.rows.length === 0) throw new Error("Projeto não encontrado.");
+  if (check.rows[0].docente_id !== docenteId) throw new Error("Acesso negado.");
+  if (check.rows[0].status !== "rascunho") throw new Error("Apenas projetos em rascunho podem ser excluídos.");
+  await query("DELETE FROM projetos WHERE id = $1", [projetoId]);
+};
+
 module.exports = {
   criar,
   listar,
   obterPorId,
   atualizar,
   alterarStatus,
-  alternarFavorito
+  alternarFavorito,
+  excluir
 };

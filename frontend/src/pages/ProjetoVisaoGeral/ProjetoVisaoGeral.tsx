@@ -1,6 +1,6 @@
 import { Link, useNavigate, useSearch } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { BarChart3, Briefcase, Calendar, CheckCircle2, Download, Edit3, FileText, GraduationCap, Info, Tag, Timer, Users, XCircle } from "lucide-react";
+import { BarChart3, Briefcase, Calendar, CheckCircle2, Download, Edit3, FileText, GraduationCap, Info, Tag, Timer, Trash2, Users, XCircle } from "lucide-react";
 import "./ProjetoVisaoGeral.css";
 import { paveApi } from "../../services/PaveApiService";
 import { ProfessorTopbar } from "./components/ProfessorTopbar";
@@ -12,6 +12,7 @@ export default function ProjetoVisaoGeral() {
   const projetoId = id ?? "";
   const [projeto, setProjeto] = useState<Projeto | null>(null);
   const [erro, setErro] = useState<string | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,12 +30,23 @@ export default function ProjetoVisaoGeral() {
   }, [projetoId, navigate]);
 
   async function handleFinish() {
-    if (!projeto || !window.confirm("Deseja finalizar a seleção deste projeto?")) return;
+    if (!projeto) return;
     try {
       await paveApi.alterarStatusProjeto(projeto.id, { status: "encerrado" });
       setProjeto((p) => p ? { ...p, status: "encerrado" } : p);
     } catch (e: unknown) {
-      alert(e instanceof Error ? e.message : "Erro ao finalizar.");
+      setErro(e instanceof Error ? e.message : "Erro ao finalizar.");
+    }
+  }
+
+  async function handleDelete() {
+    if (!projeto) return;
+    try {
+      await paveApi.excluirProjeto(projeto.id);
+      void navigate({ to: "/professor" });
+    } catch (e: unknown) {
+      setErro(e instanceof Error ? e.message : "Erro ao excluir.");
+      setConfirmDelete(false);
     }
   }
 
@@ -49,6 +61,20 @@ export default function ProjetoVisaoGeral() {
     link.click();
     URL.revokeObjectURL(url);
   }
+
+  if (confirmDelete) return (
+    <div className="po-page" style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "100vh" }}>
+      <div style={{ background: "#fff", borderRadius: 16, padding: "40px 36px", textAlign: "center", boxShadow: "0 8px 40px rgba(30,46,79,0.1)", maxWidth: 400, width: "100%" }}>
+        <Trash2 size={40} color="#dc2626" style={{ marginBottom: 16 }} />
+        <h2 style={{ fontSize: 18, fontWeight: 700, color: "#1E2E4F", margin: "0 0 8px" }}>Excluir rascunho?</h2>
+        <p style={{ fontSize: 14, color: "#64748B", margin: "0 0 24px" }}>Esta ação não pode ser desfeita. O projeto será removido permanentemente.</p>
+        <div style={{ display: "flex", gap: 12, justifyContent: "center" }}>
+          <button className="po-button po-button-secondary" type="button" onClick={() => setConfirmDelete(false)}>Cancelar</button>
+          <button className="po-button po-button-danger" type="button" onClick={() => void handleDelete()}>Excluir</button>
+        </div>
+      </div>
+    </div>
+  );
 
   if (erro) return <p className="po-page" style={{ padding: "2rem" }}>{erro}</p>;
   if (!projeto) return <p className="po-page" style={{ padding: "2rem" }}>Carregando...</p>;
@@ -87,9 +113,15 @@ export default function ProjetoVisaoGeral() {
             <button className="po-button po-button-secondary" type="button" onClick={handleExport}>
               <Download size={18} /> Exportar
             </button>
-            <button className="po-button po-button-danger" type="button" onClick={handleFinish}>
-              Finalizar seleção
-            </button>
+            {projeto.status === "rascunho" ? (
+              <button className="po-button po-button-danger" type="button" onClick={() => setConfirmDelete(true)}>
+                <Trash2 size={18} /> Excluir rascunho
+              </button>
+            ) : (
+              <button className="po-button po-button-danger" type="button" onClick={() => void handleFinish()} disabled={projeto.status === "encerrado"}>
+                Finalizar seleção
+              </button>
+            )}
           </div>
         </section>
 

@@ -26,6 +26,7 @@ router.get("/:id", projetoController.obterProjeto);
 router.post("/", authorize("docente"), validate(createProjetoSchema), projetoController.criarProjeto);
 router.put("/:id", authorize("docente"), validate(updateProjetoSchema), projetoController.atualizarProjeto);
 router.patch("/:id/status", authorize("docente"), validate(updateStatusSchema), projetoController.alterarStatus);
+router.delete("/:id", authorize("docente"), projetoController.excluirProjeto);
 
 // Ações discentes
 router.post("/:id/favorito", authorize("discente"), projetoController.alternarFavorito);

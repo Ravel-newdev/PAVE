@@ -35,11 +35,17 @@ const alternarFavorito = async (req, res) => {
   res.status(200).json(resultado);
 };
 
+const excluirProjeto = async (req, res) => {
+  await projetoService.excluir(req.params.id, req.user.id);
+  res.status(204).send();
+};
+
 module.exports = {
   criarProjeto,
   listarProjetos,
   obterProjeto,
   atualizarProjeto,
   alterarStatus,
-  alternarFavorito
+  alternarFavorito,
+  excluirProjeto
 };

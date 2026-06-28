@@ -13,8 +13,17 @@ function diasRestantes(dataTermino?: string): number | null {
 }
 
 export function ProjetoResumoItem({ projeto, onClick }: Props) {
-  const encerrado = projeto.status === "encerrado";
+  const { status } = projeto;
+  const encerrado = status === "encerrado";
   const dias = diasRestantes(projeto.data_termino);
+
+  const badgeProps: Record<string, { className: string; dot?: string; label: string }> = {
+    ativo:      { className: "bg-emerald-50 border border-emerald-200 text-emerald-700",   dot: "bg-emerald-500",  label: "Ativo"     },
+    rascunho:   { className: "bg-slate-100 border border-slate-300 text-slate-500",                               label: "Rascunho"  },
+    encerrado:  { className: "bg-[#F8FAFC] border border-[#E2E8F0] text-[#64748B]",                               label: "Encerrado" },
+    suspenso:   { className: "bg-amber-50 border border-amber-200 text-amber-700",        dot: "bg-amber-400",   label: "Suspenso"  },
+  };
+  const badge = badgeProps[status] ?? badgeProps.rascunho;
 
   return (
     <div
@@ -58,13 +67,9 @@ export function ProjetoResumoItem({ projeto, onClick }: Props) {
         )}
       </div>
 
-      <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold shrink-0 ${
-        encerrado
-          ? "bg-[#F8FAFC] border border-[#E2E8F0] text-[#64748B]"
-          : "bg-emerald-50 border border-emerald-200 text-emerald-700"
-      }`}>
-        {!encerrado && <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />}
-        {encerrado ? "Encerrado" : "Ativo"}
+      <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold shrink-0 ${badge.className}`}>
+        {badge.dot && <span className={`w-1.5 h-1.5 rounded-full ${badge.dot}`} />}
+        {badge.label}
       </span>
 
       <ChevronRight className="w-4 h-4 text-[#E2E8F0] shrink-0" />

@@ -115,6 +115,10 @@ class PaveApiService {
     return this.patch<Projeto>(`/projetos/${id}/status`, payload);
   }
 
+  excluirProjeto(id: string): Promise<void> {
+    return this.delete<void>(`/projetos/${id}`);
+  }
+
   toggleFavorito(id: string): Promise<void> {
     return this.post<void>(`/projetos/${id}/favorito`);
   }
