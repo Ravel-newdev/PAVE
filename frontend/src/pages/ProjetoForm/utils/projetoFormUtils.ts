@@ -12,7 +12,7 @@ export function createPergunta(tipo: TipoPergunta = "resposta-curta"): Pergunta 
   };
 }
 
-export function readText(data: Record<string, unknown>, keys: string[], fallback = "") {
+function readText(data: Record<string, unknown>, keys: string[], fallback = ""): string {
   for (const key of keys) {
     const value = data[key];
     if (typeof value === "string" || typeof value === "number") return String(value);
@@ -24,39 +24,28 @@ export function mapProjetoToFormData(raw: unknown): Partial<FormData> {
   const data = (raw && typeof raw === "object" ? raw : {}) as Record<string, unknown>;
   const nested = typeof data.data === "object" && data.data ? (data.data as Record<string, unknown>) : data;
 
+  const cargaRaw = readText(nested, ["carga_hora", "cargaHoraria"], "");
+  const cargaNum = parseInt(cargaRaw, 10);
+
   return {
-    titulo: readText(nested, ["titulo", "title", "nome"], initialEditData.titulo),
-    area: readText(nested, ["area", "areaTematica", "area_tematica", "tag"], initialEditData.area),
-    unidade: readText(nested, ["unidade", "unidadeResponsavel", "unidade_responsavel"], initialEditData.unidade),
-    descricao: readText(nested, ["descricao", "description"], initialEditData.descricao),
-    palavrasChave: Array.isArray(nested.palavrasChave)
-      ? nested.palavrasChave.join(", ")
-      : readText(nested, ["palavrasChave", "palavras_chave", "tags"], initialEditData.palavrasChave),
-    vagasBolsistas: readText(nested, ["vagasBolsistas", "vagas_bolsistas", "qtd_bolsistas"], initialEditData.vagasBolsistas),
-    vagasVoluntarios: readText(nested, ["vagasVoluntarios", "vagas_voluntarios", "qtd_voluntarios"], initialEditData.vagasVoluntarios),
-    cargaHoraria: readText(nested, ["cargaHoraria", "carga_horaria", "cargaHorariaSemanal"], initialEditData.cargaHoraria),
+    titulo:       readText(nested, ["titulo"], initialEditData.titulo),
+    descricao:    readText(nested, ["descricao"], initialEditData.descricao),
+    unidade:      readText(nested, ["centro_dep", "unidade"], initialEditData.unidade),
+    cargaHoraria: isNaN(cargaNum) ? "" : String(cargaNum),
+    dataInic:     readText(nested, ["data_inic"], initialEditData.dataInic),
+    dataTermino:  readText(nested, ["data_termino"], initialEditData.dataTermino),
   };
 }
 
-export function buildProjetoPayload(formData: FormData, status: "rascunho" | "ativo") {
-  const palavrasChave = formData.palavrasChave
-    .split(",")
-    .map((palavra) => palavra.trim())
-    .filter(Boolean);
-
+export function buildProjetoPayload(formData: FormData) {
+  const carga = parseInt(formData.cargaHoraria, 10);
   return {
-    titulo: formData.titulo,
-    descricao: formData.descricao,
-    area: formData.area,
-    areaTematica: formData.area,
-    unidade: formData.unidade,
-    unidadeResponsavel: formData.unidade,
-    vagasBolsistas: Number(formData.vagasBolsistas || 0),
-    vagasVoluntarios: Number(formData.vagasVoluntarios || 0),
-    cargaHoraria: formData.cargaHoraria,
-    cargaHorariaSemanal: formData.cargaHoraria,
-    palavrasChave,
-    status,
+    titulo:       formData.titulo,
+    descricao:    formData.descricao   || undefined,
+    centro_dep:   formData.unidade     || undefined,
+    carga_hora:   isNaN(carga) ? undefined : carga,
+    data_inic:    formData.dataInic    || undefined,
+    data_termino: formData.dataTermino || undefined,
   };
 }
 
@@ -67,11 +56,17 @@ export function buildProcessoPayload(
   _perguntas: Pergunta[],
 ): CriarProcessoPayload {
   return {
-    projeto_id: projetoId,
-    titulo: formData.titulo,
-    descricao: formData.mensagemCandidatos || undefined,
-    data_inicio: formData.inscricaoInicio || undefined,
-    data_termino: formData.inscricaoFim || undefined,
+    projeto_id:   projetoId,
+    titulo:       formData.titulo,
+    data_inicio:  formData.inscricaoInicio || undefined,
+    data_termino: formData.inscricaoFim    || undefined,
   };
 }
 
+export function validateForm(formData: FormData): string | null {
+  if (!formData.titulo.trim()) return "O título do projeto é obrigatório.";
+  if (formData.cargaHoraria && isNaN(parseInt(formData.cargaHoraria, 10))) return "Carga horária deve ser um número inteiro.";
+  if (formData.dataInic && formData.dataTermino && formData.dataTermino < formData.dataInic) return "A data de término do projeto não pode ser anterior à data de início.";
+  if (formData.inscricaoInicio && formData.inscricaoFim && formData.inscricaoFim < formData.inscricaoInicio) return "A data de encerramento das inscrições não pode ser anterior à data de início.";
+  return null;
+}

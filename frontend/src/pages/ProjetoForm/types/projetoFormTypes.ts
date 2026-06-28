@@ -19,15 +19,11 @@ export type DocumentoSolicitado = {
 
 export type FormData = {
   titulo: string;
-  area: string;
-  unidade: string;
   descricao: string;
-  palavrasChave: string;
-  vagasBolsistas: string;
-  vagasVoluntarios: string;
-  cargaHoraria: string;
-  inscricaoInicio: string;
-  inscricaoFim: string;
-  divulgacaoResultado: string;
-  mensagemCandidatos: string;
+  unidade: string;       // → centro_dep
+  cargaHoraria: string;  // → carga_hora (número inteiro)
+  dataInic: string;      // → data_inic (duração do projeto)
+  dataTermino: string;   // → data_termino (duração do projeto)
+  inscricaoInicio: string; // → processo seletivo data_inicio
+  inscricaoFim: string;    // → processo seletivo data_termino
 };
