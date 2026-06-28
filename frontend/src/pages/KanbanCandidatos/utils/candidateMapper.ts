@@ -41,7 +41,9 @@ export function mapCandidate(raw: unknown, index: number): Candidate {
     motivation: readString(data, ["motivacao", "motivation", "resumo"], "Não informada."),
     availability: readString(data, ["disponibilidade", "availability"], "Não informada."),
     experience: readString(data, ["experiencia", "experience"], "Não informada."),
-    documents: Array.isArray(data.documentos) ? data.documentos.map(String) : [],
+    documents: Array.isArray(data.respostas)
+      ? (data.respostas as { label: string; tipo: string; arquivo_url?: string; valor_texto?: string }[])
+      : [],
     history: Array.isArray(data.historico)
       ? data.historico.map(String)
       : ["Inscrição recebida", `Status atual: ${statusLabel(status)}`],

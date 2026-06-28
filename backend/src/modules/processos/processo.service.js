@@ -91,7 +91,29 @@ const atualizarProcesso = async (processoId, docenteId, dados) => {
   if (checkQuery.rows.length === 0) throw new Error("Processo seletivo não encontrado.");
   if (checkQuery.rows[0].docente_id !== docenteId) throw new Error("Acesso negado.");
 
-  const { titulo, descricao, data_inicio, data_termino, pdf_edital, n_vagas, status } = dados;
+  const { titulo, descricao, data_inicio, data_termino, pdf_edital, n_vagas, status, campos_chaves } = dados;
+
+  // Se vieram campos padrão e o processo ainda não tem formulário, cria um
+  if (Array.isArray(campos_chaves) && campos_chaves.length > 0) {
+    const psRow = await query(`SELECT formulario_id FROM processo_seletivo WHERE id = $1`, [processoId]);
+    let fid = psRow.rows[0]?.formulario_id;
+    if (!fid) {
+      const fRes = await query(`INSERT INTO formulario (titulo) VALUES ($1) RETURNING id`, [titulo ?? 'Formulário de candidatura']);
+      fid = fRes.rows[0].id;
+      await query(`UPDATE processo_seletivo SET formulario_id = $1 WHERE id = $2`, [fid, processoId]);
+    }
+    // Sincroniza campos padrão: remove todos os padrão e reinserindo os selecionados
+    await query(`DELETE FROM campo_formulario WHERE formulario_id = $1 AND label_override IS NULL`, [fid]);
+    for (let i = 0; i < campos_chaves.length; i++) {
+      const tcRes = await query(`SELECT id FROM tipo_campo WHERE chave_unica = $1`, [campos_chaves[i]]);
+      if (tcRes.rows.length > 0) {
+        await query(
+          `INSERT INTO campo_formulario (formulario_id, tipo_id, obrigatorio, ordem) VALUES ($1, $2, true, $3)`,
+          [fid, tcRes.rows[0].id, i + 1]
+        );
+      }
+    }
+  }
 
   await query(
     `UPDATE processo_seletivo
@@ -126,7 +148,8 @@ const atualizarProcesso = async (processoId, docenteId, dados) => {
     );
   }
 
-  return { id: processoId, atualizado: true };
+  const { rows } = await query(`SELECT formulario_id FROM processo_seletivo WHERE id = $1`, [processoId]);
+  return { id: processoId, formulario_id: rows[0]?.formulario_id ?? null, atualizado: true };
 };
 
 const listarCandidatos = async (processoId, docenteId) => {
@@ -142,7 +165,21 @@ const listarCandidatos = async (processoId, docenteId) => {
 
   const { rows } = await query(`
     SELECT i.id AS inscricao_id, i.data_inscricao, i.status, i.coluna_kanban,
-           d.nome AS candidato_nome, d.matricula, d.curso, d.foto_url
+           d.nome AS candidato_nome, d.matricula, d.curso, d.foto_url,
+           COALESCE(
+             (SELECT json_agg(json_build_object(
+                'campo_id',   rf.campo_id,
+                'label',      COALESCE(cf.label_override, tc.label),
+                'tipo',       tc.tipo,
+                'valor_texto',rf.valor_texto,
+                'arquivo_url',rf.arquivo_url
+              ) ORDER BY cf.ordem)
+              FROM resposta_formulario rf
+              INNER JOIN campo_formulario cf ON rf.campo_id = cf.id
+              INNER JOIN tipo_campo tc ON cf.tipo_id = tc.id
+              WHERE rf.inscricao_id = i.id),
+             '[]'::json
+           ) AS respostas
     FROM inscricao i
     INNER JOIN discentes d ON i.discente_id = d.id
     WHERE i.ps_id = $1
@@ -344,7 +381,7 @@ const obterProcesso = async (processoId) => {
 
 const listarProcessosDoProjeto = async (projetoId) => {
   const { rows } = await query(
-    `SELECT id, titulo, descricao, data_inicio, data_termino, status, n_vagas
+    `SELECT id, formulario_id, titulo, descricao, data_inicio, data_termino, status, n_vagas
      FROM processo_seletivo WHERE projeto_id = $1 AND status = 'aberto'
      ORDER BY criado_em DESC`,
     [projetoId]

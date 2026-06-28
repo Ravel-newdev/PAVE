@@ -14,7 +14,10 @@ INSERT INTO tipo_campo (chave_unica, label, tipo, obrigatoriedade) VALUES
     ('experiencia_previa',  'Experiência Prévia na Área',    'texto_longo', false),
     ('linkedin',            'Link do LinkedIn',              'texto',       false),
     ('portfolio',           'Link de Portfólio / GitHub',    'texto',       false),
-    ('declaracao_matricula','Declaração de Matrícula (PDF)', 'arquivo',     false)
+    ('declaracao_matricula','Declaração de Matrícula (PDF)', 'arquivo',     false),
+    ('campo_texto',         'Resposta curta',               'texto',       false),
+    ('campo_texto_longo',   'Parágrafo',                    'texto_longo', false),
+    ('campo_selecao',       'Múltipla escolha',             'selecao',     false)
 ON CONFLICT (chave_unica) DO NOTHING;
 
 -- ============================================================

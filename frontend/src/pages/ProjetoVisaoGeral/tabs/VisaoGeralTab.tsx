@@ -1,8 +1,35 @@
+import { useEffect, useState } from "react";
 import { BarChart3, Briefcase, Calendar, CheckCircle2, FileText, GraduationCap, Info, Tag, Timer, Users, XCircle } from "lucide-react";
 import { StatCard } from "../components/StatCard";
+import { paveApi } from "../../../services/PaveApiService";
+import { normalizeStatus } from "../../KanbanCandidatos/utils/status";
 import type { Projeto } from "../../../types/projeto";
 
-export function VisaoGeralTab({ projeto }: { projeto: Projeto }) {
+interface Stats {
+  inscritos: number;
+  avaliacao: number;
+  aprovados: number;
+  rejeitados: number;
+}
+
+export function VisaoGeralTab({ projeto, processoId }: { projeto: Projeto; processoId: string | null }) {
+  const [stats, setStats] = useState<Stats>({ inscritos: 0, avaliacao: 0, aprovados: 0, rejeitados: 0 });
+
+  useEffect(() => {
+    if (!processoId) return;
+    paveApi.listarCandidatos(processoId).then((candidatos) => {
+      const s: Stats = { inscritos: 0, avaliacao: 0, aprovados: 0, rejeitados: 0 };
+      for (const c of candidatos) {
+        const col = normalizeStatus(c.status);
+        if (col === "inscritos") s.inscritos++;
+        else if (col === "avaliacao") s.avaliacao++;
+        else if (col === "aprovados") s.aprovados++;
+        else if (col === "rejeitados") s.rejeitados++;
+      }
+      setStats(s);
+    }).catch(() => {});
+  }, [processoId]);
+
   return (
     <section className="po-grid-main">
       <div className="po-card po-about-card">
@@ -21,10 +48,10 @@ export function VisaoGeralTab({ projeto }: { projeto: Projeto }) {
         <div className="po-card">
           <h2><span><BarChart3 size={20} /></span> Resumo da seleção</h2>
           <div className="po-stats-grid">
-            <StatCard icon={<Users size={22} />} value={0} label="Inscritos" variant="blue" />
-            <StatCard icon={<Timer size={22} />} value={0} label="Em avaliação" variant="amber" />
-            <StatCard icon={<CheckCircle2 size={22} />} value={0} label="Aprovados" variant="green" />
-            <StatCard icon={<XCircle size={22} />} value={0} label="Rejeitados" variant="red" />
+            <StatCard icon={<Users size={22} />}       value={stats.inscritos}  label="Inscritos"     variant="blue" />
+            <StatCard icon={<Timer size={22} />}        value={stats.avaliacao}  label="Em avaliação"  variant="amber" />
+            <StatCard icon={<CheckCircle2 size={22} />} value={stats.aprovados}  label="Aprovados"     variant="green" />
+            <StatCard icon={<XCircle size={22} />}      value={stats.rejeitados} label="Rejeitados"    variant="red" />
           </div>
         </div>
 
