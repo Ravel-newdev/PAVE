@@ -9,9 +9,11 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as RedefinirSenhaRouteImport } from './routes/redefinir-senha'
 import { Route as ProjetosRouteImport } from './routes/projetos'
 import { Route as ProfessorRouteImport } from './routes/professor'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as EsqueciSenhaRouteImport } from './routes/esqueci-senha'
 import { Route as CadastroRouteImport } from './routes/cadastro'
 import { Route as AlunoRouteImport } from './routes/aluno'
 import { Route as IndexRouteImport } from './routes/index'
@@ -29,6 +31,11 @@ import { Route as AlunoOportunidadesRouteImport } from './routes/aluno/oportunid
 import { Route as AlunoNotificacoesRouteImport } from './routes/aluno/notificacoes'
 import { Route as AlunoCandidaturaRouteImport } from './routes/aluno/candidatura'
 
+const RedefinirSenhaRoute = RedefinirSenhaRouteImport.update({
+  id: '/redefinir-senha',
+  path: '/redefinir-senha',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProjetosRoute = ProjetosRouteImport.update({
   id: '/projetos',
   path: '/projetos',
@@ -42,6 +49,11 @@ const ProfessorRoute = ProfessorRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EsqueciSenhaRoute = EsqueciSenhaRouteImport.update({
+  id: '/esqueci-senha',
+  path: '/esqueci-senha',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CadastroRoute = CadastroRouteImport.update({
@@ -132,9 +144,11 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/aluno': typeof AlunoRouteWithChildren
   '/cadastro': typeof CadastroRoute
+  '/esqueci-senha': typeof EsqueciSenhaRoute
   '/login': typeof LoginRoute
   '/professor': typeof ProfessorRouteWithChildren
   '/projetos': typeof ProjetosRouteWithChildren
+  '/redefinir-senha': typeof RedefinirSenhaRoute
   '/aluno/candidatura': typeof AlunoCandidaturaRoute
   '/aluno/notificacoes': typeof AlunoNotificacoesRoute
   '/aluno/oportunidades': typeof AlunoOportunidadesRoute
@@ -152,7 +166,9 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/cadastro': typeof CadastroRoute
+  '/esqueci-senha': typeof EsqueciSenhaRoute
   '/login': typeof LoginRoute
+  '/redefinir-senha': typeof RedefinirSenhaRoute
   '/aluno/candidatura': typeof AlunoCandidaturaRoute
   '/aluno/notificacoes': typeof AlunoNotificacoesRoute
   '/aluno/oportunidades': typeof AlunoOportunidadesRoute
@@ -172,9 +188,11 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/aluno': typeof AlunoRouteWithChildren
   '/cadastro': typeof CadastroRoute
+  '/esqueci-senha': typeof EsqueciSenhaRoute
   '/login': typeof LoginRoute
   '/professor': typeof ProfessorRouteWithChildren
   '/projetos': typeof ProjetosRouteWithChildren
+  '/redefinir-senha': typeof RedefinirSenhaRoute
   '/aluno/candidatura': typeof AlunoCandidaturaRoute
   '/aluno/notificacoes': typeof AlunoNotificacoesRoute
   '/aluno/oportunidades': typeof AlunoOportunidadesRoute
@@ -195,9 +213,11 @@ export interface FileRouteTypes {
     | '/'
     | '/aluno'
     | '/cadastro'
+    | '/esqueci-senha'
     | '/login'
     | '/professor'
     | '/projetos'
+    | '/redefinir-senha'
     | '/aluno/candidatura'
     | '/aluno/notificacoes'
     | '/aluno/oportunidades'
@@ -215,7 +235,9 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/cadastro'
+    | '/esqueci-senha'
     | '/login'
+    | '/redefinir-senha'
     | '/aluno/candidatura'
     | '/aluno/notificacoes'
     | '/aluno/oportunidades'
@@ -234,9 +256,11 @@ export interface FileRouteTypes {
     | '/'
     | '/aluno'
     | '/cadastro'
+    | '/esqueci-senha'
     | '/login'
     | '/professor'
     | '/projetos'
+    | '/redefinir-senha'
     | '/aluno/candidatura'
     | '/aluno/notificacoes'
     | '/aluno/oportunidades'
@@ -256,13 +280,22 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AlunoRoute: typeof AlunoRouteWithChildren
   CadastroRoute: typeof CadastroRoute
+  EsqueciSenhaRoute: typeof EsqueciSenhaRoute
   LoginRoute: typeof LoginRoute
   ProfessorRoute: typeof ProfessorRouteWithChildren
   ProjetosRoute: typeof ProjetosRouteWithChildren
+  RedefinirSenhaRoute: typeof RedefinirSenhaRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/redefinir-senha': {
+      id: '/redefinir-senha'
+      path: '/redefinir-senha'
+      fullPath: '/redefinir-senha'
+      preLoaderRoute: typeof RedefinirSenhaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/projetos': {
       id: '/projetos'
       path: '/projetos'
@@ -282,6 +315,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/esqueci-senha': {
+      id: '/esqueci-senha'
+      path: '/esqueci-senha'
+      fullPath: '/esqueci-senha'
+      preLoaderRoute: typeof EsqueciSenhaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/cadastro': {
@@ -457,9 +497,11 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AlunoRoute: AlunoRouteWithChildren,
   CadastroRoute: CadastroRoute,
+  EsqueciSenhaRoute: EsqueciSenhaRoute,
   LoginRoute: LoginRoute,
   ProfessorRoute: ProfessorRouteWithChildren,
   ProjetosRoute: ProjetosRouteWithChildren,
+  RedefinirSenhaRoute: RedefinirSenhaRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
