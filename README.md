@@ -312,7 +312,6 @@ pnpm check     # Lint + format juntos
 - [x] Rotas de notificações
 - [x] Telas do front-end — Iteração 1 concluída
 - [x] Integração front-end ↔ back-end — Iteração 1
-- [ ] Testes de rotas no Postman
 - [ ] Emissão automática de certificados
 - [ ] Controle de requisições com Redis
 - [ ] Tabelas de estatísticas
@@ -327,15 +326,18 @@ pnpm check     # Lint + format juntos
 
 | Tarefa | Área | Responsável |
 |---|---|---|
-| Responsividade geral (mobile / tablets) | Front-end | |
-| Alterar senha na página de perfil | Front-end | |
+| Página de perfil do docente (visualização e edição) | Front-end | |
+| Alterar senha na página de perfil (aluno e docente) | Front-end + Back-end | |
+| Recuperar senha na tela de login (fluxo por e-mail) | Front-end + Back-end | |
+| Envio de notificações por e-mail (disparar no backend + configuração no perfil) | Front-end + Back-end | |
+| Testar criação de notificações para aluno e professor | Front-end + Back-end | |
+| Revisão do fluxo do processo seletivo (criação, edição, abertura/encerramento) | Front-end + Back-end | |
 | Badge de notificações do professor com dado real da API | Front-end | |
-| Integração da página de Notificações do aluno com backend | Front-end | |
 | Integração da página de Candidatura do aluno com backend | Front-end | |
 | Verificar integração do wizard de criação/edição de projeto (CadastroProjeto / ProjetoForm) | Front-end | |
 | Testar filtro de departamento no catálogo com projetos reais cadastrados | Front-end | |
+| Responsividade geral (mobile / tablets) | Front-end | |
 | Validação de e-mail institucional no cadastro (pós-MVP) | Front-end | |
-| Testes de rotas no Postman | Back-end | |
 | Emissão automática de certificados | Back-end | |
 
 ### 🔄 Em progresso
@@ -360,6 +362,7 @@ pnpm check     # Lint + format juntos
 | Favicon e título da aba corrigidos | Front-end |
 | Logo correta no navbar do professor | Front-end |
 | Campos sem mapeamento no backend removidos do perfil de aluno | Front-end |
+| Integração da página de Notificações do aluno com backend | Front-end |
 | Arquivos mortos removidos (mocks, stubs, scripts) | Front-end |
 | Rotas de autenticação (registro discente / docente, login, JWT) | Back-end |
 | Rotas de projetos (CRUD, status, favoritos, tags) | Back-end |
