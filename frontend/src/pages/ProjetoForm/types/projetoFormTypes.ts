@@ -26,4 +26,5 @@ export type FormData = {
   dataTermino: string;   // → data_termino (duração do projeto)
   inscricaoInicio: string; // → processo seletivo data_inicio
   inscricaoFim: string;    // → processo seletivo data_termino
+  vagas: string;           // → processo seletivo n_vagas (número inteiro)
 };

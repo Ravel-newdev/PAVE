@@ -70,7 +70,7 @@ export default function ProjetoForm({ mode = "create" }: { mode?: ProjetoFormMod
   const [erro, setErro] = useState<string | null>(null);
   const [published, setPublished] = useState(false);
 
-  const { projetoId: searchProjetoId } = useSearch({ strict: false }) as { projetoId?: string };
+  const { id: searchProjetoId } = useSearch({ strict: false }) as { id?: string };
   const projetoId = searchProjetoId ?? "";
   const navigate = useNavigate();
 
@@ -286,6 +286,10 @@ export default function ProjetoForm({ mode = "create" }: { mode?: ProjetoFormMod
                 <FieldLabel>Encerramento das inscrições</FieldLabel>
                 <input className="pf-input" type="date" value={formData.inscricaoFim}    onChange={(e) => updateField("inscricaoFim", e.target.value)} />
               </div>
+              <div>
+                <FieldLabel>Número de vagas</FieldLabel>
+                <input className="pf-input" type="number" min="1" value={formData.vagas} onChange={(e) => updateField("vagas", e.target.value)} placeholder="Ex: 3" />
+              </div>
             </div>
 
             <div className="pf-field-full">
@@ -381,6 +385,7 @@ export default function ProjetoForm({ mode = "create" }: { mode?: ProjetoFormMod
                 { label: "Carga horária",   value: formData.cargaHoraria ? `${formData.cargaHoraria}h/semana` : "" },
                 { label: "Período",         value: formData.dataInic && formData.dataTermino ? `${formData.dataInic} → ${formData.dataTermino}` : "" },
                 { label: "Inscrições",      value: formData.inscricaoInicio && formData.inscricaoFim ? `${formData.inscricaoInicio} → ${formData.inscricaoFim}` : "" },
+                { label: "Vagas",           value: formData.vagas ? `${formData.vagas} vaga(s)` : "" },
                 { label: "Perguntas",       value: perguntas.length > 0 ? `${perguntas.length} pergunta(s)` : "Nenhuma" },
               ].map(({ label, value }) => (
                 <div key={label} className="pf-review-item">

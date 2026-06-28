@@ -9,6 +9,7 @@ export const initialCreateData: FormData = {
   dataTermino: "",
   inscricaoInicio: "",
   inscricaoFim: "",
+  vagas: "",
 };
 
 export const initialEditData: FormData = {
@@ -20,6 +21,7 @@ export const initialEditData: FormData = {
   dataTermino: "",
   inscricaoInicio: "",
   inscricaoFim: "",
+  vagas: "",
 };
 
 export const initialDocumentos: DocumentoSolicitado[] = [

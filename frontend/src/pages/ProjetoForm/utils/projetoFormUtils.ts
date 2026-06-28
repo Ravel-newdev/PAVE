@@ -55,11 +55,13 @@ export function buildProcessoPayload(
   _documentos: DocumentoSolicitado[],
   _perguntas: Pergunta[],
 ): CriarProcessoPayload {
+  const vagas = parseInt(formData.vagas, 10);
   return {
     projeto_id:   projetoId,
     titulo:       formData.titulo,
     data_inicio:  formData.inscricaoInicio || undefined,
     data_termino: formData.inscricaoFim    || undefined,
+    n_vagas:      isNaN(vagas) ? undefined : vagas,
   };
 }
 
@@ -68,5 +70,6 @@ export function validateForm(formData: FormData): string | null {
   if (formData.cargaHoraria && isNaN(parseInt(formData.cargaHoraria, 10))) return "Carga horária deve ser um número inteiro.";
   if (formData.dataInic && formData.dataTermino && formData.dataTermino < formData.dataInic) return "A data de término do projeto não pode ser anterior à data de início.";
   if (formData.inscricaoInicio && formData.inscricaoFim && formData.inscricaoFim < formData.inscricaoInicio) return "A data de encerramento das inscrições não pode ser anterior à data de início.";
+  if (formData.vagas && (isNaN(parseInt(formData.vagas, 10)) || parseInt(formData.vagas, 10) < 1)) return "O número de vagas deve ser um inteiro positivo.";
   return null;
 }
