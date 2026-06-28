@@ -159,7 +159,7 @@ export default function ProjetoVisaoGeral() {
           )}
         </div>
 
-        {aba === "visao-geral" && <VisaoGeralTab projeto={projeto} />}
+        {aba === "visao-geral" && <VisaoGeralTab projeto={projeto} processoId={processoId} />}
         {aba === "candidatos" && processoId && <CandidatosTab processoId={processoId} />}
       </div>
     </main>

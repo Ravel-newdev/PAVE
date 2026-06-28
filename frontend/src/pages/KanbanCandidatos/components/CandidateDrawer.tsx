@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { ChangeEvent } from "react";
-import { Briefcase, Calendar, X } from "lucide-react";
+import { Briefcase, Download, FileText, Calendar, X } from "lucide-react";
 
 import type { Candidate, CandidateStatus } from "../types/candidate";
 import type { DrawerTab } from "../types/project";
@@ -124,14 +124,32 @@ export function CandidateDrawer({ candidate, onClose, onMove }: CandidateDrawerP
       {activeDrawerTab === "documentos" && (
         <section className="kc-summary-card">
           <h3>Documentos enviados</h3>
-          <div className="kc-list-stack">
-            {candidate.documents.map((document) => (
-              <button className="kc-file-item" key={document} type="button">
-                <Briefcase size={16} />
-                {document}
-              </button>
-            ))}
-          </div>
+          {candidate.documents.length === 0 ? (
+            <p style={{ color: "#64748B", fontSize: 14 }}>Nenhum documento enviado.</p>
+          ) : (
+            <div className="kc-list-stack">
+              {candidate.documents.map((doc, i) =>
+                doc.tipo === "arquivo" && doc.arquivo_url ? (
+                  <a
+                    key={i}
+                    className="kc-file-item kc-file-item--link"
+                    href={doc.arquivo_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <FileText size={16} className="kc-file-item__icon" />
+                    <span className="kc-file-item__label">{doc.label}</span>
+                    <Download size={14} className="kc-file-item__download" />
+                  </a>
+                ) : (
+                  <div key={i} className="kc-field-resposta">
+                    <p className="kc-field-resposta__label">{doc.label}</p>
+                    <p className="kc-field-resposta__valor">{doc.valor_texto ?? "—"}</p>
+                  </div>
+                )
+              )}
+            </div>
+          )}
         </section>
       )}
 

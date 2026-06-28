@@ -16,7 +16,7 @@ export type Candidate = {
   motivation: string;
   availability: string;
   experience: string;
-  documents: string[];
+  documents: { label: string; tipo: string; arquivo_url?: string; valor_texto?: string }[];
   history: string[];
 };
 

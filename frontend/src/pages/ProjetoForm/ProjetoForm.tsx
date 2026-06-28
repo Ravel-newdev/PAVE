@@ -194,8 +194,8 @@ export default function ProjetoForm({ mode = "create" }: { mode?: ProjetoFormMod
         if (isEdit) {
           const processos = await paveApi.listarProcessosProjeto(idCriado).catch(() => []);
           if (processos.length > 0) {
-            await paveApi.atualizarProcesso(processos[0].id, processoPayload).catch((e) => console.error("Processo não atualizado:", e));
-            formularioId = processos[0].formulario_id;
+            const atualizado = await paveApi.atualizarProcesso(processos[0].id, processoPayload).catch((e) => { console.error("Processo não atualizado:", e); return null; });
+            formularioId = (atualizado as { formulario_id?: string } | null)?.formulario_id ?? processos[0].formulario_id;
           } else {
             const novo = await paveApi.criarProcesso(processoPayload).catch((e) => { console.error("Processo não criado:", e); return null; });
             formularioId = novo?.formulario_id;
