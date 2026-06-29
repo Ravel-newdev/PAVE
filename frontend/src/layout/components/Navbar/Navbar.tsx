@@ -53,7 +53,7 @@ export default function Navbar() {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const currentPath = typeof window !== "undefined" ? window.location.pathname : "/";
-  const nome        = session ? deriveNome(session.email) : "";
+  const nome        = session ? (session.nome || deriveNome(session.email)) : "";
   const inicial     = nome.charAt(0).toUpperCase();
 
   useEffect(() => {

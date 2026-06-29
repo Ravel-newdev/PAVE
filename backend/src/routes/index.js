@@ -11,6 +11,7 @@ const { processoRouter, inscricaoRouter } = require("../modules/processos/proces
 const notificacaoRoutes = require("../modules/notificacoes/notificacao.routes");
 const metadadosRoutes = require("../modules/metadados/metadados.routes");
 const discenteRoutes   = require("../modules/discentes/discente.routes");
+const docenteRoutes    = require("../modules/docentes/docente.routes");
 const formularioRoutes = require("../modules/formularios/formulario.routes");
 const uploadRoutes     = require("../modules/uploads/upload.routes");
 
@@ -22,6 +23,7 @@ router.use("/processos",   processoRouter);
 router.use("/inscricoes",  inscricaoRouter);
 router.use("/notificacoes",notificacaoRoutes);
 router.use("/discentes",   discenteRoutes);
+router.use("/docentes",    docenteRoutes);
 router.use("/formularios", formularioRoutes);
 router.use("/uploads",     uploadRoutes);
 router.use("/",            metadadosRoutes);

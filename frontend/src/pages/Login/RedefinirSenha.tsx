@@ -68,7 +68,6 @@ export default function RedefinirSenha() {
           <div className="login-form-wrapper">
             <Link to="/login" className="back-login-link">
               <ArrowLeft size={16} />
-              Voltar ao login
             </Link>
 
             <div className="form-header">

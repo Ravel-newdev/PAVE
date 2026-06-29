@@ -48,7 +48,7 @@ const criar = async (docenteId, dados) => {
 
 const listar = async (usuario, filtros) => {
   let baseQuery = `
-    SELECT p.id, p.titulo, p.centro_dep, p.status, p.criado_em, p.docente_id AS autor_id, d.nome AS autor_nome,
+    SELECT p.id, p.titulo, p.centro_dep, p.status, p.criado_em, p.carga_hora, p.data_inic, p.data_termino, p.docente_id AS autor_id, d.nome AS autor_nome,
       COALESCE(
         (SELECT json_agg(json_build_object('id', t.id, 'nome', t.nome))
          FROM projeto_tag pt

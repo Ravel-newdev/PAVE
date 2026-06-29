@@ -214,6 +214,14 @@
   color: white;
   background: var(--po-red);
   border: 1px solid #b91c1c;
+  transition: background 0.15s, opacity 0.15s;
+}
+
+.po-button-danger:disabled {
+  background: #6b7280;
+  border-color: #4b5563;
+  opacity: 0.75;
+  cursor: not-allowed;
 }
 
 .po-tabs {

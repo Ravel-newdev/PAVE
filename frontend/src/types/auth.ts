@@ -23,6 +23,7 @@ export interface UserSession {
   id: string;
   email: string;
   tipo: TipoUsuario;
+  nome: string;
 }
 
 /** Corpo da requisição de login. */

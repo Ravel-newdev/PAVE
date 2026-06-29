@@ -112,10 +112,21 @@ const resetPasswordSchema = z.object({
     .min(6, { error: "A nova senha deve conter ao menos 6 caracteres." }),
 });
 
+const alterarSenhaSchema = z.object({
+  senhaAtual: z.string({
+    error: (issue) => issue.input === undefined ? "A senha atual é obrigatória." : "A senha atual deve ser um texto."
+  }).min(1, { error: "A senha atual não pode estar vazia." }),
+
+  novaSenha: z.string({
+    error: (issue) => issue.input === undefined ? "A nova senha é obrigatória." : "A nova senha deve ser um texto."
+  }).min(6, { error: "A nova senha deve conter ao menos 6 caracteres." }),
+});
+
 module.exports = {
   registerDiscenteSchema,
   registerDocenteSchema,
   loginSchema,
   recoverPasswordSchema,
   resetPasswordSchema,
+  alterarSenhaSchema,
 };

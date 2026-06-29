@@ -106,6 +106,12 @@ export default function Login() {
               </div>
             </div>
 
+            <div className="forgot-password-row">
+              <Link to="/esqueci-senha" className="text-link forgot-password-link">
+                Esqueceu sua senha?
+              </Link>
+            </div>
+
             <button type="button" className="submit-btn" onClick={handleSubmit} disabled={isSubmitting}>
               {isSubmitting ? "Entrando..." : "Entrar"}
               <ArrowRight size={17} />

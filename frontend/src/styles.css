@@ -57,6 +57,10 @@
   --color-ring: var(--ring);
 }
 
+button {
+  cursor: pointer;
+}
+
 body {
   @apply m-0;
   font-family: 'DM Sans', sans-serif;

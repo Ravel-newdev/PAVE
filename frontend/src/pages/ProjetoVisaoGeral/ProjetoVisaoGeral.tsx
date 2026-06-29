@@ -1,5 +1,6 @@
 import { Link, useNavigate, useSearch } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { Briefcase, Calendar, Download, Edit3, GraduationCap, Trash2 } from "lucide-react";
 import "./ProjetoVisaoGeral.css";
 import { paveApi } from "../../services/PaveApiService";
@@ -19,6 +20,8 @@ export default function ProjetoVisaoGeral() {
   const [processoId, setProcessoId] = useState<string | null>(null);
   const [erro, setErro] = useState<string | null>(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [finalizando, setFinalizando] = useState(false);
+  const [exportando, setExportando] = useState(false);
 
   useEffect(() => {
     if (!projetoId) { void navigate({ to: "/professor" }); return; }
@@ -43,12 +46,16 @@ export default function ProjetoVisaoGeral() {
   }, [projetoId, navigate]);
 
   async function handleFinish() {
-    if (!projeto) return;
+    if (!projeto || finalizando) return;
+    setFinalizando(true);
     try {
       await paveApi.alterarStatusProjeto(projeto.id, { status: "encerrado" });
       setProjeto((p) => p ? { ...p, status: "encerrado" } : p);
+      toast.success("Seleção finalizada com sucesso.");
     } catch (e) {
       setErro(e instanceof Error ? e.message : "Erro ao finalizar.");
+    } finally {
+      setFinalizando(false);
     }
   }
 
@@ -63,16 +70,111 @@ export default function ProjetoVisaoGeral() {
     }
   }
 
-  function handleExport() {
-    if (!projeto) return;
-    const content = `Projeto,${projeto.titulo}\nAutor,${projeto.autor_nome}\nStatus,${projeto.status}`;
-    const blob = new Blob([content], { type: "text/csv;charset=utf-8" });
+  const statusLabel: Record<string, string> = {
+    rascunho: "Rascunho",
+    ativo: "Ativo",
+    encerrado: "Encerrado",
+    suspenso: "Suspenso",
+  };
+
+  const inscricaoLabel: Record<string, string> = {
+    em_analise: "Em análise",
+    aprovado: "Aprovado",
+    reprovado: "Reprovado",
+    desistencia: "Desistência",
+  };
+
+  function csvEscape(value: string | number | null | undefined): string {
+    const str = value == null ? "" : String(value);
+    return str.includes(",") || str.includes('"') || str.includes("\n")
+      ? `"${str.replace(/"/g, '""')}"`
+      : str;
+  }
+
+  function row(...cells: (string | number | null | undefined)[]): string {
+    return cells.map(csvEscape).join(";");
+  }
+
+  function section(title: string): string {
+    return row(title, "", "", "", "", "");
+  }
+
+  function divider(): string {
+    return row("---", "---", "---", "---", "---", "---");
+  }
+
+  async function handleExport() {
+    if (!projeto || exportando) return;
+    setExportando(true);
+
+    const formatDate = (d: string | null | undefined) =>
+      d ? new Date(d).toLocaleDateString("pt-BR") : "—";
+
+    const linhas: string[] = [
+      row("RELATÓRIO DE PROJETO", "PAVE UFC", "", "", "", `Gerado em: ${new Date().toLocaleString("pt-BR")}`),
+      divider(),
+      "",
+      section("DADOS DO PROJETO"),
+      row("Campo", "Valor"),
+      divider(),
+      row("Título", projeto.titulo),
+      row("Autor", projeto.autor_nome),
+      row("Status", statusLabel[projeto.status] ?? projeto.status),
+      row("Departamento / Centro", projeto.centro_dep),
+      row("Carga horária", projeto.carga_hora ? `${projeto.carga_hora}h` : "—"),
+      row("Data de início", formatDate(projeto.data_inic)),
+      row("Data de término", formatDate(projeto.data_termino)),
+      row("Tags", (projeto.tags ?? []).join(", ") || "—"),
+      "",
+    ];
+
+    if (processoId) {
+      try {
+        const candidatos = await paveApi.listarCandidatos(processoId);
+        const aprovados = candidatos.filter((c) => c.status === "aprovado").length;
+        const reprovados = candidatos.filter((c) => c.status === "reprovado").length;
+        const emAnalise = candidatos.filter((c) => c.status === "em_analise").length;
+
+        linhas.push(section("CANDIDATOS"));
+        linhas.push(row("#", "Nome", "Curso", "E-mail", "Status", "Nota", "Inscrito em"));
+        linhas.push(divider());
+
+        candidatos.forEach((c, i) => {
+          linhas.push(row(
+            i + 1,
+            c.nome || "—",
+            c.curso || "—",
+            c.email || "—",
+            inscricaoLabel[c.status] ?? c.status,
+            c.nota != null ? c.nota : "—",
+            formatDate(c.criado_em),
+          ));
+        });
+
+        linhas.push("");
+        linhas.push(section("RESUMO"));
+        linhas.push(row("Total de candidatos", candidatos.length));
+        linhas.push(row("Aprovados", aprovados));
+        linhas.push(row("Reprovados", reprovados));
+        linhas.push(row("Em análise", emAnalise));
+      } catch {
+        linhas.push(section("CANDIDATOS"));
+        linhas.push(row("Não foi possível carregar os candidatos."));
+      }
+    } else {
+      linhas.push(section("CANDIDATOS"));
+      linhas.push(row("Nenhum processo seletivo vinculado a este projeto."));
+    }
+
+    const bom = "﻿";
+    const blob = new Blob([bom + linhas.join("\n")], { type: "text/csv;charset=utf-8" });
     const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `${projeto.titulo}.csv`;
-    link.click();
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `PAVE_${projeto.titulo.replace(/\s+/g, "_")}.csv`;
+    a.click();
     URL.revokeObjectURL(url);
+    setExportando(false);
   }
 
   if (confirmDelete) return (
@@ -121,16 +223,16 @@ export default function ProjetoVisaoGeral() {
             <button className="po-button po-button-secondary" type="button" onClick={() => navigate({ to: "/professor/editar-projeto", search: { id: projeto.id } as never })}>
               <Edit3 size={18} /> Editar projeto
             </button>
-            <button className="po-button po-button-secondary" type="button" onClick={handleExport}>
-              <Download size={18} /> Exportar
+            <button className="po-button po-button-secondary" type="button" onClick={() => void handleExport()} disabled={exportando}>
+              <Download size={18} /> {exportando ? "Exportando..." : "Exportar"}
             </button>
             {projeto.status === "rascunho" ? (
               <button className="po-button po-button-danger" type="button" onClick={() => setConfirmDelete(true)}>
                 <Trash2 size={18} /> Excluir rascunho
               </button>
             ) : (
-              <button className="po-button po-button-danger" type="button" onClick={() => void handleFinish()} disabled={projeto.status === "encerrado"}>
-                Finalizar seleção
+              <button className="po-button po-button-danger" type="button" onClick={() => void handleFinish()} disabled={projeto.status === "encerrado" || finalizando}>
+                {finalizando ? "Finalizando..." : "Finalizar seleção"}
               </button>
             )}
           </div>

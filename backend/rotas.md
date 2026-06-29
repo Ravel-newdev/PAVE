@@ -68,6 +68,17 @@ Este documento detalha os endpoints disponíveis, métodos HTTP, parâmetros esp
     }
     ```
 
+**POST /api/auth/alterar-senha**
+* **Descrição:** Altera a senha do usuário autenticado verificando a senha atual.
+* **Autorização:** Autenticado (Docente ou Discente).
+* **Corpo da Requisição (JSON):**
+    ```json
+    {
+      "senhaAtual": "string",
+      "novaSenha": "string"
+    }
+    ```
+
 ---
 
 ### PROJETOS

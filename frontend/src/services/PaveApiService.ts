@@ -94,6 +94,10 @@ class PaveApiService {
     return this.post<void>("/auth/reset-senha", { token, novaSenha }, false);
   }
 
+  alterarSenha(senhaAtual: string, novaSenha: string): Promise<void> {
+    return this.post<void>("/auth/alterar-senha", { senhaAtual, novaSenha });
+  }
+
   listarProjetos(status?: string): Promise<Projeto[]> {
     const query = status ? `?status=${status}` : "";
     return this.get<Projeto[]>(`/projetos${query}`);
@@ -187,6 +191,14 @@ class PaveApiService {
 
   atualizarPerfilDiscente(payload: Record<string, unknown>): Promise<void> {
     return this.put("/discentes/me", payload);
+  }
+
+  obterPerfilDocente(): Promise<{ nome: string; matricula: string; telefone: string | null; departamento: string | null; email: string; criado_em: string }> {
+    return this.get("/docentes/me");
+  }
+
+  atualizarPerfilDocente(payload: { nome?: string; telefone?: string; departamento?: string }): Promise<void> {
+    return this.put("/docentes/me", payload);
   }
 
   uploadFotoDiscente(file: File): Promise<{ url: string }> {

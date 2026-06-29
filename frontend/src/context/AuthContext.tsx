@@ -10,10 +10,10 @@ function decodeJwtPayload(token: string): UserSession | null {
     const base64Payload = token.split(".")[1];
     if (!base64Payload) return null;
     const json = atob(base64Payload.replace(/-/g, "+").replace(/_/g, "/"));
-    const parsed = JSON.parse(json) as { id?: string; email?: string; tipo?: string; exp?: number };
+    const parsed = JSON.parse(json) as { id?: string; email?: string; tipo?: string; nome?: string; exp?: number };
     if (!parsed.id || !parsed.email || !parsed.tipo) return null;
     if (parsed.exp && Date.now() / 1000 > parsed.exp) return null;
-    return { id: parsed.id, email: parsed.email, tipo: parsed.tipo as TipoUsuario };
+    return { id: parsed.id, email: parsed.email, tipo: parsed.tipo as TipoUsuario, nome: parsed.nome ?? "" };
   } catch {
     return null;
   }

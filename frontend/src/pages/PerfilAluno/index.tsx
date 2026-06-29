@@ -31,6 +31,7 @@ export default function ProfilePage() {
     reset,
     setValue,
     handleSubmit,
+    formState: { errors },
   } = form;
 
   const [loading, setLoading] = useState(true);
@@ -69,16 +70,35 @@ export default function ProfilePage() {
   }
 
   function onValidationError() {
-    toast.error("Corrija os campos destacados antes de salvar.");
+    const senhaErrors = [
+      errors.currentPassword?.message,
+      errors.newPassword?.message,
+      errors.confirmPassword?.message,
+    ].filter(Boolean);
+
+    if (senhaErrors.length > 0) {
+      senhaErrors.forEach((msg) => toast.error(msg));
+    } else {
+      toast.error("Corrija os campos destacados antes de salvar.");
+    }
   }
 
   async function onSubmit(data: ProfileFormData) {
     try {
       await paveApi.atualizarPerfilDiscente(formToBackend(data));
+
+      if (data.newPassword) {
+        await paveApi.alterarSenha(data.currentPassword, data.newPassword);
+        form.setValue("currentPassword", "");
+        form.setValue("newPassword", "");
+        form.setValue("confirmPassword", "");
+      }
+
       toast.success("Perfil atualizado com sucesso.");
     } catch (error) {
       console.error(error);
-      toast.error("Erro ao atualizar perfil. Tente novamente.");
+      const msg = error instanceof Error ? error.message : "Erro ao atualizar perfil.";
+      toast.error(msg);
     }
   }
 

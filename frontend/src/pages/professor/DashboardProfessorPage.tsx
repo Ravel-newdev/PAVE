@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Plus, Folder, FileEdit, Flag, FolderX, BellOff, Bell } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
-import { ProfessorNavbar } from "@/layout/components/professor/ProfessorNavbar";
 import { EstatisticaCard } from "@/components/dashboard/EstatisticaCard";
 import { ProjetoResumoItem } from "@/components/dashboard/ProjetoResumoItem";
 import { NotificacaoResumoItem } from "@/components/dashboard/NotificacaoResumoItem";
@@ -38,8 +37,6 @@ export default function DashboardProfessorPage() {
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col">
-      <ProfessorNavbar />
-
       <main className="max-w-6xl mx-auto px-8 py-8 flex-1 w-full space-y-6">
         <div
           className="rounded-2xl p-8 flex items-center justify-between gap-6 overflow-hidden relative"

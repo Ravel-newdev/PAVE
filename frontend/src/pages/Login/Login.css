@@ -157,6 +157,25 @@
 /*  Inputs  */
 .input-group { margin-bottom: 18px; }
 
+.forgot-password-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -10px;
+  margin-bottom: 20px;
+}
+
+.forgot-password-link {
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+  opacity: 0.85;
+}
+
+.forgot-password-link:hover {
+  color: #287999;
+  opacity: 1;
+}
+
 .input-label {
   display: block;
   font-size: 13px;
@@ -272,6 +291,34 @@
 
 .submit-btn:hover { background: #152139; }
 .submit-btn:active { transform: scale(0.99); }
+
+.success-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 16px;
+  padding: 32px 24px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 12px;
+  color: #15803d;
+}
+
+.success-box strong {
+  display: block;
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: #14532d;
+}
+
+.success-box p {
+  margin: 0;
+  font-size: 13px;
+  color: #166534;
+  line-height: 1.6;
+}
 
 /*  Divider  */
 .form-divider {

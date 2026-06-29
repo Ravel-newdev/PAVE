@@ -26,7 +26,7 @@ function getIniciais(nome: string): string {
 export function Header({ paginaAtiva = "", notificacoesPendentes = 0 }: HeaderProps) {
   const { session } = useAuth();
   const tipo = session?.tipo ?? "discente";
-  const nome = session?.email?.split("@")[0] ?? "Usuário";
+  const nome = session?.nome || session?.email?.split("@")[0] || "Usuário";
 
   return (
     <header className="bg-[#1E2E4F] border-b border-[#2a3d63]">

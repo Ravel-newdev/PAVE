@@ -11,6 +11,7 @@ const crypto = require("crypto");
 const { query, getClient } = require("../../database/connection");
 const { jwtSecret } = require("../../config/env");
 const { sendEmail } = require("../../services/mail.service");
+const { recuperacaoSenhaHtml } = require("../../templates/email/recuperacaoSenha");
 
 const SALT_ROUNDS = 12;
 
@@ -108,8 +109,12 @@ const authenticateUser = async ({ email, senha }) => {
   const valid = await bcrypt.compare(senha, user.senha);
   if (!valid) throw new Error("Credenciais inválidas.");
 
+  const tabela = user.tipo === "docente" ? "docentes" : "discentes";
+  const { rows: perfil } = await query(`SELECT nome FROM ${tabela} WHERE id = $1`, [user.id]);
+  const nome = perfil[0]?.nome ?? "";
+
   return jwt.sign(
-    { id: user.id, email: user.email, tipo: user.tipo },
+    { id: user.id, email: user.email, tipo: user.tipo, nome },
     jwtSecret,
     { expiresIn: "8h" }
   );
@@ -134,10 +139,15 @@ const processPasswordRecovery = async (email) => {
    * Delegação estrita do envio para o adaptador de infraestrutura.
    * O domínio fornece apenas a semântica da mensagem.
    */
+  const frontendUrl = process.env.FRONTEND_URL ?? "http://localhost:3000";
+  const link = `${frontendUrl}/redefinir-senha?token=${token}`;
+
+
   await sendEmail({
     to: email,
-    subject: "Recuperação de Senha - PAVE",
-    text: `Código identificador para redefinição de acesso: ${token}\n\nEste código expira em 1 hora.`,
+    subject: "Redefinição de senha da sua conta PAVE",
+    text: `Você solicitou a redefinição de senha da sua conta PAVE.\n\nAcesse o link abaixo para criar uma nova senha (válido por 1 hora):\n${link}\n\nSe você não solicitou isso, ignore este e-mail.`,
+    html: recuperacaoSenhaHtml(link),
   });
 };
 
@@ -177,10 +187,23 @@ const executePasswordReset = async (token, novaSenha) => {
   }
 };
 
+const alterarSenha = async (usuarioId, { senhaAtual, novaSenha }) => {
+  const { rows } = await query("SELECT senha FROM usuarios WHERE id = $1", [usuarioId]);
+  const user = rows[0];
+  if (!user) throw new Error("Usuário não encontrado.");
+
+  const valid = await bcrypt.compare(senhaAtual, user.senha);
+  if (!valid) throw new Error("Senha atual incorreta.");
+
+  const hashed = await bcrypt.hash(novaSenha, SALT_ROUNDS);
+  await query("UPDATE usuarios SET senha = $1 WHERE id = $2", [hashed, usuarioId]);
+};
+
 module.exports = {
   createDiscente,
   createDocente,
   authenticateUser,
   processPasswordRecovery,
   executePasswordReset,
+  alterarSenha,
 };

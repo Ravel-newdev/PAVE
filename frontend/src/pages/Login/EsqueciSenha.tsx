@@ -18,6 +18,11 @@ export default function EsqueciSenha() {
       return;
     }
 
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      setError("Informe um e-mail válido.");
+      return;
+    }
+
     setIsSubmitting(true);
     try {
       await paveApi.recuperarSenha(email.trim());
@@ -52,7 +57,6 @@ export default function EsqueciSenha() {
           <div className="login-form-wrapper">
             <Link to="/login" className="back-login-link">
               <ArrowLeft size={16} />
-              Voltar ao login
             </Link>
 
             <div className="form-header">

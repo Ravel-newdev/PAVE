@@ -36,6 +36,17 @@ const errorHandler = (err, req, res, next) => {
     return res.status(409).json({ message: err.message });
   }
 
+  // Interceptação de erros de regra de negócio (HTTP 400)
+  const mensagensBadRequest = [
+    "Senha atual incorreta.",
+    "Usuário não encontrado.",
+    "Docente não encontrado.",
+  ];
+
+  if (mensagensBadRequest.includes(err.message)) {
+    return res.status(400).json({ message: err.message });
+  }
+
   // Interceptação de falhas de autenticação (HTTP 401)
   const mensagensNaoAutorizado = [
     "Credenciais inválidas.",

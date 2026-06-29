@@ -11,6 +11,7 @@ const {
   authenticateUser,
   processPasswordRecovery,
   executePasswordReset,
+  alterarSenha,
 } = require("./auth.service");
 
 const registerDiscente = async (req, res) => {
@@ -40,10 +41,16 @@ const resetPassword = async (req, res) => {
   res.status(200).json({ message: "Senha redefinida com sucesso." });
 };
 
+const changePassword = async (req, res) => {
+  await alterarSenha(req.user.id, req.body);
+  res.status(200).json({ message: "Senha alterada com sucesso." });
+};
+
 module.exports = {
   registerDiscente,
   registerDocente,
   login,
   recoverPassword,
   resetPassword,
+  changePassword,
 };
