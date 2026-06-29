@@ -90,8 +90,8 @@ class PaveApiService {
     return this.post<void>("/auth/recuperar-senha", { email }, false);
   }
 
-  redefinirSenha(token: string, nova_senha: string): Promise<void> {
-    return this.post<void>("/auth/reset-senha", { token, nova_senha }, false);
+  redefinirSenha(token: string, novaSenha: string): Promise<void> {
+    return this.post<void>("/auth/reset-senha", { token, novaSenha }, false);
   }
 
   listarProjetos(status?: string): Promise<Projeto[]> {
