@@ -10,6 +10,11 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  preview: {
+    allowedHosts: "all",
+    port: 10000,
+    host: "0.0.0.0",
+  },
   plugins: [
     TanStackRouterVite({ autoCodeSplitting: true }),
     tailwindcss(),
