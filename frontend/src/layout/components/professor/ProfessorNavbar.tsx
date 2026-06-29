@@ -19,6 +19,9 @@ export function ProfessorNavbar() {
             <Home size={18} />
             <span>Início</span>
           </Link>
+          <Link to="/professor/perfil" className="nav-link" activeProps={{ className: "nav-link active" }}>
+          <span>Meu Perfil</span>
+          </Link>
         </div>
       </div>
 
