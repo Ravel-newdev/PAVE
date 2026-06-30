@@ -9,7 +9,9 @@ function decodeJwtPayload(token: string): UserSession | null {
   try {
     const base64Payload = token.split(".")[1];
     if (!base64Payload) return null;
-    const json = atob(base64Payload.replace(/-/g, "+").replace(/_/g, "/"));
+    const binary = atob(base64Payload.replace(/-/g, "+").replace(/_/g, "/"));
+    const bytes = Uint8Array.from(binary, (c) => c.charCodeAt(0));
+    const json = new TextDecoder().decode(bytes);
     const parsed = JSON.parse(json) as { id?: string; email?: string; tipo?: string; nome?: string; exp?: number };
     if (!parsed.id || !parsed.email || !parsed.tipo) return null;
     if (parsed.exp && Date.now() / 1000 > parsed.exp) return null;
