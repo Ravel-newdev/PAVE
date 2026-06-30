@@ -35,10 +35,15 @@ const criarCampo = async (formularioId, { tipo_chave, label_override, opcoes, ob
 };
 
 const limparCamposPersonalizados = async (formularioId) => {
-  await query(
-    `DELETE FROM campo_formulario WHERE formulario_id = $1 AND label_override IS NOT NULL`,
+  const campos = await query(
+    `SELECT id FROM campo_formulario WHERE formulario_id = $1 AND label_override IS NOT NULL`,
     [formularioId]
   );
+  if (campos.rows.length > 0) {
+    const ids = campos.rows.map((r) => r.id);
+    await query(`DELETE FROM resposta_formulario WHERE campo_id = ANY($1::int[])`, [ids]);
+    await query(`DELETE FROM campo_formulario WHERE id = ANY($1::int[])`, [ids]);
+  }
 };
 
 module.exports = { listarCampos, criarCampo, limparCamposPersonalizados };

@@ -103,7 +103,12 @@ const atualizarProcesso = async (processoId, docenteId, dados) => {
       await query(`UPDATE processo_seletivo SET formulario_id = $1 WHERE id = $2`, [fid, processoId]);
     }
     // Sincroniza campos padrão: remove todos os padrão e reinserindo os selecionados
-    await query(`DELETE FROM campo_formulario WHERE formulario_id = $1 AND label_override IS NULL`, [fid]);
+    const camposPadrao = await query(`SELECT id FROM campo_formulario WHERE formulario_id = $1 AND label_override IS NULL`, [fid]);
+    if (camposPadrao.rows.length > 0) {
+      const ids = camposPadrao.rows.map((r) => r.id);
+      await query(`DELETE FROM resposta_formulario WHERE campo_id = ANY($1::int[])`, [ids]);
+      await query(`DELETE FROM campo_formulario WHERE id = ANY($1::int[])`, [ids]);
+    }
     for (let i = 0; i < campos_chaves.length; i++) {
       const tcRes = await query(`SELECT id FROM tipo_campo WHERE chave_unica = $1`, [campos_chaves[i]]);
       if (tcRes.rows.length > 0) {
