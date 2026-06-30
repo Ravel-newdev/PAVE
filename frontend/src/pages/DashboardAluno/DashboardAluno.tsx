@@ -103,7 +103,7 @@ export default function Home() {
         {erro && <p className="text-sm text-red-600 mb-4">{erro}</p>}
 
         <div className="cards-grid">
-          {projetos.slice(0, 3).map((p) => (
+          {projetos.slice(0, 4).map((p) => (
             <div key={p.id} className="project-card">
               <div className="card-header">
                 <div className="card-icon-wrap">

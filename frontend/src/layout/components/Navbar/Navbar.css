@@ -1,3 +1,4 @@
+
 :root {
   --navy: #1E2E4F;
   --green-accent: #287999;
@@ -37,7 +38,7 @@
   white-space: nowrap;
 }
 .nav-link:hover { color: #fff; background: rgba(255,255,255,0.08); }
-.nav-link.active { color: #fff; border-bottom: 2px solid var(--yellow-accent); border-radius: 0; padding-bottom: 4px; }
+.nav-link.nav-link--ativo { color: #fff; border-bottom: 2px solid var(--yellow-accent); border-radius: 0; padding-bottom: 4px; }
 
 .navbar-right { display: flex; align-items: center; gap: 16px; }
 
@@ -162,7 +163,7 @@
   border: 1.5px solid var(--navy);
 }
 
-/* User dropdown */
+
 .user-profile-wrap { position: relative; }
 
 .user-profile {
@@ -215,7 +216,7 @@
 .user-dropdown-item--danger { color: #DC2626; }
 .user-dropdown-item--danger:hover { background: #FEF2F2; }
 
-/* Mobile logout button */
+
 .mobile-logout {
   display: flex;
   align-items: center;
@@ -232,15 +233,12 @@
   text-align: left;
 }
 
-/* notif-btn como link */
 a.notif-btn {
   text-decoration: none;
 }
 
-/*  Mobile menu links com ícone  */
 .mobile-menu-link { display: flex; align-items: center; gap: 8px; }
 
-/*  Busca mobile  */
 .mobile-search {
   display: flex;
   align-items: center;
@@ -260,7 +258,7 @@ a.notif-btn {
   font-family: inherit;
 }
 .mobile-search .search-icon { color: #888; }
-/* ─── Search bar como link ─── */
+
 a.search-bar {
   text-decoration: none;
   cursor: text;

@@ -15,23 +15,19 @@
 .cat-page {
   background: var(--bg);
   min-height: 100vh;
-  font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif;
+  font-family: 'DM Sans', sans-serif;
 }
 
 /*  Hero  */
 .cat-hero {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: center;
-  gap: 32px;
   max-width: 1160px;
   margin: 0 auto;
   padding: 48px 32px 32px;
 }
 
 .cat-hero-text h1 {
-  font-size: 28px;
-  font-weight: 800;
+  font-size: 2rem;
+  font-weight: 700;
   color: var(--text-main);
   margin: 0 0 8px;
   border-left: 4px solid var(--yellow);
@@ -40,24 +36,17 @@
 
 .cat-hero-text p {
   font-size: 1.05rem;
-  color: var(--op-text-secondary);
-  max-width: 600px;
+  color: #64748B;
+
   line-height: 1.5;
 }
-
-.cat-hero-illustration {
-  width: 120px;
-  opacity: 0.8;
-}
-
-.cat-hero-illustration svg { width: 100%; height: auto; }
 
 .cat-busca-ativa {
   max-width: 1160px;
   margin: 0 auto;
   padding: 12px 32px;
   font-size: 0.9rem;
-  color: var(--op-text-secondary);
+  color: #64748B;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -88,18 +77,17 @@
 .cat-filtros-btn {
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 6px;
   background: #fff;
   border: 1.5px solid var(--border);
   color: var(--text-main);
   font-size: 13px;
-  font-weight: 700;
-  padding: 9px 18px;
+  font-weight: 600;
+  padding: 7px 14px;
   border-radius: 10px;
   cursor: pointer;
   font-family: inherit;
   transition: border-color 0.15s, box-shadow 0.15s;
-  height: 40px;
 }
 
 .cat-filtros-btn:hover {

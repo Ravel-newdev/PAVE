@@ -201,7 +201,6 @@ export default function MinhasOportunidades() {
                       ))}
                     </div>
                     <h3 className="card-title">{p.titulo}</h3>
-                    {p.descricao && <p className="card-desc">{p.descricao}</p>}
                     <div className="prof-row">
                       <div className="prof-avatar">{p.autor_nome.charAt(0).toUpperCase()}</div>
                       <span className="prof-name">{p.autor_nome}</span>

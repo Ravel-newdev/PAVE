@@ -93,19 +93,6 @@ export default function CatalogoProjeto() {
           <h1>Catálogo de Projetos</h1>
           <p>Encontre oportunidades de voluntariado, extensão e bolsas para aprender, crescer e transformar vidas.</p>
         </div>
-
-        <div className="cat-hero-illustration" aria-hidden="true">
-          <svg viewBox="0 0 220 160" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="60" y="40" width="100" height="80" rx="8" fill="#E8EAF6" opacity=".6"/>
-            <rect x="70" y="50" width="80" height="10" rx="4" fill="#9FA8DA" opacity=".5"/>
-            <rect x="70" y="66" width="60" height="8" rx="4" fill="#C5CAE9" opacity=".4"/>
-            <rect x="70" y="80" width="70" height="8" rx="4" fill="#C5CAE9" opacity=".4"/>
-            <circle cx="170" cy="30" r="22" fill="#FFF8E1" opacity=".7"/>
-            <path d="M170 22v8l5 3" stroke="#FFC107" strokeWidth="2" strokeLinecap="round"/>
-            <circle cx="50" cy="110" r="16" fill="#E8F5EE" opacity=".7"/>
-            <path d="M50 103v7l4 2" stroke="#4CAF50" strokeWidth="2" strokeLinecap="round"/>
-          </svg>
-        </div>
       </header>
 
       {busca && (

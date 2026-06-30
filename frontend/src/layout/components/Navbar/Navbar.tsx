@@ -4,7 +4,7 @@ import {
   Bell, ChevronDown, Menu, X, Search,
   Settings, LogOut,
 } from "lucide-react";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate, useLocation } from "@tanstack/react-router";
 import logo from "../../../assets/pave-logo-detalhada-512.png";
 import { useAuth } from "@/context/AuthContext";
 import { paveApi } from "@/services/PaveApiService";
@@ -32,9 +32,9 @@ function deriveNome(email: string): string {
 }
 
 const navItems = [
-  { label: "Início",               to: "/",             icon: <Home size={16} />       },
-  { label: "Projetos",             to: "/projetos",     icon: <FolderOpen size={16} /> },
-  { label: "Minhas Oportunidades", to: "/aluno/oportunidades", icon: <Bookmark size={16} />   },
+  { label: "Início",               to: "/aluno",              icon: <Home size={16} />       },
+  { label: "Projetos",             to: "/projetos",           icon: <FolderOpen size={16} /> },
+  { label: "Minhas Oportunidades", to: "/aluno/oportunidades", icon: <Bookmark size={16} />  },
 ];
 
 export default function Navbar() {
@@ -52,9 +52,10 @@ export default function Navbar() {
 
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const currentPath = typeof window !== "undefined" ? window.location.pathname : "/";
-  const nome        = session ? (session.nome || deriveNome(session.email)) : "";
-  const inicial     = nome.charAt(0).toUpperCase();
+  const location     = useLocation();
+  const currentPath  = location.pathname;
+  const nome         = session ? (session.nome || deriveNome(session.email)) : "";
+  const inicial      = nome.charAt(0).toUpperCase();
 
   useEffect(() => {
     if (!session) return;
@@ -96,16 +97,16 @@ export default function Navbar() {
           {!isMobile && (
             <div className="nav-links">
               {navItems.map((item) => {
-                const base = item.to.replace(/\/$/, "");
                 const isActive =
-                  item.to === "/"
-                    ? currentPath === "/"
-                    : currentPath.startsWith(base);
+                  item.to === "/aluno"
+                    ? currentPath === "/aluno" || currentPath === "/aluno/"
+                    : currentPath === item.to || currentPath.startsWith(item.to + "/");
                 return (
                   <Link
                     key={item.label}
                     to={item.to}
-                    className={`nav-link${isActive ? " active" : ""}`}
+                    activeProps={{}}
+                    className={`nav-link${isActive ? " nav-link--ativo" : ""}`}
                   >
                     {item.icon}
                     {item.label}
