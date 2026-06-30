@@ -106,8 +106,8 @@ const atualizarProcesso = async (processoId, docenteId, dados) => {
     const camposPadrao = await query(`SELECT id FROM campo_formulario WHERE formulario_id = $1 AND label_override IS NULL`, [fid]);
     if (camposPadrao.rows.length > 0) {
       const ids = camposPadrao.rows.map((r) => r.id);
-      await query(`DELETE FROM resposta_formulario WHERE campo_id = ANY($1::int[])`, [ids]);
-      await query(`DELETE FROM campo_formulario WHERE id = ANY($1::int[])`, [ids]);
+      await query(`DELETE FROM resposta_formulario WHERE campo_id = ANY($1::uuid[])`, [ids]);
+      await query(`DELETE FROM campo_formulario WHERE id = ANY($1::uuid[])`, [ids]);
     }
     for (let i = 0; i < campos_chaves.length; i++) {
       const tcRes = await query(`SELECT id FROM tipo_campo WHERE chave_unica = $1`, [campos_chaves[i]]);

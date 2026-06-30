@@ -41,8 +41,8 @@ const limparCamposPersonalizados = async (formularioId) => {
   );
   if (campos.rows.length > 0) {
     const ids = campos.rows.map((r) => r.id);
-    await query(`DELETE FROM resposta_formulario WHERE campo_id = ANY($1::int[])`, [ids]);
-    await query(`DELETE FROM campo_formulario WHERE id = ANY($1::int[])`, [ids]);
+    await query(`DELETE FROM resposta_formulario WHERE campo_id = ANY($1::uuid[])`, [ids]);
+    await query(`DELETE FROM campo_formulario WHERE id = ANY($1::uuid[])`, [ids]);
   }
 };
 
